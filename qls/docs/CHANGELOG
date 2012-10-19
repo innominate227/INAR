@@ -1,0 +1,74 @@
+ChangeLog for the Quadodo Login Script 3.1.x
+
+
+////////////////////////////////////////////////////
+****************************************************
+
+Contents
+	- Changes since 3.1.8
+	- Changes since 3.1.7
+	- Changes since 3.1.6
+	- Changes since 3.1.5
+	- Changes since 3.1.4
+	- Changes since 3.1.3
+	- Changes since 3.1.2
+	- Changes since 3.1.1
+	- Changes since 3.1.0
+
+****************************************************
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+**Changes since 3.1.8
+
+[Fix] The registration form data is now saved when you make a mistake
+[Fix] When you install you can login now as an admin
+
+**Changes since 3.1.7
+
+[Fix] Don't have to be logged out to change your password
+[Fix] When you edit a user, they can now login properly afterwards
+
+**Changes since 3.1.6
+
+[Info] Changed all links pointing to old site to new site
+
+**Changes since 3.1.5
+
+[Feature] You can set the format and separator for the online users list
+[Feature] The system now has new feature that allows you to output online users
+[Fix] Updating from early versions actually works now
+
+**Changes since 3.1.4
+
+[Info] Removed Content-Language header from the header.php file
+[Fix] When editing a user it now defaults to their current group
+[Fix] You can now edit the Redirect Type via the Edit Configuration section
+[Fix] You can now edit the Login Redirect URL via the Edit Configuration section
+
+**Changes since 3.1.3
+
+[Info] Dropped support for updating from 3.1.0 and 3.1.1
+[Fix] You can now set the content language of the page
+[Fix] You can now set the locale of the system
+[Fix] Set the Content-Type header on every page (for new languages)
+[Feature] The system now uses both cookies and session (remember me feature)
+
+**Changes since 3.1.2
+
+[Info] Dropped support for updating from 3.0.x
+[Fix] Changed ` to ' in a SQL query when upgrading from 3.1.0 or 3.1.1 in Update.class.php
+[Fix] Set version to new version in Install.class.php this time!
+[Security] Won't allow unactivated users to login in *any* case
+[Feature] Set how long a user account lasts before it expires (per group)
+
+**Changes since 3.1.1
+
+[Fix] Didn't set to new version in the update module
+
+**Changes since 3.1.0
+
+[Fix] Links in GroupCP weren't set to the correct CSS class
+[Fix] group_list_members.php - Blank list if no one in group
+[Fix] group_list_users.php - No one was shown if everyone was inside the group
+[Fix] SITE_NAME useless, removed from system
+[Feature] User can now reset their password

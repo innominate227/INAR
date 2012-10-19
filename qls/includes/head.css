@@ -1,0 +1,50 @@
+body 
+{
+padding: 0;
+margin: 0;
+}
+.header
+{
+width:100%;
+height:100px;
+background:#666; 
+}
+#navigation 
+{
+ top:100px;
+  width: 100%;
+  background-color:#B49AA9;
+  height: 30px;
+  text-align: center;
+  padding-top: 15px;
+  padding-left: 40px;
+}
+#navigation a {
+	font-style:bold;
+	font-size: 18px;
+	padding-left: 15px;
+	padding-right: 15px;
+	color: white;
+	text-decoration: none;
+}
+
+#navigation a:hover {
+	color: orange;
+}
+
+.logo 
+{
+float:left; 
+height:100px;
+}
+.text
+{
+padding:10px;
+text-align:center;
+font-size:40px;
+color:white;
+}
+.clear 
+{
+clear:both;
+}
