@@ -1,11 +1,19 @@
 <?php
 define('QUADODO_IN_SYSTEM', true);
 require_once('includes/header.php');
+if ($qls->user_info['username'] == '') 
+{
 require_once('includes/banner.php');
+}
+else
+{
+require_once('includes/banner2.php');
+}
 ?>
 
-
-
+<html lang='en'>
+<body>
+<div style="width:70%;margin:10px 0;text-align:center;color:red;background:silver;border:2px solid black;font-size:22px">
 <?php
 /*** *** *** *** *** ***
 * @package Quadodo Login Script
@@ -32,7 +40,6 @@ require_once('includes/banner.php');
 *** *** *** *** *** ***
 * Comments are always before the code they are commenting.
 *** *** *** *** *** ***/
-
 // Are they already logged in?
 if ($qls->user_info['username'] == '') {
 	// Pfft is user validation even turned on
@@ -56,3 +63,6 @@ else {
 echo ACTIVATE_ALREADY_LOGGED;
 }
 ?>
+</div>
+</body>
+</html>

@@ -1,13 +1,18 @@
 <?php
 define('QUADODO_IN_SYSTEM', true);
 require_once('includes/header.php');
-$qls->Security->check_auth_page('admin_surveys.php'); ?>
+$qls->Security->check_auth_page('admin_surveys.php'); 
+?>
 
-
-
+<html>
+<head>
+<link rel="stylesheet" type="text/css" HREF="html/form.css" />
+</head>
 <?php
 // Look in the USERGUIDE.html for more info
-if ($qls->user_info['username'] != '') {
+if ($qls->user_info['username'] != '') 
+{
+require_once('includes/banner2.php');
 ?>
 
 
@@ -132,16 +137,17 @@ if ($defaults_updated)
 }
 ?>
 
-<h1>Surveys:</h1><br>
 <form action="admin_surveys.php" method="post">
 <input type="hidden" name="process_default_surveys" value="yes" />
+<fieldset>
+<legend> Surveys </legend>
 <table style="border:1px solid black;border-collapse:collapse;">
 <tr>
 <th style="border:1px solid black;"><b>Name</b></th>
 <th style="border:1px solid black;"><b>Issues</b></th>
 <th style="border:1px solid black;"><b>Default</b></th>
-<th style="border:1px solid black;"><b>Paricipants</b></th>
-<th style="border:1px solid black;"><b>Assign Paricipants</b></th>
+<th style="border:1px solid black;"><b>Participants</b></th>
+<th style="border:1px solid black;"><b>Assign Participants</b></th>
 <th style="border:1px solid black;"><b>Responses</b></th>
 </tr>
 
@@ -181,15 +187,15 @@ for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++)
 <br>
 <input type="submit" value="Update" />
 </form>
+</fieldset>
 <br>
 <br>
-
+<div style="background:silver;border:1px solid black;text:align:center;padding:5px;font-size:18px">
 You are logged in as <?php echo $qls->user_info['username']; ?><br />
 Your email address is set to <?php echo $qls->user_info['email']; ?><br />
 There have been <b><?php echo $qls->hits('members.php'); ?></b> visits to this page.<br />
 <br />
-Currently online users (<?php echo count($qls->online_users()); ?>): <?php $qls->output_online_users(); ?>
-
+</div>
 <?php
 }
 else {
@@ -200,3 +206,4 @@ You are currently not logged in.
 <?php
 }
 ?>
+</html>

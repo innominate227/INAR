@@ -1,7 +1,6 @@
 <?php
 define('QUADODO_IN_SYSTEM', true);
 require_once('includes/header.php');
-require_once('includes/banner.php');
 ?>
 
 <?php
@@ -32,10 +31,17 @@ require_once('includes/banner.php');
 *** *** *** *** *** ***/
 
 // Is the user logged in already?
-if ($qls->user_info['username'] == '') {
+if ($qls->user_info['username'] == '') 
+{
+require_once('includes/banner.php');
 require_once('html/login_form.php');
 }
-else {
-echo LOGIN_ALREADY_LOGGED;
+else 
+{
+require_once('includes/banner2.php');
+?>
+<div style="color:red;font-size:22px;background:silver;border:2px solid black;">
+<? echo LOGIN_ALREADY_LOGGED;
 }
 ?>
+</div>

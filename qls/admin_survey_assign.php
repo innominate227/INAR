@@ -7,7 +7,9 @@ $qls->Security->check_auth_page('admin_survey_assign.php'); ?>
 
 <?php
 // Look in the USERGUIDE.html for more info
-if ($qls->user_info['username'] != '') {
+if ($qls->user_info['username'] != '') 
+{
+require_once('includes/banner2.php');
 ?>
 
 <?php
@@ -96,12 +98,14 @@ if ($qls->user_info['username'] != '') {
 	
 	
 ?>
-
+<html>
+<body>
+<div style ="background-color:linen;margin-left:20px;margin-right:20px;padding:25px;">
 <?php
 if ($paticipants_updated)
 {
 ?>
-	<h3> Paticipant List For Survey Updated</h3>
+	<h3> Participant List For Survey Updated</h3>
 <?php
 }
 ?>
@@ -125,6 +129,7 @@ if (count($participant_ids))
 
 
 	<h1>Participants:</h1><br>
+         <div style="font-size:18px">
 	<form action="admin_survey_assign.php?sid=<?php echo $sid; ?>" method="post">
 	<input type="hidden" name="process_search_users" value="yes" />
 	<input type="hidden" name="user_name_search" value="<?php echo $_POST['user_name_search'] ?>"> 	
@@ -166,16 +171,17 @@ if (count($participant_ids))
 	</form>
 	<br>
 	<br>
-	
+	</div>
 <?php
 }
 ?>
-
+</div>
+<div style ="background-color:lightgrey;margin-left:20px;margin-right:20px;padding:25px;">>
 You are logged in as <?php echo $qls->user_info['username']; ?><br />
 Your email address is set to <?php echo $qls->user_info['email']; ?><br />
 There have been <b><?php echo $qls->hits('members.php'); ?></b> visits to this page.<br />
 <br />
-Currently online users (<?php echo count($qls->online_users()); ?>): <?php $qls->output_online_users(); ?>
+</div>
 
 <?php
 }
@@ -187,3 +193,5 @@ You are currently not logged in.
 <?php
 }
 ?>
+</body>
+</html>

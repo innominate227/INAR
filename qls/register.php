@@ -6,7 +6,6 @@ $qls->Security->check_auth_registration();
 ?>
 
 
-
 <?php
 /*** *** *** *** *** ***
 * @package Quadodo Login Script
@@ -41,7 +40,6 @@ if ($qls->user_info['username'] == '') {
 		if ($qls->User->register_user()) {
 			switch ($qls->config['activation_type']) {
 				default:
-				echo REGISTER_SUCCESS_NO_ACTIVATION;
 				break;
 				case 1:
 				echo REGISTER_SUCCESS_USER_ACTIVATION;

@@ -1,8 +1,11 @@
 <?php
 define('QUADODO_IN_SYSTEM', true);
 require_once('includes/header.php');
+if ($qls->user_info['username'] != '')
+require_once('includes/banner2.php');
+else
 require_once('includes/banner.php');
-$qls->Security->check_auth_page('surveys.php'); ?>
+//$qls->Security->check_auth_page('surveys.php'); ?>
 
 
 
@@ -13,7 +16,7 @@ if ($qls->user_info['username'] != '') {
 
 <div>
 <h1>Surveys:</h1>
-<div style="float:right;font-size:25px;margin-right:10px;"><a href="logout.php"> LOGOUT </a> </div>
+
 </div>
 <table style="text-align:center;margin:auto">
 <?php
@@ -59,21 +62,22 @@ if ($qls->user_info['username'] != '') {
 <br>
 <br>
 <br>
-
+<div style="border:2px solid black">
 You are logged in as <?php echo $qls->user_info['username']; ?><br />
 Your email address is set to <?php echo $qls->user_info['email']; ?><br />
 There have been <b><?php echo $qls->hits('members.php'); ?></b> visits to this page.<br />
+</div>
 <br />
-Currently online users (<?php echo count($qls->online_users()); ?>): <?php $qls->output_online_users(); ?>
 
 
 <?php
 }
 else {
 ?>
-
-You are currently not logged in.
-
+<div style="text-align:center; width:80%;height:100px; margins:10px 0;padding:10px background-color:LightCyan; color:red;font-size:22px; border:2px solid black;">
+<p>You are currently not logged in. Log in to view available surveys<p>
+<p> If you haven't registered, signup <a href= "register.php"> here </a> </p>
+</div>
 <?php
 }
 ?>

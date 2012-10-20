@@ -23,11 +23,18 @@ Indian Autism Registry
 	</div>
 		<div id="navigation">
 			<a href="welcome.php">Home</a>
-			<a href="surveys.php">View Surveys</a>
+                         <?php 
+                         if ($qls->user_info['username'] != 'inar2012') 
+                         {
+			 echo '<a href="surveys.php">View Surveys</a>';
+                         }
+                         else
+                         echo '<a href="admin_surveys.php">View Surveys</a>';
+                         ?>
 			<a href="#">Contact Us</a>
 			<a href="http://www.ianproject.org">I.A.N</a>
 			<a href="#">A.F.A</a>
-                        <a href="login.php">Login</a>
+                        <a href="logout.php">Logout</a>
 		</div>
 
 </body>
