@@ -1,29 +1,5 @@
 <?php
-/*** *** *** *** *** ***
-* @package Quadodo Login Script
-* @file    User.class.php
-* @start   July 15th, 2007
-* @author  Douglas Rennehan
-* @license http://www.opensource.org/licenses/gpl-license.php
-* @version 1.1.4
-* @link    http://www.quadodo.com
-*** *** *** *** *** ***
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*** *** *** *** *** ***
-* Comments are always before the code they are commenting.
-*** *** *** *** *** ***/
+
 if (!defined('QUADODO_IN_SYSTEM')) {
 exit;	
 }
@@ -32,11 +8,13 @@ exit;
  * Contains all Survey functions
  */
 class Surveys {
+	
+	require_once 'jsonrpcphp\includes\jsonRPCClient.php';
 
-/**
- * @var object $this->qls - Will contain everything else
- */
-var $qls;
+	/**
+	 * @var object $this->qls - Will contain everything else
+	 */
+	var $qls;
 
 	/**
 	 * Construct class
@@ -47,11 +25,59 @@ var $qls;
 	$this->qls = &$qls;
 	}
 
+	/* export a survey in the format passed */
+	function export_survey($sid, $format)
+	{
+		//connect via json
+		$myJSONRPCClient = new jsonRPCClient('http://indiaautismregistry.com/TEST2/limesurvey/admin/remotecontrol');
+		$sessionKey = $myJSONRPCClient->get_session_key('inar2012', 'Inar!2012');
+
+		//get responses
+		$data = $myJSONRPCClient->export_responses($sessionKey, $sid, 'xls');
+
+		//dissconnect
+		$myJSONRPCClient->release_session_key( $sessionKey );
+		
+		//return data?
+		return $data;
+	}
+	
+	
     /*
      * Assign the user with the id pass to the survey passed (if they are eligable to be assigned to it)
      */
 	function assign_to_survey($lime_participant_id, $sid)
 	{	
+		//get all info for the user with that participant id
+		$user_info_result = $this->qls->SQL->query("SELECT `username`, `email` FROM `{$this->qls->config['sql_prefix']}users` WHERE `lime_participant_id`='{$lime_participant_id}'");					
+		$user_info_row = $this->qls->SQL->fetch_array($user_info_result);		
+		if ($user_info_row == null)
+		{		
+			return;
+		}
+
+		//create array of data for this participant to send to lime
+		$participant_data = array(
+			'participant_id' => $lime_participant_id,
+			'firstname' => $user_info_row['username'],
+			'email' => $user_info_row['email']);
+			
+		
+		//connect via json
+		$myJSONRPCClient = new jsonRPCClient('http://indiaautismregistry.com/TEST2/limesurvey/admin/remotecontrol');
+		$sessionKey = $myJSONRPCClient->get_session_key('inar2012', 'Inar!2012');
+
+		//add the participant (Note the method actually takes an array of partcipants)
+		$result = $myJSONRPCClient->add_participants($sessionKey, $sid, array($participant_data) );
+
+		var_dump($result);
+		
+		//dissconnect
+		$myJSONRPCClient->release_session_key( $sessionKey );
+					
+	
+		/*
+	
 		//get row for survey, give up if you cant find it
 		$survey_results = $this->qls->SQL->query("SELECT `active` FROM `{$this->qls->config['lime_sql_prefix']}surveys` WHERE `sid`='{$sid}'");	
 		$survey_row = $this->qls->SQL->fetch_array($survey_results);
@@ -134,6 +160,8 @@ var $qls;
 				'NOW()'			
 			)
 		);
+		
+		*/
 	}
 	
 	
