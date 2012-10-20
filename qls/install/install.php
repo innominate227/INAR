@@ -74,14 +74,6 @@ else {
 					</tr>
 					<tr>
 						<td>
-							Lime Table Prefix:
-						</td>
-						<td>
-							<input type="text" name="lime_database_prefix" maxlength="254" value="<?php if (isset($_SESSION['lime_database_prefix'])) { echo $_SESSION['lime_database_prefix']; } else { echo 'lime_'; } ?>" />
-						</td>
-					</tr>
-					<tr>
-						<td>
 							Database Type:
 						</td>
 						<td>
@@ -348,7 +340,7 @@ else {
 						<td>
 							<input type="text" name="login_redirect" maxlength="255" value="<?php if (isset($_SESSION['login_redirect'])) { echo $_SESSION['login_redirect']; } ?>" />
 						</td>
-					</tr>
+					</tr>					
 					<tr>
 						<td>
 							Admin Login Redirect URL:
@@ -456,6 +448,39 @@ else {
 						</td>
 						<td>
 							<input type="text" name="email_confirm" maxlength="100" value="<?php if (isset($_SESSION['email_confirm'])) { echo $_SESSION['email_confirm']; } ?>" />
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			<br />
+			<br />
+			<fieldset style="width: 50%;">
+				<legend>
+					Lime Information
+				</legend>
+				<table border="0">
+					<tr>
+						<td>
+							Lime Location:
+						</td>
+						<td>
+							<input type="text" name="password" maxlength="255" value="<?php if (isset($_SESSION['lime_location'])) { echo $_SESSION['lime_location']; } ?>" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Lime Admin Username:
+						</td>
+						<td>
+							<input type="text" name="username" maxlength="255" value="<?php if (isset($_SESSION['lime_username'])) { echo $_SESSION['lime_username']; } ?>" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Lime Admin Password:
+						</td>
+						<td>
+							<input type="text" name="password" maxlength="255" value="<?php if (isset($_SESSION['lime_password'])) { echo $_SESSION['lime_password']; } ?>" />
 						</td>
 					</tr>
 				</table>

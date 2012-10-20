@@ -248,7 +248,6 @@ var $install_error = 'There was an error with the installation! This is most lik
 	$errors = null;
 
 	// Check all the input data
-	$lime_database_prefix = (preg_match("/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]{0,254}$/", $_POST['lime_database_prefix']) || $_POST['lime_database_prefix'] == '') ? $this->make_safe($_POST['lime_database_prefix']) : false;
 	$database_prefix = (preg_match("/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]{0,254}$/", $_POST['database_prefix']) || $_POST['database_prefix'] == '') ? $this->make_safe($_POST['database_prefix']) : false;
 	$database_type = (isset($_POST['database_type'])) ? $_POST['database_type'] : false;
 	$database_server_name = (isset($_POST['database_server_name'])) ? $_POST['database_server_name'] : false;
@@ -284,12 +283,11 @@ var $install_error = 'There was an error with the installation! This is most lik
 	$password_confirm = (isset($_POST['password_confirm']) && $password == $this->make_safe($_POST['password_confirm'])) ? true : false;
 	$email = (isset($_POST['email']) && eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $_POST['email']) && strlen($_POST['email']) <= 255 && strlen($_POST['email']) > 6) ? $_POST['email'] : false;
 	$email_confirm = (isset($_POST['email_confirm']) && $email == $_POST['email_confirm']) ? true : false;
+	$lime_location = (isset($_POST['lime_location']) && strlen($_POST['lime_location']) <= 255 && strlen($_POST['lime_location']) > 0) ? $this->make_safe($_POST['lime_location'], false) : false;
+	$lime_username = (isset($_POST['lime_username']) && strlen($_POST['lime_username']) <= 255 && strlen($_POST['lime_username']) > 0) ? $this->make_safe($_POST['lime_username'], false) : false;
+	$lime_password = (isset($_POST['lime_password']) && strlen($_POST['lime_password']) <= 255 && strlen($_POST['lime_password']) > 0) ? $this->make_safe($_POST['lime_password'], false) : false;
 
 		// Did they fail? If so add to the $errors variable
-		if ($lime_database_prefix === false) {
-		$errors[] = 'The lime database prefix you entered was not a valid format.';
-		}
-		
 		if ($database_prefix === false) {
 		$errors[] = 'The database prefix you entered was not a valid format.';
 		}
@@ -351,7 +349,7 @@ var $install_error = 'There was an error with the installation! This is most lik
 		}
 		
 		if ($admin_login_redirect === false) {
-		$errors[] = 'The login redirect URL you specified was not valid.';
+		$errors[] = 'The admin login redirect URL you specified was not valid.';
 		}
 
 		if ($logout_redirect === false) {
@@ -369,11 +367,22 @@ var $install_error = 'There was an error with the installation! This is most lik
 		if ($email === false || $email_confirm === false) {
 		$errors[] = 'Either the email address you entered was not valid, or the two emails did not match.';
 		}
+		
+		if ($lime_location === false) {
+		$errors[] = 'The lime location you specified was not valid.';
+		}
+		
+		if ($lime_username === false) {
+		$errors[] = 'The lime admin username you specified was not valid.';
+		}
+		
+		if ($lime_password === false) {
+		$errors[] = 'The lime admin password you specified was not valid.';
+		}
 
 		// Do we have some errors?
 		if ($errors !== null) {
 		// Make sure the values are saved
-		$_SESSION['lime_database_prefix'] = stripslashes($lime_database_prefix);
 		$_SESSION['database_prefix'] = stripslashes($database_prefix);
 		$_SESSION['cookie_prefix'] = stripslashes($cookie_prefix);
 		$_SESSION['max_username'] = stripslashes($max_username);
@@ -403,6 +412,9 @@ var $install_error = 'There was an error with the installation! This is most lik
 		$_SESSION['password_confirm'] = stripslashes($password_confirm);
 		$_SESSION['email'] = stripslashes($email);
 		$_SESSION['email_confirm'] = stripslashes($email_confirm);
+		$_SESSION['lime_location'] = stripslashes($lime_location);
+		$_SESSION['lime_username'] = stripslashes($lime_username);
+		$_SESSION['lime_password'] = stripslashes($lime_password);
 		$error_count = count($errors);
 
 		// Create the HTML and return false
@@ -460,20 +472,13 @@ var $install_error = 'There was an error with the installation! This is most lik
 		$hash[] = sha1($hash[0] . $hash[1] . $hash[2] . $hash[3]) . md5($hash[4] . $hash[4]) . sha1($user_code);
 		$final_hash = sha1($hash[0] . $hash[1] . $hash[2] . $hash[3] . $hash[4] . $hash[5] . md5($user_code));
 
-		
-			//auth_356a192b7913b04c54574d18c28d46e6395428ab = members.php
-			//auth_da4b9237bacccdf19c0760cab7aec4a8359010b0 = surveys.php
-			//auth_1b6453892473a467d07372d45eb05abc2031647a = admin_surveys.php
-			//auth_ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4 = admin_survey_assign.php
-			//dont forget these need to be in mysql.sql too
-		
 			// The permission mask for an Administrator
-			if (!$this->test->query("INSERT INTO `{$database_prefix}masks` (`name`,`auth_admin`,`auth_admin_phpinfo`,`auth_admin_configuration`,`auth_admin_add_user`,`auth_admin_user_list`,`auth_admin_remove_user`,`auth_admin_edit_user`,`auth_admin_add_page`,`auth_admin_page_list`,`auth_admin_remove_page`,`auth_admin_edit_page`,`auth_admin_page_stats`,`auth_admin_add_mask`,`auth_admin_list_masks`,`auth_admin_remove_mask`,`auth_admin_edit_mask`,`auth_admin_add_group`,`auth_admin_list_groups`,`auth_admin_remove_group`,`auth_admin_edit_group`, `auth_admin_activate_account`,`auth_admin_send_invite`,`auth_356a192b7913b04c54574d18c28d46e6395428ab`,`auth_da4b9237bacccdf19c0760cab7aec4a8359010b0`,`auth_1b6453892473a467d07372d45eb05abc2031647a`,`auth_ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4`) VALUES('Admin',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)")) {
+			if (!$this->test->query("INSERT INTO `{$database_prefix}masks` (`name`,`auth_admin`,`auth_admin_phpinfo`,`auth_admin_configuration`,`auth_admin_add_user`,`auth_admin_user_list`,`auth_admin_remove_user`,`auth_admin_edit_user`,`auth_admin_add_page`,`auth_admin_page_list`,`auth_admin_remove_page`,`auth_admin_edit_page`,`auth_admin_page_stats`,`auth_admin_add_mask`,`auth_admin_list_masks`,`auth_admin_remove_mask`,`auth_admin_edit_mask`,`auth_admin_add_group`,`auth_admin_list_groups`,`auth_admin_remove_group`,`auth_admin_edit_group`, `auth_admin_activate_account`,`auth_admin_send_invite`,`auth_356a192b7913b04c54574d18c28d46e6395428ab`) VALUES('Admin',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)")) {
 			$this->test->output_error();
 			}
 
 			// The Default mask for new users
-			if (!$this->test->query("INSERT INTO `{$database_prefix}masks` (`name`,`auth_admin`,`auth_admin_phpinfo`,`auth_admin_configuration`,`auth_admin_add_user`,`auth_admin_user_list`,`auth_admin_remove_user`,`auth_admin_edit_user`,`auth_admin_add_page`,`auth_admin_page_list`,`auth_admin_remove_page`,`auth_admin_edit_page`,`auth_admin_page_stats`,`auth_admin_add_mask`,`auth_admin_list_masks`,`auth_admin_remove_mask`,`auth_admin_edit_mask`,`auth_admin_add_group`,`auth_admin_list_groups`,`auth_admin_remove_group`,`auth_admin_edit_group`, `auth_admin_activate_account`,`auth_admin_send_invite`,`auth_356a192b7913b04c54574d18c28d46e6395428ab`,`auth_da4b9237bacccdf19c0760cab7aec4a8359010b0`,`auth_1b6453892473a467d07372d45eb05abc2031647a`,`auth_ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4`) VALUES('{$default_mask_name}',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0)")) {
+			if (!$this->test->query("INSERT INTO `{$database_prefix}masks` (`name`,`auth_admin`,`auth_admin_phpinfo`,`auth_admin_configuration`,`auth_admin_add_user`,`auth_admin_user_list`,`auth_admin_remove_user`,`auth_admin_edit_user`,`auth_admin_add_page`,`auth_admin_page_list`,`auth_admin_remove_page`,`auth_admin_edit_page`,`auth_admin_page_stats`,`auth_admin_add_mask`,`auth_admin_list_masks`,`auth_admin_remove_mask`,`auth_admin_edit_mask`,`auth_admin_add_group`,`auth_admin_list_groups`,`auth_admin_remove_group`,`auth_admin_edit_group`, `auth_admin_activate_account`,`auth_admin_send_invite`,`auth_356a192b7913b04c54574d18c28d46e6395428ab`) VALUES('{$default_mask_name}',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1)")) {
 			$this->test->output_error();
 			}
 
@@ -487,17 +492,8 @@ var $install_error = 'There was an error with the installation! This is most lik
 			$this->test->output_error();
 			}
 
-			// The default pages
+			// The default member page
 			if (!$this->test->query("INSERT INTO `{$database_prefix}pages` (`name`,`hits`) VALUES('members.php',0)")) {
-			$this->test->output_error();
-			}
-			if (!$this->test->query("INSERT INTO `{$database_prefix}pages` (`name`,`hits`) VALUES('surveys.php',0)")) {
-			$this->test->output_error();
-			}
-			if (!$this->test->query("INSERT INTO `{$database_prefix}pages` (`name`,`hits`) VALUES('admin_surveys.php',0)")) {
-			$this->test->output_error();
-			}
-			if (!$this->test->query("INSERT INTO `{$database_prefix}pages` (`name`,`hits`) VALUES('admin_survey_assign.php',0)")) {
 			$this->test->output_error();
 			}
 
@@ -531,6 +527,9 @@ var $install_error = 'There was an error with the installation! This is most lik
 		$sql[] = "'redirect_type','{$redirect_type}'";
 		$sql[] = "'online_users_format','{$online_users_format}'";
 		$sql[] = "'online_users_separator','{$online_users_separator}'";
+		$sql[] = "'lime_location','{$lime_location}'";
+		$sql[] = "'lime_username','{$lime_username}'";
+		$sql[] = "'lime_password','{$lime_password}'";
 		$sql_count = count($sql);
 
 		// Insert the config data
@@ -549,8 +548,7 @@ var $install_error = 'There was an error with the installation! This is most lik
 		$database_port = ($database_port === false) ? 'false' : $database_port;
 
 		// We don't need these anymore
-		unset($_SESSION['lime_database_prefix'],
-		    $_SESSION['database_prefix'],
+		unset($_SESSION['database_prefix'],
 			$_SESSION['cookie_prefix'],
 			$_SESSION['max_username'],
 			$_SESSION['min_username'],
@@ -578,7 +576,10 @@ var $install_error = 'There was an error with the installation! This is most lik
 			$_SESSION['password'],
 			$_SESSION['password_confirm'],
 			$_SESSION['email'],
-			$_SESSION['email_confirm']
+			$_SESSION['email_confirm'],
+			$_SESSION['lime_location'],
+			$_SESSION['lime_username'],
+			$_SESSION['lime_password']
 		);
 
 		// The database_info.php file
@@ -599,7 +600,6 @@ exit;
 }
 
 define('SYSTEM_INSTALLED', true);
-\$lime_database_prefix = '{$lime_database_prefix}';
 \$database_prefix = '{$database_prefix}';
 \$database_type = '{$database_type}';
 \$database_server_name = '{$database_server_name}';

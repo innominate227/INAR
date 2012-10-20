@@ -756,15 +756,10 @@ var $qls;
 		}
 
 		// Compare the codes
-		if ($this->compare_codes($activation_code, $username)) {
-		
-			//generate a participant id for the lime participant table
-			$lime_participant_id = $this->gen_uuid();
-		
-			//update user table with lime participant id, that its active, and the activation time
+		if ($this->compare_codes($activation_code, $username)) 
+		{
 			$this->qls->SQL->update('users',
 				array(
-					'lime_participant_id' => $lime_participant_id,
 					'active' => 'yes',
 					'activation_time' => time()
 				),
@@ -776,68 +771,19 @@ var $qls;
 				)
 			);
 			
-			//get info for user
-			$user_info = $this->fetch_user_info($username);
-			
-			// Insert participant into lime database
-			$this->qls->SQL->insert_lime('participants',
-				array(
-					'participant_id',
-					'firstname',
-					'lastname',
-					'email',
-					'language',
-					'blacklisted',
-					'owner_uid',
-				),
-				array(
-					$lime_participant_id,
-					$username,
-					'',
-					$user_info['email'],
-					'en',
-					'N',
-					1 /* 1 should set Admin as the owner */
-				)
-			);
-			
-			//get all the defult surveys and insert the user into them
-			$default_surveys_results = $this->qls->SQL->select('sid', 'default_surveys');			
-			while ($default_surveys_row = $this->qls->SQL->fetch_array($default_surveys_results)) 
-			{			
-				$this->qls->Surveys->assign_to_survey($lime_participant_id, $default_surveys_row['sid']);
-			}
-			
+			//get the users id
+			$user_id = $this->qls->SQL->select_one_simple('id', 'users', array('username' => $username))['id'];
+					
+			//add user to auto assign surveys
+			$this->qls->Surveys->auto_assign_new_user($user_id);
+
 			return true;
 		}
-		else {
-		$this->activate_error = ACTIVATE_CODE_NOT_MATCH;
-		return false;
+		else 
+		{
+			$this->activate_error = ACTIVATE_CODE_NOT_MATCH;
+			return false;
 		}
 	}
-	
-
-	
-    /*
-     * Generation of unique id (this function was copied from lime survey, use the same method to generate uuid that they do)
-     */
-    function gen_uuid()
-    {
-        return sprintf(
-                '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0x0fff) | 0x4000,
-                mt_rand(0, 0x3fff) | 0x8000,
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff)
-        );
-    }
-	
-		
-
 }
-	
 ?>

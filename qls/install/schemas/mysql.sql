@@ -22,7 +22,6 @@ DROP TABLE IF EXISTS `{database_prefix}users`;
 
 CREATE TABLE `{database_prefix}users`(
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`lime_participant_id` VARCHAR(50) DEFAULT '' NOT NULL,
 	`username` VARCHAR(255) DEFAULT '' NOT NULL,
 	`password` VARCHAR(40) DEFAULT '' NOT NULL,
 	`code` VARCHAR(40) DEFAULT '' NOT NULL,
@@ -110,9 +109,6 @@ CREATE TABLE `{database_prefix}masks`(
 	`auth_admin_activate_account` TINYINT(1) DEFAULT '0' NOT NULL,
 	`auth_admin_send_invite` TINYINT(1) DEFAULT '0' NOT NULL,
 	`auth_356a192b7913b04c54574d18c28d46e6395428ab` TINYINT(1) DEFAULT '0' NOT NULL,
-	`auth_da4b9237bacccdf19c0760cab7aec4a8359010b0` TINYINT(1) DEFAULT '0' NOT NULL,
-	`auth_1b6453892473a467d07372d45eb05abc2031647a` TINYINT(1) DEFAULT '0' NOT NULL,
-	`auth_ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4` TINYINT(1) DEFAULT '0' NOT NULL,
 	PRIMARY KEY(`id`),
 	INDEX `masks_idx` (`name`)
 );
@@ -141,9 +137,21 @@ CREATE TABLE `{database_prefix}password_requests`(
 );
 
 
-DROP TABLE IF EXISTS `{database_prefix}default_surveys`;
+DROP TABLE IF EXISTS `{database_prefix}surveys`;
 
-CREATE TABLE `{database_prefix}default_surveys`(	
-	`sid` INT(11) NOT NULL,
-	PRIMARY KEY(`sid`)	
+CREATE TABLE `{database_prefix}surveys`(
+	`id` INT(11) NOT NULL,
+	`name` VARCHAR(255) DEFAULT '' NOT NULL,
+	`auto_assign_new_participant` VARCHAR(1) DEFAULT 'N' NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+DROP TABLE IF EXISTS `{database_prefix}user_surveys`;
+
+CREATE TABLE `{database_prefix}user_surveys`(
+	`survey_id` INT(11) NOT NULL,
+	`user_id` INT(11) NOT NULL,
+	`token` VARCHAR(35) NOT NULL,
+	PRIMARY KEY(`id`)
 );

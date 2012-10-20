@@ -58,9 +58,6 @@ class qls {
 
 	require_once('User.class.php');
 	$this->User = new User($this);
-	
-	require_once('Surveys.class.php');
-	$this->Surveys = new Surveys($this);
 
 	require_once('Session.class.php');
 	$this->Session = new Session($this);

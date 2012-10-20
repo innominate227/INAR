@@ -219,8 +219,35 @@ exit;
 				</td>
 			</tr>
 			<tr>
+				<td>
+					<?php echo LIME_LOCATION; ?>
+
+				</td>
+				<td>
+					<input type="text" id="lime_location" name="lime_location" maxlength="255" value="<?php echo $qls->config['lime_location']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<?php echo LIME_USERNAME; ?>
+
+				</td>
+				<td>
+					<input type="text" id="lime_username" name="lime_username" maxlength="255" value="<?php echo $qls->config['lime_username']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<?php echo LIME_PASSWORD; ?>
+
+				</td>
+				<td>
+					<input type="text" id="lime_password" name="lime_password" maxlength="255" value="<?php echo $qls->config['lime_password']; ?>" />
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2" align="center">
-					<input type="button" onclick="javascript:run_form('configuration', new Array('cookie_prefix','max_username','min_username','max_password','min_password','cookie_path','cookie_secure','cookie_length','cookie_domain','max_tries','user_regex','security_image','activation_type','login_redirect','admin_login_redirect','logout_redirect','redirect_type','online_users_format','online_users_separator','max_upload_size','auth_registration'));" value="<?php echo GO_LABEL; ?>" />
+					<input type="button" onclick="javascript:run_form('configuration', new Array('cookie_prefix','max_username','min_username','max_password','min_password','cookie_path','cookie_secure','cookie_length','cookie_domain','max_tries','user_regex','security_image','activation_type','login_redirect','admin_login_redirect','logout_redirect','redirect_type','online_users_format','online_users_separator','max_upload_size','auth_registration','lime_location','lime_username','lime_password'));" value="<?php echo GO_LABEL; ?>" />
 				</td>
 			</tr>
 		</table>

@@ -172,7 +172,6 @@ var $qls;
 		}
 	}
 
-		
 	/**
 	 * This function selects a query from the database.
 	 * @param    mixed  $what     - An array of fields to select or a string for one field
@@ -182,7 +181,7 @@ var $qls;
 	 * @optional array  $limit    - Contains offset and number
 	 * @return void
 	 */
-	function select($what, $from, $where = false, $order_by = false, $limit = false, $lime=false) {
+	function select($what, $from, $where = false, $order_by = false, $limit = false) {
 	$new_what = '';
 	$new_where = '';
 	$new_order_by = '';
@@ -225,13 +224,7 @@ var $qls;
 		}
 
 	// Build the query
-	$newfrom = $this->qls->config['sql_prefix'] . $from;
-	if ($lime)
-	{
-		$newfrom = $this->qls->config['lime_sql_prefix'] . $from;
-	}
-	
-	$query = "SELECT {$new_what} FROM `{$newfrom}`";
+	$query = "SELECT {$new_what} FROM `{$this->qls->config['sql_prefix']}{$from}`";
 
 		if ($where !== false) {
 			if (is_array($where)) {
@@ -358,16 +351,12 @@ var $qls;
 	 * @param array  $where - Array containing WHERE information
 	 * @return void
 	 */
-	function delete($from, $where, $lime=false) {
+	function delete($from, $where) {
 	$new_from = '';
 	$new_where = '';
 		// Can't be an array
 		if (!is_array($from) && $from != '') {
-			$new_from = "`{$this->qls->config['sql_prefix']}{$from}`";
-			if ($lime)
-			{
-				$new_from = "`{$this->qls->config['lime_sql_prefix']}{$from}`";
-			}
+		$new_from = "`{$this->qls->config['sql_prefix']}{$from}`";
 		}
 		else {
 		die(SQL_DELETE_QUERY_FAILED);
@@ -376,26 +365,58 @@ var $qls;
 	// Build query
 	$query = "DELETE FROM {$new_from}";
 
-		// Must be an array
 		if (is_array($where)) {
-			foreach ($where as $key => $value) {
-				if (is_array($value)) {
-					if (is_numeric($value[1])) {
-					$new_where = "`{$key}`{$value[0]}{$value[1]}";
+			// Shouldn't be divisble by 2
+			if ((count($where) % 2) == 0) {
+			die(SQL_DELETE_QUERY_FAILED);
+			}
+			else {
+			$x = 0;
+				foreach ($where as $key => $value) {
+				$x++;
+					// Is it the last one?
+					if (count($where) == $x) {
+						// The last one must be an array
+						if (is_array($value)) {
+							if (is_numeric($value[1])) {
+							$new_where .= "`{$key}`" . $value[0] . "{$value[1]}";
+							}
+							else {
+							$new_where .= "`{$key}`" . $value[0] . "'{$value[1]}'";
+							}
+						}
+						else {
+						die(SQL_DELETE_QUERY_FAILED);
+						}
 					}
 					else {
-					$new_where = "`{$key}`{$value[0]}'{$value[1]}'";
+						/**
+						 * If the number we are on is divsible by
+						 * 2 and it's equal to one of those put
+						 * the value in the variable.
+						 */
+						if (($x % 2) == 0 && ($value == "AND" || $value == "OR" || $value == "XOR") === true) {
+						$new_where .= " {$value} ";
+						}
+						else {
+							if (is_array($value)) {
+								if (is_numeric($value[1])) {
+								$new_where .= "`{$key}`" . $value[0] . "{$value[1]}";
+								}
+								else {
+								$new_where .= "`{$key}`" . $value[0] . "'{$value[1]}'";
+								}
+							}
+							else {
+							die(SQL_DELETE_QUERY_FAILED);
+							}
+						}
 					}
 				}
-				else {
-				die(SQL_DELETE_QUERY_FAILED);
-				}
-
-			break;
 			}
 		}
-		else {
-		die(SQL_DELETE_QUERY_FAILED);
+		else {			
+			die(SQL_DELETE_QUERY_FAILED);			
 		}
 
 	// Add to query
@@ -413,17 +434,13 @@ var $qls;
 	 * @param array  $where - Condition to delete
 	 * @return void
 	 */
-	function update($table, $set, $where, $lime=false) {
+	function update($table, $set, $where) {
 	$new_table = '';
 	$new_set = '';
 	$new_where = '';
 		// Can't be an array or empty
 		if (!is_array($table) && $table != '') {
-			$new_table = "`{$this->qls->config['sql_prefix']}{$table}`";
-			if ($lime)
-			{
-				$new_table = "`{$this->qls->config['lime_sql_prefix']}{$table}`";
-			}
+		$new_table = "`{$this->qls->config['sql_prefix']}{$table}`";
 		}
 		else {
 		die(SQL_UPDATE_QUERY_FAILED);
@@ -529,7 +546,7 @@ var $qls;
 	 * @param array  $values  - Array of values corresponding to the columns
 	 * @return void
 	 */
-	function insert($table, $columns, $values, $lime=false) {
+	function insert($table, $columns, $values) {
 	$new_table = '';
 	$new_columns = '';
 	$new_values = '';
@@ -538,11 +555,7 @@ var $qls;
 
 		// Did they define a table?
 		if ($table != '') {
-			$new_table = "`{$this->qls->config['sql_prefix']}{$table}`";
-			if ($lime)
-			{
-				$new_table = "`{$this->qls->config['lime_sql_prefix']}{$table}`";
-			}
+		$new_table = "`{$this->qls->config['sql_prefix']}{$table}`";
 		}
 		else {
 		die(SQL_INSERT_QUERY_FAILED);
@@ -581,10 +594,7 @@ var $qls;
 				foreach ($values as $value) {
 				$x++;
 					if ($x == $value_count) {
-						if ($value=='NOW()') {
-						$new_values .= "NOW()";
-						}
-						else if (is_numeric($value)) {
+						if (is_numeric($value)) {
 						$new_values .= "{$value}";
 						}
 						else {
@@ -592,10 +602,7 @@ var $qls;
 						}
 					}
 					else {
-						if ($value=='NOW()') {
-						$new_values .= "NOW(),";
-						}
-						else if (is_numeric($value)) {
+						if (is_numeric($value)) {
 						$new_values .= "{$value},";
 						}
 						else {
@@ -629,7 +636,7 @@ var $qls;
 	 * @optional boolean $null      - If the $action is add, is it NULL?
 	 * @return void
 	 */
-	function alter($table, $action, $column, $data_type = false, $null = false, $lime=false) {
+	function alter($table, $action, $column, $data_type = false, $null = false) {
 	$new_table = '';
 	$new_action = '';
 	$new_column = '';
@@ -638,11 +645,7 @@ var $qls;
 
 		// Check the table
 		if ($table != '') {
-			$new_table = "{$this->qls->config['sql_prefix']}{$table}";
-			if ($lime)
-			{
-				$new_table = "{$this->qls->config['lime_sql_prefix']}{$table}";
-			}
+		$new_table = "{$this->qls->config['sql_prefix']}{$table}";
 		}
 		else {
 		die(SQL_ALTER_QUERY_FAILED);

@@ -8,9 +8,7 @@ exit;
  * Contains all Survey functions
  */
 class Surveys {
-	
-	require_once 'jsonrpcphp\includes\jsonRPCClient.php';
-
+		
 	/**
 	 * @var object $this->qls - Will contain everything else
 	 */
@@ -21,19 +19,59 @@ class Surveys {
 	 * @param object $this->qls - Contains all other classes
 	 * @return void
 	 */
-	function Surveys(&$qls) {
-	$this->qls = &$qls;
+	function Surveys(&$qls) 
+	{
+		require_once('jsonRPCClient.php');	
+		$this->qls = &$qls;
 	}
 
-	/* export a survey in the format passed */
-	function export_survey($sid, $format)
+	
+	
+	
+	/* create a new survey */
+	function create_survey($name, $data)
 	{
-		//connect via json
-		$myJSONRPCClient = new jsonRPCClient('http://indiaautismregistry.com/TEST2/limesurvey/admin/remotecontrol');
-		$sessionKey = $myJSONRPCClient->get_session_key('inar2012', 'Inar!2012');
+		//connect to lime
+		$myJSONRPCClient = new jsonRPCClient($qls->config['lime_location']);
+		$sessionKey = $myJSONRPCClient->get_session_key($qls->config['lime_user'], $qls->config['lime_password']);
+
+		//create the survey
+		$new_survey_id = $myJSONRPCClient->import_survey($sessionKey, $data, 'lss', $name);
+		
+		//insert the new survey on our side
+		$this->qls->SQL->insert_simple('surveys',
+			array(
+				'id' => $new_survey_id,
+				'name' => $name
+			)
+		);
+		
+		//set properties for the survey
+		$survey_properties = array(
+			'usetokens' => 'Y',
+			'tokenanswerspersistence' => 'Y'
+			'allowsave' => 'N');
+		$myJSONRPCClient->set_survey_properties($sessionKey, $new_survey_id, $survey_properties);
+		
+		
+		//activate the survey
+		$myJSONRPCClient->activate_survey($sessionKey, $new_survey_id);
+				
+		//dissconnect
+		$myJSONRPCClient->release_session_key( $sessionKey );		
+	}
+	
+	
+	
+	/* export a survey in the format passed */
+	function export_survey($survey_id, $format)
+	{
+		//connect to lime
+		$myJSONRPCClient = new jsonRPCClient($qls->config['lime_location']);
+		$sessionKey = $myJSONRPCClient->get_session_key($qls->config['lime_user'], $qls->config['lime_password']);
 
 		//get responses
-		$data = $myJSONRPCClient->export_responses($sessionKey, $sid, 'xls');
+		$data = $myJSONRPCClient->export_responses($sessionKey, $survey_id, 'xls');
 
 		//dissconnect
 		$myJSONRPCClient->release_session_key( $sessionKey );
@@ -43,182 +81,183 @@ class Surveys {
 	}
 	
 	
-    /*
-     * Assign the user with the id pass to the survey passed (if they are eligable to be assigned to it)
-     */
-	function assign_to_survey($lime_participant_id, $sid)
-	{	
-		//get all info for the user with that participant id
-		$user_info_result = $this->qls->SQL->query("SELECT `username`, `email` FROM `{$this->qls->config['sql_prefix']}users` WHERE `lime_participant_id`='{$lime_participant_id}'");					
-		$user_info_row = $this->qls->SQL->fetch_array($user_info_result);		
-		if ($user_info_row == null)
-		{		
-			return;
+	/* make a survey be auto matically assigned to a new user */
+	function set_survey_auto_assign($survey_id, $auto_assign)
+	{
+		//update the survey in database
+		$this->qls->SQL->update_simple('surveys',
+			array('auto_assign_new_participant' => $auto_assign),
+			array('survey_id' => $survey_id),
+		);	
+	}
+	
+	
+	/* auto assign a new user to all surveys marked auto assign*/
+	function auto_assign_new_user($user_id)
+	{
+		//get all survey marked auto assign
+		$survey_results = $this->qls->SQL->select_simple('id', 'surveys', array('auto_assign_new_participant' => true));			
+		while ($survey_row = $this->qls->SQL->fetch_array($survey_results)) 
+		{
+			$this->assign_to_survey($user_id, $survey_row['id']);
 		}
-
-		//create array of data for this participant to send to lime
-		$participant_data = array(
-			'participant_id' => $lime_participant_id,
-			'firstname' => $user_info_row['username'],
-			'email' => $user_info_row['email']);
-			
+	}	
+	
+	
+    /*
+     * Assign the user with the id pass to the survey passed 
+     */
+	function assign_to_survey($user_id, $survey_id)
+	{	
+		//make sure user is not already assigned
+		if ($this->is_user_assigned($user_id, $survey_id)){ return; }		
+	
+		//get email and user name for the user with that id
+		$user_info = $this->qls->SQL->select_one_simple(array('username', 'email'), 'users', array('id' => $user_id));
 		
-		//connect via json
-		$myJSONRPCClient = new jsonRPCClient('http://indiaautismregistry.com/TEST2/limesurvey/admin/remotecontrol');
-		$sessionKey = $myJSONRPCClient->get_session_key('inar2012', 'Inar!2012');
+		//create array of data for this participant to send to lime
+		$participant_data = array(			
+			'firstname' => $user_info['username'],
+			'email' => $user_info['email']);			
+		
+		//connect to lime
+		$myJSONRPCClient = new jsonRPCClient($qls->config['lime_location']);
+		$sessionKey = $myJSONRPCClient->get_session_key($qls->config['lime_user'], $qls->config['lime_password']);
 
-		//add the participant (Note the method actually takes an array of partcipants)
-		$result = $myJSONRPCClient->add_participants($sessionKey, $sid, array($participant_data) );
-
-		var_dump($result);
+		//add the participant, get the token that was created for him (Note the method actually takes an array of partcipants)
+		$results = $myJSONRPCClient->add_participants($sessionKey, $survey_id, array($participant_data) );		
+		$token = $results['token'];
 		
 		//dissconnect
 		$myJSONRPCClient->release_session_key( $sessionKey );
 					
-	
-		/*
-	
-		//get row for survey, give up if you cant find it
-		$survey_results = $this->qls->SQL->query("SELECT `active` FROM `{$this->qls->config['lime_sql_prefix']}surveys` WHERE `sid`='{$sid}'");	
-		$survey_row = $this->qls->SQL->fetch_array($survey_results);
-		if ($survey_row == null)
-		{
-			return;
-		}
-		
-		//check for issues that prevent adding user to the survey (no token table, not active)
-		//if any of these exsits we give up and return
-		$survey_issue = '';
-		$token_exsists_result = $this->qls->SQL->query("SHOW TABLES LIKE '{$this->qls->config['lime_sql_prefix']}tokens_{$sid}'");					
-		if ($this->qls->SQL->num_rows($token_exsists_result) == 0)
-		{		
-			return;
-		}
-		if ($survey_row['active'] != 'Y')
-		{
-			return;
-		}
-		
-		//make sure the user is not already assigned to this survey
-		$surveys_links_result = $this->qls->SQL->query("SELECT COUNT(*) AS `count` FROM `{$this->qls->config['lime_sql_prefix']}survey_links` WHERE `survey_id`='{$sid}' AND `participant_id`='{$lime_participant_id}'");					
-		$surveys_links_row = $this->qls->SQL->fetch_array($surveys_links_result);		
-		if ($surveys_links_row['count'] > 0)
-		{		
-			return;
-		}
-	
-		//get all info for the user with that participant id
-		$user_info_result = $this->qls->SQL->query("SELECT `username`, `email` FROM `{$this->qls->config['sql_prefix']}users` WHERE `lime_participant_id`='{$lime_participant_id}'");					
-		$user_info_row = $this->qls->SQL->fetch_array($user_info_result);		
-		if ($user_info_row == null)
-		{		
-			return;
-		}
-		
-		//lime survey has more complicated token generation code (see Tokens_dynamic.php)
-		//it actually checks new tokens against all other tokens, but it seems to me like would get very slow to me so im just going to give it a uuid.				
-		$token = $this->gen_uuid();
-		$token = str_replace('-', '', $token);
-	
-		// Insert participant into that surveys token table
-		$this->qls->SQL->insert_lime('tokens_' . $sid,
+		//add to our user_surveys table		
+		$this->qls->SQL->insert_simple('user_surveys',
 			array(
-				'participant_id',
-				'firstname',
-				'lastname',
-				'email',
-				'emailstatus',
-				'token',						
-				'language'
-			),
-			array(
-				$lime_participant_id,
-				$user_info_row['username'],
-				'',
-				$user_info_row['email'],
-				'OK',
-				$token,
-				'en'						
+				'user_id' => $user_id,
+				'survey_id' => $survey_id,
+				'token' => $token,
 			)
 		);
-		
-		//id for the token we just inserted
-		$token_id = $this->qls->SQL->insert_id();
-		
-		// Also insert record into survey links table
-		$this->qls->SQL->insert_lime('survey_links',
-			array(
-				'participant_id',
-				'token_id',
-				'survey_id',
-				'date_created'
-			),
-			array(
-				$lime_participant_id,
-				$token_id,
-				$sid,
-				'NOW()'			
-			)
-		);
-		
-		*/
 	}
 	
 	
     /*
-     * unassign the user with the id pass to the survey passed (if they have not already completed it )
+     * unassign the user with the id pass to the survey passed 
      */
-	function unassign_to_survey($lime_participant_id, $sid)
-	{			
-		//check for issues that prevent remove the participant from the survey (no token table)
-		$survey_issue = '';
-		$token_exsists_result = $this->qls->SQL->query("SHOW TABLES LIKE '{$this->qls->config['lime_sql_prefix']}tokens_{$sid}'");					
-		if ($this->qls->SQL->num_rows($token_exsists_result) == 0)
-		{		
-			return;
-		}
+	function unassign_to_survey($user_id, $survey_id)
+	{	
+		//make sure user is already assigned
+		if ($this->is_user_assigned($user_id, $survey_id) == false){ return; }
 		
-		//make sure the user is already assigned to this survey
-		$surveys_links_result = $this->qls->SQL->query("SELECT `date_completed` FROM `{$this->qls->config['lime_sql_prefix']}survey_links` WHERE `survey_id`='{$sid}' AND `participant_id`='{$lime_participant_id}'");					
-		$surveys_links_row = $this->qls->SQL->fetch_array($surveys_links_result);		
-		if ($surveys_links_row == null)
-		{		
-			return;
-		}
-		if ($surveys_links_row['date_completed'] != null)
-		{	
-			return;
-		}
-			
-		//delete from tokens table
-		$this->qls->SQL->query("DELETE FROM `{$this->qls->config['lime_sql_prefix']}tokens_{$sid}` WHERE `participant_id`='{$lime_participant_id}'");	
+		//get email and user name for the user with that id
+		$user_survey_info = $this->qls->SQL->select_one_simple(array('username', 'email'), 'user_surveys', array('user_id' => $user_id, 'survey_id' => $survey_id));
+		$token = $user_survey_info['token'];
 		
-		//delete from links table
-		$this->qls->SQL->query("DELETE FROM `{$this->qls->config['lime_sql_prefix']}survey_links` WHERE `participant_id`='{$lime_participant_id}'");	
+		//connect to lime
+		$myJSONRPCClient = new jsonRPCClient($qls->config['lime_location']);
+		$sessionKey = $myJSONRPCClient->get_session_key($qls->config['lime_user'], $qls->config['lime_password']);
+
+		//remove the participant, (Note the method actually takes an array of tokens)
+		$results = $myJSONRPCClient->add_participants($sessionKey, $survey_id, array($token) );		
+				
+		//dissconnect
+		$myJSONRPCClient->release_session_key( $sessionKey );
+					
+		//remove from our user_surveys table		
+		$this->qls->SQL->delete_simple('user_surveys',
+			array(
+				'user_id' => $user_id,
+				'survey_id' => $survey_id				
+			)
+		);	
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	/* get survey info for all surveys */
+	function get_survey_info()
+	{
+		$ids = array();
+		$names = array();
+		$auto_assigns = array();
+		$participants = array();
+		$responses = array();
+	
+		//get all surveys
+		$surveys_results = $this->qls->SQL->select('*', 'surveys'));			
+		while ($survey_row = $this->qls->SQL->fetch_array($survey_results)) 
+		{
+			$ids[] = $survey_row['id'];
+			$names[] =  $survey_row['name'];
+			$auto_assign[] =  $survey_row['auto_assign_new_participant'];			
+			$participants[] = 0;
+			$responses[] = 0;
+		}
+		
+		//return all the info
+		return array($ids, $names, $auto_assigns, $participants, $responses);
+	}
 
 	
-    /*
-     * Generation of unique id (this function was copied from lime survey, use the same method to generate uuid that they do)
-     */
-    function gen_uuid()
-    {
-        return sprintf(
-                '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0x0fff) | 0x4000,
-                mt_rand(0, 0x3fff) | 0x8000,
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff)
-        );
-    }
+	/* get survey info for one surveys */
+	function get_survey_info($survey_id)
+	{	
+		$survey_row = $this->qls->SQL->select_one_simple('*', 'surveys'));			
+		if ($survey_row != null) 
+		{
+			return array($survey_row['id'], $survey_row['name'], $survey_row['auto_assign_new_participant'], 0, 0);			
+		}
+		return null;		
+	}	
 	
+	
+	
+	
+	/* get true or false if the user passed is assigned to the survey passed */
+	function is_user_assigned($user_id, $survey_id)
+	{
+		$resultrow = $this->qls->SQL->select_one_simple('*', 'user_surveys',
+			array(
+				'user_id' => $user_id,
+				'survey_id' => $survey_id				
+			)
+		);
+		return ($resultrow != null);
+	}	
+	
+	
+	
+	/* get survey info for surveys a user can take*/
+	function get_survey_info_for_user($user_id)
+	{
+		$ids = array();
+		$names = array();
+		$tokens = array();
+		$complete = array();
+	
+		//get all surveys for the user
+		$survey_results = $qls->SQL->query("SELECT s.`id`, s.`name`, us.`token` FROM `{$qls->config['sql_prefix']}surveys` s, `{$qls->config['sql_prefix']}user_surveys` us WHERE us.`user_id`='{$user_id}' AND us.`survey_id`=s.`id`'");					
+		while ($survey_row = $this->qls->SQL->fetch_array($survey_results)) 
+		{
+			$ids[] = $survey_row['id'];
+			$names[] =  $survey_row['name'];
+			$tokens[] =  $survey_row['token'];
+			$complete[] = false; //TODO 			
+		}				
 		
+		//return all the info
+		return array($ids, $names, $tokens, $complete);
+	}	
+	
+	
+	
 
 }
 	

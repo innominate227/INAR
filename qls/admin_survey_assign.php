@@ -13,26 +13,17 @@ require_once('includes/banner2.php');
 ?>
 
 <?php
-	$sid = $_GET['sid'];
-	$results_language = 'en';
+	$survey_id = $_GET['sid'];
+		
+	//get info for the survey with the passed id
+	list ($survey_id, $survey_name, $survey_auto_assign, $survey_participant_count, $survey_response_count) = $qls->Survey->get_survey_info($survey_id);	
 	
-	$surveys_lang_result = $qls->SQL->query("SELECT `surveyls_title` FROM `{$qls->config['lime_sql_prefix']}surveys_languagesettings` WHERE `surveyls_survey_id`='{$sid}' AND `surveyls_language`='{$results_language}'");					
-	$surveys_lang_row = $qls->SQL->fetch_array($surveys_lang_result);
-	if ($surveys_lang_row == null)
-	{
-		$survey_name = 'title not translated to selected language';
-	}
-	else
-	{
-		$survey_name = $surveys_lang_row['surveyls_title'];		
-	}
 
-	$paticipants_updated = false;
-	
+	$paticipants_updated = false;	
 	//process user assigned changes
 	if (isset($_POST['process_assign_participants'])) 
 	{	
-		//start atomic operation
+		//start operation
 		$qls->SQL->transaction("START TRANSACTION");
 		
 		//look at each participant assigned/unassigned
@@ -44,17 +35,16 @@ require_once('includes/banner2.php');
 			
 			if ($participant_assigned == 'true')
 			{
-				$qls->Surveys->assign_to_survey($participant_id, $sid);
+				$qls->Surveys->assign_to_survey($participant_id, $survey_id);
 			}
 			else
 			{
-				$qls->Surveys->unassign_to_survey($participant_id, $sid);
+				$qls->Surveys->unassign_to_survey($participant_id, $survey_id);
 			}
 		}
 		
-		//commit atomic operation
-		$qls->SQL->transaction("COMMIT");
-		
+		//commit operation
+		$qls->SQL->transaction("COMMIT");		
 		$paticipants_updated = true;
 	}
 	
@@ -71,30 +61,16 @@ require_once('includes/banner2.php');
 
 	//process search made
 	if (isset($_POST['process_search_users'])) 
-	{
-		
-		$users_results = $qls->SQL->query("SELECT `{$qls->config['sql_prefix']}users`.`lime_participant_id`, `{$qls->config['sql_prefix']}users`.`username` FROM `{$qls->config['sql_prefix']}users`, `{$qls->config['sql_prefix']}groups` WHERE `{$qls->config['sql_prefix']}users`.`username` LIKE '%{$_POST['user_name_search']}%' AND `{$qls->config['sql_prefix']}users`.`group_id` = `{$qls->config['sql_prefix']}groups`.`id` AND `{$qls->config['sql_prefix']}groups`.`name` = 'Respondents'");	
+	{		
+		$users_results = $qls->SQL->query("SELECT `{$qls->config['sql_prefix']}users`.`id`, `{$qls->config['sql_prefix']}users`.`username` FROM `{$qls->config['sql_prefix']}users`, `{$qls->config['sql_prefix']}groups` WHERE `{$qls->config['sql_prefix']}users`.`username` LIKE '%{$_POST['user_name_search']}%' AND `{$qls->config['sql_prefix']}users`.`group_id` = `{$qls->config['sql_prefix']}groups`.`id` AND `{$qls->config['sql_prefix']}groups`.`name` = 'Respondents'");	
 		while ($users_rows = $qls->SQL->fetch_array($users_results)) 
 		{
-			array_push($participant_ids, $users_rows['lime_participant_id']);
-			array_push($participant_names, $users_rows['username']);
-								
-			//get if the survey has been completed by this participant
-			$surveys_link_result = $qls->SQL->query("SELECT `date_completed` FROM `{$qls->config['lime_sql_prefix']}survey_links` WHERE `survey_id`='{$sid}' AND `participant_id`='{$users_rows['lime_participant_id']}'");					
-			$surveys_link_row = $qls->SQL->fetch_array($surveys_link_result);
-			if ($surveys_link_row == null)
-			{
-				array_push($participant_assigneds, '');
-				array_push($participant_completeds, '');
-			}
-			else
-			{
-				array_push($participant_assigneds, 'checked');
-				array_push($participant_completeds, $surveys_link_row['date_completed']);
-			}			
+			$participant_ids[] = $users_rows['id'];
+			$participant_names[] = $users_rows['username'];
+			$participant_assigneds[] = $qls->Surveys->is_user_assigned($users_rows['id'], $survey_id);
+			$participant_completeds[] = '';								
 		}
 	}
-	
 	
 	
 ?>
@@ -176,12 +152,7 @@ if (count($participant_ids))
 }
 ?>
 </div>
-<div style ="background-color:lightgrey;margin-left:20px;margin-right:20px;padding:25px;">>
-You are logged in as <?php echo $qls->user_info['username']; ?><br />
-Your email address is set to <?php echo $qls->user_info['email']; ?><br />
-There have been <b><?php echo $qls->hits('members.php'); ?></b> visits to this page.<br />
-<br />
-</div>
+
 
 <?php
 }

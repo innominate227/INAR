@@ -66,7 +66,6 @@ var $qls;
 		 */
 
 	$this->qls->config['sql_prefix'] = $database_prefix;
-	$this->qls->config['lime_sql_prefix'] = $lime_database_prefix;
 
 	// Get the actual database class
 	$database_file = ($database_type == 'MySQLi') ? 'MySQLie' : $database_type;
@@ -107,6 +106,26 @@ var $qls;
 		}
 	}
 
+	
+	
+	private function to_crazy_where($where)
+	{
+		//this is putting the select into the crazy format that the other select wants it in.
+		$newwhere = array();	
+		$x = 0;
+		foreach ($where as $key => $value) 
+		{
+			$x++;
+			$newwhere[$key] = array('=', $value);
+			if (count($where) != $x) 
+			{				
+				$newwhere[] = 'AND';
+			}
+		}
+		return newwhere;
+	}
+	
+	
 	/**
 	 * These functions run the functions in the database classes. See those 
 	 * files for more information.
@@ -155,54 +174,61 @@ var $qls;
 	return $this->current_layer->transaction($status);
 	}
 
-	//***************************
-	//operations on qls tables
-	//***************************
 	function select($what, $from, $where = false, $order_by = false, $limit = false) {
-	return $this->current_layer->select($what, $from, $where, $order_by, $limit, false);
+	return $this->current_layer->select($what, $from, $where, $order_by, $limit);
 	}
+	
+	function select_simple($what, $from, $where) 
+	{			
+		return $this->current_layer->select($what, $from, $this->to_crazy_where($where));
+	}
+	
+	function select_one_simple($what, $from, $where) 
+	{				
+		$results = $this->select_simple($what, $from, $where);				
+		return $this->fetch_array($results);
+	}
+		
 
 	function delete($from, $where) {
-	return $this->current_layer->delete($from, $where, false);
+	return $this->current_layer->delete($from, $where);
 	}
 
+	function delete_simple($from, $where) 
+	{
+		return $this->current_layer->delete($from, $this->to_crazy_where($where));
+	}
+	
 	function update($table, $set, $where) {
-	return $this->current_layer->update($table, $set, $where, false);
+	return $this->current_layer->update($table, $set, $where);
 	}
 	
+	function update_simple($table, $set, $where) 
+	{
+		return $this->current_layer->update($table, $set, $this->to_crazy_where($where));
+	}
+
 	function insert($table, $columns, $values) {
-	return $this->current_layer->insert($table, $columns, $values, false);
+	return $this->current_layer->insert($table, $columns, $values);
 	}
 	
+	function insert_simple($table, $values) 
+	{
+		//put it how insert wants it
+		$values2 = array();
+		$columns = array();
+		foreach ($values as $column => $value) 
+		{	
+			$values2[] = $value;
+			$columns[] = $column;
+		}
+	
+		return $this->insert($table, $columns, $values2);
+	}
+
 	function alter($table, $action, $column, $data_type = false, $null = false) {
-	return $this->current_layer->alter($table, $action, $column, $data_type, $null, false);
+	return $this->current_layer->alter($table, $action, $column, $data_type, $null);
 	}
-
-	//***************************
-	//operations on lime tables
-	//***************************
-	function select_lime($what, $from, $where = false, $order_by = false, $limit = false) {
-	return $this->current_layer->select($what, $from, $where, $order_by, $limit, true);
-	}
-
-	function delete_lime($from, $where, $lime = false) {
-	return $this->current_layer->delete($from, $where, true);
-	}
-
-	function update_lime($table, $set, $where, $lime = false) {
-	return $this->current_layer->update($table, $set, $where, true);
-	}
-
-	function insert_lime($table, $columns, $values, $lime = false) {
-	return $this->current_layer->insert($table, $columns, $values, true);
-	}
-	
-	function alter_lime($table, $action, $column, $data_type = false, $null = false, $lime = false) {
-	return $this->current_layer->alter($table, $action, $column, $data_type, $null, true);
-	}
-	
-	
-	
 
 	function query($query) {
 	return $this->current_layer->query($query);

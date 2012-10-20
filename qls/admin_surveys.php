@@ -18,134 +18,58 @@ require_once('includes/banner2.php');
 
 <?php
 
-	$defaults_updated = false;
+	$auto_assign_updated = false;
 
 	//process changes made
-	if (isset($_POST['process_default_surveys'])) 
+	if (isset($_POST['process_update_auto_assign'])) 
 	{
 		//start atomic operation
 		$qls->SQL->transaction("START TRANSACTION");
 	
-		//delete all surveys from default table
-		$qls->SQL->query("DELETE FROM `{$qls->config['sql_prefix']}default_surveys`");
-		
-		//add back the surveys that were checked
-		foreach($_POST as $surveyId => $isDefault) 
-		{		
-			if ($surveyId != 'process_default_surveys')
-			{				
-				$qls->SQL->query("INSERT INTO `{$qls->config['sql_prefix']}default_surveys` VALUES ('{$surveyId}')");
-			}			
+		//update each surveys auto assign setting
+		$edits_count = $_POST['surveys_count'];
+		for ($edit_num = 0; $edit_num < $edits_count; $edit_num++) 
+		{
+			$survey_id = $_POST['survey_id_' . $edit_num];
+			$survey_auto_assign = ($_POST['survey_auto_' . $edit_num] == 'true');
+			$qls->Surveys->set_survey_auto_assign($survey_id, $survey_auto_assign);
 		}
 		
 		//commit atomic operation
 		$qls->SQL->transaction("COMMIT");
 		
-		$defaults_updated = true;
+		$auto_assign_updated = true;
 	}
 ?>
 
 
 
 <?php
-	
-	//id of each surevy
-	$survey_ids = array();
-	//name of each surevy
-	$survey_names = array();	
-	//"" if the survey is not a defult, or "checked" if it is
-	$is_defaults = array();	
-	//"" if the survey be selected as default, or the reason if it cant
-	$survey_issues = array();	
-	//number of participants assigned
-	$participant_counts = array();
-	//number of participants assigned
-	$responses_counts = array();	
-	
-	//lanague to get survey names in
-	$results_language = 'en';
-	
 
-	//get all non expired surveies
-	$survey_results = $qls->SQL->query("SELECT `sid`, `active` FROM `{$qls->config['lime_sql_prefix']}surveys`");	
-	while ($survey_row = $qls->SQL->fetch_array($survey_results)) 
-	{	
-		//id for survey
-		array_push($survey_ids, $survey_row['sid']);
-	
-		//get name of survey from language table
-		$surveys_lang_result = $qls->SQL->query("SELECT `surveyls_title` FROM `{$qls->config['lime_sql_prefix']}surveys_languagesettings` WHERE `surveyls_survey_id`='{$survey_row['sid']}' AND `surveyls_language`='{$results_language}'");					
-		$surveys_lang_row = $qls->SQL->fetch_array($surveys_lang_result);
-		if ($surveys_lang_row == null)
-		{
-			array_push($survey_names, 'title not translated to selected language');
-		}
-		else
-		{
-			array_push($survey_names, $surveys_lang_row['surveyls_title']);		
-		}
-		
-				
-		//get if the survey is selected in the defults list
-		$surveys_is_defult_results = $qls->SQL->query("SELECT `sid` FROM `{$qls->config['sql_prefix']}default_surveys` WHERE `sid`='{$survey_row['sid']}'");					
-		$surveys_is_defult_row = $qls->SQL->fetch_array($surveys_is_defult_results);
-		if ($surveys_is_defult_row)
-		{
-			array_push($is_defaults, 'checked');
-		}
-		else
-		{
-			array_push($is_defaults, '');		
-		}
-
-		
-		//check for issues that prevent adding user to the survey (no token table, not active)
-		$survey_issue = '';
-		$token_exsists_result = $qls->SQL->query("SHOW TABLES LIKE '{$qls->config['lime_sql_prefix']}tokens_{$survey_row['sid']}'");					
-		if ($qls->SQL->num_rows($token_exsists_result) == 0)
-		{		
-			$survey_issue = $survey_issue . 'No Token Table, ';
-		}
-		if ($survey_row['active'] != 'Y')
-		{
-			$survey_issue = $survey_issue . 'Survey Not Active, ';	
-		}
-		array_push($survey_issues, trim($survey_issue, ", "));
-		
-		
-		//get the count of users assigned to take the survey (setup to work even if user is assigned to same survey twice, if we decided to support that in the future)
-		$surveys_participants_count_result = $qls->SQL->query("SELECT COUNT(DISTINCT `participant_id`) AS `count` FROM `{$qls->config['lime_sql_prefix']}survey_links` WHERE `survey_id`='{$survey_row['sid']}'");					
-		$surveys_participants_count_row = $qls->SQL->fetch_array($surveys_participants_count_result);
-		array_push($participant_counts, $surveys_participants_count_row['count']);
-		
-		
-		//get the count of completed responses for this survey
-		$surveys_response_count_result = $qls->SQL->query("SELECT COUNT(*) AS `count` FROM `{$qls->config['lime_sql_prefix']}survey_links` WHERE `survey_id`='{$survey_row['sid']}' AND `date_completed` IS NOT NULL");					
-		$surveys_response_count_row = $qls->SQL->fetch_array($surveys_response_count_result);
-		array_push($responses_counts, $surveys_response_count_row['count']);
-				
-	}
+	//get info for all the surveys
+	list ($survey_ids, $survey_names, $survey_auto_assigns, $survey_participant_counts, $survey_response_counts) = $qls->Survey->get_survey_info();		
 ?>
 
 
+
 <?php
-if ($defaults_updated)
+if ($auto_assign_updated)
 {
 ?>
-	<h3> Default Surveys Updated</h3>
+	<h3> Surveys Auto Assign Settings Updated</h3>
 <?php
 }
 ?>
 
 <form action="admin_surveys.php" method="post">
-<input type="hidden" name="process_default_surveys" value="yes" />
+<input type="hidden" name="process_update_auto_assign" value="yes" />
+<input type="hidden" name="surveys_count" value="<?=count($survey_names)?>" />
 <fieldset>
 <legend> Surveys </legend>
 <table style="border:1px solid black;border-collapse:collapse;">
 <tr>
 <th style="border:1px solid black;"><b>Name</b></th>
-<th style="border:1px solid black;"><b>Issues</b></th>
-<th style="border:1px solid black;"><b>Default</b></th>
+<th style="border:1px solid black;"><b>Auto Assign New Participants</b></th>
 <th style="border:1px solid black;"><b>Participants</b></th>
 <th style="border:1px solid black;"><b>Assign Participants</b></th>
 <th style="border:1px solid black;"><b>Responses</b></th>
@@ -156,27 +80,22 @@ for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++)
 {
 	$survey_id = $survey_ids[$survey_num];
     $survey_name = $survey_names[$survey_num];
-	$is_default = $is_defaults[$survey_num];
-	$survey_issue = $survey_issues[$survey_num];
-	$participant_count = $participant_counts[$survey_num];
-	$responses_count = $responses_counts[$survey_num];
+	$survey_auto_assign = $survey_auto_assigns[$survey_num];	
+	$survey_participant_count = $survey_participant_counts[$survey_num];
+	$survey_response_count = $survey_response_counts[$survey_num];
 ?>
 
 <tr>
-<td style="border:1px solid black;"><?php echo $survey_name; ?></td>
-<td style="border:1px solid black;"><?php echo $survey_issue; ?></td>
+<td style="border:1px solid black;"><?=$survey_name?></td>
 <td style="border:1px solid black;">
-<?php if ($survey_issue == '') { ?>
-    <input type="checkbox"  name="<?php echo $survey_id; ?>" <?php echo $is_default; ?> value="true" />
-<?php } ?>
+<input type="hidden"    name="survey_id_<?=$survey_num?>"    value="<?=$survey_id?>" />
+<input type="checkbox"  name="survey_auto_<?=$survey_num?>"  value="true"  <?php if($survey_auto_assign){ echo 'checked'; } ?> />
 </td>
-<td style="border:1px solid black;"><?php echo $participant_count; ?></td>
+<td style="border:1px solid black;"><?php=$survey_participant_count?></td>
 <td style="border:1px solid black;">
-<?php if ($survey_issue == '') { ?>
-    <a href="admin_survey_assign.php?sid=<?php echo $survey_id; ?>">Assign</a></td>
-<?php } ?>
+<a href="admin_survey_assign.php?sid=<?php=$survey_id;?>">Assign</a></td>
 </td>
-<td style="border:1px solid black;"><?php echo $responses_count; ?></td>
+<td style="border:1px solid black;"><?php=$survey_response_count?></td>
 </tr>
 
 <?php	
@@ -188,13 +107,8 @@ for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++)
 <input type="submit" value="Update" />
 </form>
 </fieldset>
-<br>
-<br>
-<div style="background:silver;border:1px solid black;text:align:center;padding:5px;font-size:18px">
-You are logged in as <?php echo $qls->user_info['username']; ?><br />
-Your email address is set to <?php echo $qls->user_info['email']; ?><br />
-There have been <b><?php echo $qls->hits('members.php'); ?></b> visits to this page.<br />
-<br />
+
+
 </div>
 <?php
 }

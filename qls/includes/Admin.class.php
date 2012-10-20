@@ -1245,7 +1245,11 @@ var $permissions = array(
 			'admin_login_redirect',
 			'redirect_type',
 			'online_users_format',
-			'online_users_separator'
+			'online_users_separator',
+			'lime_location',
+			'lime_username',
+			'lime_password'
+			
 		);
 
 		// Meh lot's of stuff to go through 0_0
@@ -1270,6 +1274,10 @@ var $permissions = array(
 		$online_users_separator = (isset($_GET['online_users_separator']) && strlen($_GET['online_users_separator']) <= 255) ? $this->qls->Security->make_safe($_GET['online_users_separator'], false) : ',';
 		$max_upload_size = (isset($_GET['max_upload_size']) && is_numeric($_GET['max_upload_size']) && $_GET['max_upload_size'] > 0) ? $this->qls->Security->make_safe($_GET['max_upload_size']) : false;
 		$auth_registration = ($_GET['auth_registration'] == 1 || $_GET['auth_registration'] == 0) ? $this->qls->Security->make_safe($_GET['auth_registration']) : false;
+		$lime_location = (isset($_GET['lime_location']) && strlen($_GET['lime_location']) < 256 && strlen($_GET['lime_location']) > 0) ? $this->qls->Security->make_safe($_GET['lime_location'], false) : false;
+		$lime_username = (isset($_GET['lime_username']) && strlen($_GET['lime_username']) < 256 && strlen($_GET['lime_username']) > 0) ? $this->qls->Security->make_safe($_GET['lime_username'], false) : false;
+		$lime_password = (isset($_GET['lime_password']) && strlen($_GET['lime_password']) < 256 && strlen($_GET['lime_password']) > 0) ? $this->qls->Security->make_safe($_GET['lime_password'], false) : false;
+		
 			// Go through each one and see if it's false
 			if ($cookie_prefix === false) {
 			$this->configuration_error = ADMIN_COOKIE_PREFIX_ERROR;
@@ -1358,6 +1366,21 @@ var $permissions = array(
 
 			if ($auth_registration === false) {
 			$this->configuration_error = ADMIN_AUTH_REGISTRATION_CONFIG_ERROR;
+			return false;
+			}
+			
+			if ($lime_location === false) {
+			$this->configuration_error = ADMIN_LIME_LOCATION_ERROR;
+			return false;
+			}
+			
+			if ($lime_username === false) {
+			$this->configuration_error = ADMIN_LIME_USERNAME_ERROR;
+			return false;
+			}
+			
+			if ($lime_password === false) {
+			$this->configuration_error = ADMIN_LIME_PASSWORD_ERROR;
 			return false;
 			}
 

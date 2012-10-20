@@ -156,6 +156,11 @@ define('ADMIN_LOGOUT_REDIRECT_ERROR', 'The logout redirect URL you entered was t
 define('ADMIN_MAX_UPLOAD_SIZE_CONFIG_ERROR', 'The maximum upload size you entered was not a valid size in bytes.');
 define('ADMIN_AUTH_REGISTRATION_CONFIG_ERROR', 'The choice you selected for allowing public registrations was not valid.');
 
+define('ADMIN_LIME_LOCATION_ERROR', 'The lime location you entered was too long or too short.');
+define('ADMIN_LIME_USERNAME_ERROR', 'The lime admin user name you entered was too long or too short.');
+define('ADMIN_LIME_PASSWORD_ERROR', 'The lime admin password you entered was too long or too short.');
+
+
 // Admin errors
 define('ADMIN_USERNAME_NOT_VALID', 'The username you entered was not a valid format.');
 define('ADMIN_NOT_ADMIN', 'You must be an administrator to access this site.');
@@ -509,6 +514,9 @@ define('REDIRECT_TYPE_LABEL', 'Redirect Type');
 define('RECOMMENDED_LABEL', 'Recommended');
 define('ONLINE_USERS_FORMAT_LABEL', 'Online Users Format');
 define('ONLINE_USERS_SEPARATOR_LABEL', 'Online Users Separator');
+define('LIME_LOCATION_LABEL', 'Lime Location');
+define('LIME_USERNAME_LABEL', 'Lime Admin User Name');
+define('LIME_PASSWORD_LABEL', 'Lime Admin Password');
 
 // Explain why there is no need..
 define('GROUP_ADD_NO_NEED', 'There is no need to add the user when they can just add themselves! This is a public group.');

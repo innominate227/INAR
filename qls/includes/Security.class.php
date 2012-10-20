@@ -370,8 +370,7 @@ var $qls;
 	);
 	$row = $this->qls->SQL->fetch_array($result);
 	$hash = sha1($row['id']);
-		if ($this->qls->user_info['auth_' . $hash] == 0) 
-                {
+		if ($this->qls->user_info['auth_' . $hash] == 0) {
 		die(NO_AUTHORIZATION);
 		}
 
@@ -486,7 +485,7 @@ var $qls;
 	$font = $fonts[array_rand($fonts)];
 
 		// Place random characters all over the place
-		$chars = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Ãœ', 'Ã¨', 'Ãª');
+		$chars = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Ü', 'è', 'ê');
 		for ($x = 0; $x < rand(200, 250); $x++) {
 		$font_size = rand(5, 10);
 		$font_angle = rand(-30, 40);
