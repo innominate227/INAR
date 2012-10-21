@@ -70,6 +70,9 @@ class qls {
 
 	require_once('Upload.class.php');
 	$this->Upload = new Upload($this);
+	
+	require_once('Surveys.class.php');
+	$this->Surveys = new Surveys($this);
 
 	$this->main_directory = str_replace('/includes', '', dirname(__FILE__));
 

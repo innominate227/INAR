@@ -152,6 +152,7 @@ DROP TABLE IF EXISTS `{database_prefix}user_surveys`;
 CREATE TABLE `{database_prefix}user_surveys`(
 	`survey_id` INT(11) NOT NULL,
 	`user_id` INT(11) NOT NULL,
+	`token_id` INT(11) NOT NULL,
 	`token` VARCHAR(35) NOT NULL,
-	PRIMARY KEY(`id`)
+	PRIMARY KEY(`survey_id`, `user_id`)
 );

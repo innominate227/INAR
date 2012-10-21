@@ -109,7 +109,7 @@ var $qls;
 	
 	
 	private function to_crazy_where($where)
-	{
+	{	
 		//this is putting the select into the crazy format that the other select wants it in.
 		$newwhere = array();	
 		$x = 0;
@@ -122,7 +122,7 @@ var $qls;
 				$newwhere[] = 'AND';
 			}
 		}
-		return newwhere;
+		return $newwhere;
 	}
 	
 	
@@ -230,7 +230,7 @@ var $qls;
 	return $this->current_layer->alter($table, $action, $column, $data_type, $null);
 	}
 
-	function query($query) {
+	function query($query) {	
 	return $this->current_layer->query($query);
 	}
 

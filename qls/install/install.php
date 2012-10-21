@@ -464,7 +464,7 @@ else {
 							Lime Location:
 						</td>
 						<td>
-							<input type="text" name="password" maxlength="255" value="<?php if (isset($_SESSION['lime_location'])) { echo $_SESSION['lime_location']; } ?>" />
+							<input type="text" name="lime_location" maxlength="255" value="<?php if (isset($_SESSION['lime_location'])) { echo $_SESSION['lime_location']; } ?>" />
 						</td>
 					</tr>
 					<tr>
@@ -472,7 +472,7 @@ else {
 							Lime Admin Username:
 						</td>
 						<td>
-							<input type="text" name="username" maxlength="255" value="<?php if (isset($_SESSION['lime_username'])) { echo $_SESSION['lime_username']; } ?>" />
+							<input type="text" name="lime_username" maxlength="255" value="<?php if (isset($_SESSION['lime_username'])) { echo $_SESSION['lime_username']; } ?>" />
 						</td>
 					</tr>
 					<tr>
@@ -480,7 +480,7 @@ else {
 							Lime Admin Password:
 						</td>
 						<td>
-							<input type="text" name="password" maxlength="255" value="<?php if (isset($_SESSION['lime_password'])) { echo $_SESSION['lime_password']; } ?>" />
+							<input type="text" name="lime_password" maxlength="255" value="<?php if (isset($_SESSION['lime_password'])) { echo $_SESSION['lime_password']; } ?>" />
 						</td>
 					</tr>
 				</table>

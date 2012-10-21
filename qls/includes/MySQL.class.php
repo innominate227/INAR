@@ -186,7 +186,7 @@ var $qls;
 	$new_where = '';
 	$new_order_by = '';
 	$new_limit = '';
-
+	
 		// See if it is an array
 		if (is_array($what)) {
 			if (count($what) == 1 && $what[0] == '*') {
@@ -338,7 +338,7 @@ var $qls;
 		if ($new_limit != '') {
 		$query .= " {$new_limit}";
 		}
-
+				
 	$this->update_queries();
 	$this->last_query[] = $query;
 	$result = mysql_query($query, $this->connection) or die(mysql_errno() . ': ' . mysql_error());

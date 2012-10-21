@@ -5,7 +5,7 @@ if ($qls->user_info['username'] != '')
 require_once('includes/banner2.php');
 else
 require_once('includes/banner.php');
-//$qls->Security->check_auth_page('surveys.php'); ?>
+$qls->Security->check_auth_page('surveys.php'); ?>
 
 
 
@@ -17,7 +17,7 @@ if ($qls->user_info['username'] != '') {
 <?php
 
 	//get info for all the surveys this user is a partcipant in	
-	list ($survey_ids, $survey_names, $survey_tokens, $survey_completes) = $qls->Survey->get_survey_info_for_user($qls->user_info['id']);
+	list ($survey_ids, $survey_names, $survey_tokens, $survey_completes) = $qls->Surveys->get_survey_info_for_user($qls->user_info['id']);
 		
 ?>
 
@@ -29,7 +29,7 @@ if ($qls->user_info['username'] != '') {
 
 
 <?php
-for ($survey_num = 0; $survey_num < count($names); $survey_num++) 
+for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++) 
 {
 	$survey_id = $survey_ids[$survey_num];
     $survey_name = $survey_names[$survey_num];		
@@ -41,7 +41,7 @@ for ($survey_num = 0; $survey_num < count($names); $survey_num++)
 	
 	<?php
 	//only show link if user has not already completed the survey
-	if ($token_row['completed'] == 'N')
+	if ($survey_complete == '')
 	{	
 	?>
 		<a href="../limesurvey/index.php/<?=$survey_id?>/tk-<?=$survey_token?>">  <?=$survey_name?> </a>		
@@ -50,7 +50,7 @@ for ($survey_num = 0; $survey_num < count($names); $survey_num++)
 	else
 	{
 	?>
-		<?=$survey_name?> - Completed
+		<?=$survey_name?> - Completed on <?=$survey_complete?>
 	<?php
 	}
 	?>

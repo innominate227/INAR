@@ -16,7 +16,7 @@ require_once('includes/banner2.php');
 	$survey_id = $_GET['sid'];
 		
 	//get info for the survey with the passed id
-	list ($survey_id, $survey_name, $survey_auto_assign, $survey_participant_count, $survey_response_count) = $qls->Survey->get_survey_info($survey_id);	
+	list ($survey_id, $survey_name, $survey_auto_assign, $survey_participant_count, $survey_response_count) = $qls->Surveys->get_survey_info($survey_id);	
 	
 
 	$paticipants_updated = false;	
@@ -87,7 +87,7 @@ if ($paticipants_updated)
 ?>
 
 <h1>Assign to <?php echo $survey_name; ?>:</h1><br>
-<form action="admin_survey_assign.php?sid=<?php echo $sid; ?>" method="post">
+<form action="admin_survey_assign.php?sid=<?=$survey_id?>" method="post">
 <input type="hidden" name="process_search_users" value="yes" />
 Search: 
 <input type="text" name="user_name_search" value="<?php echo $_POST['user_name_search'] ?>"> 
@@ -106,11 +106,11 @@ if (count($participant_ids))
 
 	<h1>Participants:</h1><br>
          <div style="font-size:18px">
-	<form action="admin_survey_assign.php?sid=<?php echo $sid; ?>" method="post">
+	<form action="admin_survey_assign.php?sid=<?=$survey_id?>" method="post">
 	<input type="hidden" name="process_search_users" value="yes" />
-	<input type="hidden" name="user_name_search" value="<?php echo $_POST['user_name_search'] ?>"> 	
+	<input type="hidden" name="user_name_search" value="<?=$_POST['user_name_search']?>"> 	
 	<input type="hidden" name="process_assign_participants" value="yes" />
-	<input type="hidden" name="assign_participant_count" value="<?php echo count($participant_ids) ?>" />
+	<input type="hidden" name="assign_participant_count" value="<?=count($participant_ids)?>" />
 	
 	<table style="border:1px solid black;border-collapse:collapse;">
 	<tr>
@@ -129,12 +129,12 @@ if (count($participant_ids))
 	?>
 
 	<tr>
-	<td style="border:1px solid black;"><?php echo $participant_name; ?></td>	
+	<td style="border:1px solid black;"><?=$participant_name;?></td>	
 	<td style="border:1px solid black;">	
-	<input type="hidden" name="participant_id_<?php echo $participant_num; ?>" value="<?php echo $participant_id; ?>" />	
-	<input type="checkbox" name="participant_assigned_<?php echo $participant_num; ?>" <?php echo $participant_assigned; ?> value="true" />		
+	<input type="hidden" name="participant_id_<?=$participant_num;?>" value="<?=$participant_id;?>" />	
+	<input type="checkbox" name="participant_assigned_<?=$participant_num;?>" <?php if ($participant_assigned){ echo 'checked'; }?> value="true" />		
 	</td>
-	<td style="border:1px solid black;"><?php echo $participant_completed; ?></td>
+	<td style="border:1px solid black;"><?=$participant_completed;?></td>
 	</tr>
 
 	<?php	
