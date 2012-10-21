@@ -33,7 +33,7 @@ class Surveys {
 	{
 		//connect to lime
 		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_usernamename'], $this->qls->config['lime_password']);
+		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
 
 		//create the survey
 		$new_survey_id = $myJSONRPCClient->import_survey($sessionKey, $data, 'lss', $name);
@@ -65,20 +65,26 @@ class Surveys {
 	
 	
 	
-	/* export a survey in the format passed */
-	function export_survey($survey_id, $format)
-	{
+	/* export a survey to csv */
+	function export_survey($survey_id)
+	{		
+		//export parameters
+		$langauage = 'en';
+		$completion = 'show';       //'complete', 'incomplete' or 'show' (all)
+		$heading_type = 'full';     //'code', 'full' or 'abbreviated'
+		$response_type = 'long';   //'short' or 'long'
+	
 		//connect to lime
 		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
 		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
-
+				
 		//get responses
-		$data = $myJSONRPCClient->export_responses($sessionKey, $survey_id, 'xls');
-
+		$data = $myJSONRPCClient->export_responses($sessionKey, $survey_id, 'csv', $langauage, $completion, $heading_type, $response_type);
+				
 		//dissconnect
 		$myJSONRPCClient->release_session_key( $sessionKey );
 		
-		//return data?
+		//return data
 		return $data;
 	}
 	

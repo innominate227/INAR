@@ -97,6 +97,7 @@ if ($auto_assign_updated)
 <th style="border:1px solid black;"><b>Participants</b></th>
 <th style="border:1px solid black;"><b>Assign Participants</b></th>
 <th style="border:1px solid black;"><b>Responses</b></th>
+<th style="border:1px solid black;"><b>Export</b></th>
 </tr>
 
 <?php
@@ -116,9 +117,12 @@ for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++)
 	</td>
 	<td style="border:1px solid black;"><?=$survey_participant_count?></td>
 	<td style="border:1px solid black;">
-	<a href="admin_survey_assign.php?sid=<?=$survey_id;?>">Assign Participants</a></td>
+	<a href="admin_survey_assign.php?sid=<?=$survey_id;?>">Assign Participants</a>
 	</td>
 	<td style="border:1px solid black;"><?=$survey_response_count?></td>
+	<td style="border:1px solid black;">
+	<a href="admin_survey_export.php?sid=<?=$survey_id;?>">Export</a>
+	</td>
 	</tr>
 <?php	
 }

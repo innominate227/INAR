@@ -81,8 +81,6 @@ class ExportSurveyResultsService
             header("Pragma: public");
         }
 
-		$fileName = 'not set';
-		
         switch ( $sExportPlugin ) {
             case "doc":
                     $writer = new DocWriter();
@@ -91,10 +89,10 @@ class ExportSurveyResultsService
                     $writer = new ExcelWriter();
                 break;
             case "pdf":
-                if ($oOptions->output=='file')
+                if ($oOptions->output=='display')
                 {
-                    $fileName=Yii::app()->getConfig("tempdir") . DIRECTORY_SEPARATOR . randomChars(40);
-                    $writer = new PdfWriter($fileName);
+                    $sRandomFileName=Yii::app()->getConfig("tempdir") . DIRECTORY_SEPARATOR . randomChars(40);
+                    $writer = new PdfWriter($sRandomFileName);
                 }
                 else
                 {
@@ -129,11 +127,7 @@ class ExportSurveyResultsService
         $writer->close();
         if ($oOptions->output=='file')
         {
-            return $fileName;
-        }
-		if ($oOptions->output=='return')
-        {
-            return $writer->output_data;
+            return $writer->filename;
         }
     }
 }
@@ -1320,13 +1314,13 @@ abstract class Writer implements IWriter
 
 class CsvWriter extends Writer
 {
-    public $output_data;
+    private $output;
     private $separator;
     private $hasOutputHeader;
 
     function __construct()
     {
-        $this->output_data = '';
+        $this->output = '';
         $this->separator = ',';
         $this->hasOutputHeader = false;
     }
@@ -1335,10 +1329,10 @@ class CsvWriter extends Writer
     {
         parent::init($survey, $sLanguageCode, $oOptions);
         if ($oOptions->output=='display')
-		{
-			header("Content-Disposition: attachment; filename=results-survey".$survey->id.".csv");
-			header("Content-type: text/comma-separated-values; charset=UTF-8");
-		}
+            {
+                header("Content-Disposition: attachment; filename=results-survey".$survey->id.".csv");
+                header("Content-type: text/comma-separated-values; charset=UTF-8");
+            }
 
     }
     
@@ -1355,14 +1349,10 @@ class CsvWriter extends Writer
 
             //Output the header...once and only once.
             $sRecord=implode($this->separator, $headers);
-            if ($oOptions->output=='display')
+            if ($oOptions->output='display')
             {
                 echo $sRecord; 
             }
-			if ($oOptions->output=='return')
-			{
-				$this->output_data .= $sRecord;
-			}
 
             $this->hasOutputHeader = true;
         }
@@ -1374,19 +1364,15 @@ class CsvWriter extends Writer
             $index++;
         }
         $sRecord=PHP_EOL.implode($this->separator, $values);
-        if ($oOptions->output=='display')
+        if ($oOptions->output='display')
         {
             echo $sRecord; 
         }
-		if ($oOptions->output=='return')
-		{
-			$this->output_data .= $sRecord;
-		}
     }
 
     public function close()
     {
-        return $this->output_data;
+        return $this->output;
     }
 
     /**
@@ -1509,7 +1495,7 @@ class ExcelWriter extends Writer
     private $rowCounter;
 
     //Indicates if the Writer is outputting to a file rather than sending via HTTP.
-    public $fileName;
+    private $fileName;
     private $outputToFile;
 
     /**
@@ -1599,7 +1585,7 @@ class PdfWriter extends Writer
     private $separator;
     private $rowCounter;
     private $pdfDestination;
-    public $fileName;
+    private $fileName;
     private $surveyName;
 
     public function __construct($filename = null)
