@@ -170,6 +170,9 @@ class Surveys {
 		//make sure user is already assigned
 		if ($this->is_user_assigned($user_id, $survey_id) == false){ return; }
 		
+		//make sure user has not already completed survey
+		if ($this->user_completed_date($user_id, $survey_id) != 'N'){ return; }
+		
 		//get token id for that user in that survey
 		$user_survey_info = $this->qls->SQL->select_one_simple('token_id', 'user_surveys', array('user_id' => $user_id, 'survey_id' => $survey_id));
 		$token_id = $user_survey_info['token_id'];
@@ -286,7 +289,37 @@ class Surveys {
 		return ($resultrow != null);
 	}	
 	
-	
+		
+	/* get 'N' or the date the user completed the survey */
+	function user_completed_date($user_id, $survey_id)
+	{
+		$user_survey_row = $this->qls->SQL->select_one_simple('token_id', 'user_surveys',
+			array(
+				'user_id' => $user_id,
+				'survey_id' => $survey_id				
+			)
+		);
+		
+		//user if not even assigned, so of course they are not completed
+		if ($user_survey_row == null) { return false; }
+		
+		//users token for the survey
+		$token_id = $user_survey_row['token_id'];
+			
+		//connect to lime
+		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
+		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
+		
+		//get if the participant has completed the survey, and when
+		$results = $myJSONRPCClient->get_participant_properties($sessionKey, $survey_id, $token_id, array('completed'));												
+		$completed = $results['completed'];
+				
+		//dissconnect
+		$myJSONRPCClient->release_session_key( $sessionKey );
+		
+		//if completed is not 'N' its complete
+		return $completed;
+	}
 	
 	/* get survey info for surveys a user can take*/
 	function get_survey_info_for_user($user_id)

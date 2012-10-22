@@ -68,7 +68,7 @@ require_once('includes/banner2.php');
 			$participant_ids[] = $users_rows['id'];
 			$participant_names[] = $users_rows['username'];
 			$participant_assigneds[] = $qls->Surveys->is_user_assigned($users_rows['id'], $survey_id);
-			$participant_completeds[] = '';								
+			$participant_completeds[] = $qls->Surveys->user_completed_date($users_rows['id'], $survey_id);
 		}
 	}
 	
