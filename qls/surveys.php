@@ -41,7 +41,7 @@ for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++)
 	
 	<?php
 	//only show link if user has not already completed the survey
-	if ($survey_complete == '')
+	if ($survey_complete == 'N')
 	{	
 	?>
 		<a href="../limesurvey/index.php/<?=$survey_id?>/tk-<?=$survey_token?>">  <?=$survey_name?> </a>		

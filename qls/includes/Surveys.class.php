@@ -107,7 +107,7 @@ class Surveys {
 	function auto_assign_new_user($user_id)
 	{
 		//get all survey marked auto assign
-		$survey_results = $this->qls->SQL->select_simple('id', 'surveys', array('auto_assign_new_participant' => true));			
+		$survey_results = $this->qls->SQL->select_simple('id', 'surveys', array('auto_assign_new_participant' => 'Y'));			
 		while ($survey_row = $this->qls->SQL->fetch_array($survey_results)) 
 		{
 			$this->assign_to_survey($user_id, $survey_row['id']);
