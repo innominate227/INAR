@@ -215,6 +215,7 @@ var $qls;
 	 * @return true on success, false on error
 	 */
 	function validate_session($information) {
+		
 		// Has to be an array, or no admittance!
 		if (is_array($information)) {
 			// Make sure they are SHA-1 hashes
@@ -237,6 +238,8 @@ var $qls;
 				$row = $this->qls->SQL->fetch_array($result);
 
 				// Update the session time
+				// NOTE: this is clearly broken, info[3] is not set here, but when i did what appears to be a fix and made it info[2]
+				// that caused the user to not be logged in for more than 1 page view, so im just going to leave it brokwn for now.				
 				$this->qls->SQL->update('sessions',
 					array('time' => time()),
 					array('id' =>
@@ -246,10 +249,10 @@ var $qls;
 						)
 					)
 				);				
-				
+								
 				// Get the lime session number, add to user info
-				$lime_session_row = $this->qls->SQL->select_one_simple('lime_session', 'sessions', array('id' => $information[3]));
-				$lime_session = $lime_session_row['lime_session']
+				$lime_session_row = $this->qls->SQL->select_one_simple('lime_session', 'sessions', array('id' => $information[2]));								
+				$lime_session = $lime_session_row['lime_session'];
 				$this->qls->user_info['lime_session'] = $lime_session;
 				
 

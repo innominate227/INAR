@@ -41,7 +41,7 @@ class Surveys {
 	/* start a session with lime rpc, return the session key */
 	function start_lime_session()
 	{
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$sessionKey = $lime_rpc->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);		
 		return $sessionKey;
 	}
@@ -50,7 +50,7 @@ class Surveys {
 	/* end the session with lime rpc */
 	function end_lime_session()
 	{
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];		
 		$lime_rpc->release_session_key($lime_session_key);				
 	}
@@ -60,7 +60,7 @@ class Surveys {
 	/* create a new survey */
 	function create_survey($name, $data)
 	{
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];		
 		
 		//create the survey
@@ -93,7 +93,7 @@ class Surveys {
 	/* export a survey to csv */
 	function export_survey($survey_id)
 	{
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];			
 	
 		//survey info
@@ -159,7 +159,7 @@ class Surveys {
 			'email' => $user_info['email']);	
 		
 		//connect to lime
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];	
 				
 		//add the participant, get the token that was created for him (Note the method actually takes an array of partcipants)
@@ -195,7 +195,7 @@ class Surveys {
 		$token_id = $user_survey_info['token_id'];
 		
 		//connect to lime
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];	
 
 		//remove the participant, (Note the method actually takes an array of token ids)
@@ -222,9 +222,9 @@ class Surveys {
 	function get_all_surveys_info()
 	{
 		//get lime connection
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];	
-		
+				
 		$ids = array();
 		$names = array();
 		$auto_assigns = array();
@@ -260,7 +260,7 @@ class Surveys {
 		//TODO: lots of replicated code between this and get_all_surveys_info.
 				
 		//get lime connection
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];	
 	
 		$user_surveys_table = $this->qls->config['sql_prefix'] . 'user_surveys';
@@ -315,7 +315,7 @@ class Surveys {
 		$token_id = $user_survey_row['token_id'];
 			
 		//get lime connection
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];	
 		
 		//get if the participant has completed the survey, and when
@@ -330,7 +330,7 @@ class Surveys {
 	function get_survey_info_for_user($user_id)
 	{		
 		//get lime connection
-		$lime_rpc = get_lime_connection();
+		$lime_rpc = $this->get_lime_connection();
 		$lime_session_key = $this->qls->user_info['lime_session'];	
 	
 		$ids = array();
