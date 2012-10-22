@@ -474,15 +474,20 @@ var $qls;
 	 */
 	function logout_user() {
 	$session_names = array('user_id', 'user_time', 'user_unique');
-		if (isset($_SESSION[$this->qls->config['cookie_prefix'] . 'user_unique'])) {
-		$this->qls->SQL->delete('sessions',
-			array('id' =>
-				array(
-					'=',
-					$_SESSION[$this->qls->config['cookie_prefix'] . 'user_unique']
+		if (isset($_SESSION[$this->qls->config['cookie_prefix'] . 'user_unique'])) 
+		{
+			
+			//end session with lime RPC
+			$lime_session = $this->qls->Surveys->end_lime_session();
+		
+			$this->qls->SQL->delete('sessions',
+				array('id' =>
+					array(
+						'=',
+						$_SESSION[$this->qls->config['cookie_prefix'] . 'user_unique']
+					)
 				)
-			)
-		);
+			);
 		}
 
 	// Remove all session information and unset the cookie

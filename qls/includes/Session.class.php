@@ -120,18 +120,23 @@ var $qls;
 	// Generate unique value to go in users table and sessions table
 	$value = $this->generate_unique_value($password, $user_code, $unique_id, $time);
 	$sha1_time = sha1($time);
+	
+	//start a session with lime RPC
+	$lime_session = $this->qls->Surveys->start_lime_session();
 
 	// Insert new session info into database
 	$this->qls->SQL->insert('sessions',
 		array(
 			'id',
 			'value',
-			'time'
+			'time',
+			'lime_session'
 		),
 		array(
 			$unique_id,
 			$value,
-			$time
+			$time,
+			$lime_session
 		)
 	);
 	// Update users table
@@ -240,7 +245,13 @@ var $qls;
 							$information[3]
 						)
 					)
-				);
+				);				
+				
+				// Get the lime session number, add to user info
+				$lime_session_row = $this->qls->SQL->select_one_simple('lime_session', 'sessions', array('id' => $information[3]));
+				$lime_session = $lime_session_row['lime_session']
+				$this->qls->user_info['lime_session'] = $lime_session;
+				
 
 					// Loop through and add to $user_info
 					foreach ($row as $key => $value) {

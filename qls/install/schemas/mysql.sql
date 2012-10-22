@@ -14,6 +14,7 @@ CREATE TABLE `{database_prefix}sessions`(
 	`id` VARCHAR(40) DEFAULT '' NOT NULL,
 	`value` VARCHAR(40) DEFAULT '' NOT NULL,
 	`time` INT(11) DEFAULT '0' NOT NULL,
+	`lime_session` VARCHAR(32) DEFAULT '' NOT NULL,
 	PRIMARY KEY(`id`),
 	INDEX `sessions_idx` (`value`,`time`)
 );

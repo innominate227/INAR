@@ -13,6 +13,9 @@ class Surveys {
 	 * @var object $this->qls - Will contain everything else
 	 */
 	var $qls;
+	
+	/* connection to lime rpc */
+	var $lime_rpc;
 
 	/**
 	 * Construct class
@@ -24,36 +27,58 @@ class Surveys {
 		require_once('jsonRPCClient.php');	
 		$this->qls = &$qls;
 	}
+	
+	/* return the JSON RPC client used to talk to lime */
+	private function get_lime_connection()
+	{		
+		if ($this->lime_rpc == null)
+		{
+			$this->lime_rpc = new jsonRPCClient($this->qls->config['lime_location']);
+		}
+		return $this->lime_rpc;
+	}
 
+	/* start a session with lime rpc, return the session key */
+	function start_lime_session()
+	{
+		$lime_rpc = get_lime_connection();
+		$sessionKey = $lime_rpc->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);		
+		return $sessionKey;
+	}
+	
+	
+	/* end the session with lime rpc */
+	function end_lime_session()
+	{
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];		
+		$lime_rpc->release_session_key($lime_session_key);				
+	}
 	
 	
 	
 	/* create a new survey */
 	function create_survey($name, $data)
 	{
-		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
-
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];		
+		
 		//create the survey
-		$new_survey_id = $myJSONRPCClient->import_survey($sessionKey, $data, 'lss', $name);
+		$new_survey_id = $lime_rpc->import_survey($lime_session_key, $data, 'lss', $name);
 				
 		//set properties for the survey
 		$survey_properties = array(
 			'usetokens' => 'Y',
 			'tokenanswerspersistence' => 'Y',
 			'allowsave' => 'N');
-		$response = $myJSONRPCClient->set_survey_properties($sessionKey, $new_survey_id, $survey_properties);
+		$response = $lime_rpc->set_survey_properties($lime_session_key, $new_survey_id, $survey_properties);
 				
 		//set the survey to use tokens
-		$response = $myJSONRPCClient->activate_tokens($sessionKey, $new_survey_id);
+		$response = $lime_rpc->activate_tokens($lime_session_key, $new_survey_id);
 		
 		//activate the survey
-		$response = $myJSONRPCClient->activate_survey($sessionKey, $new_survey_id);
+		$response = $lime_rpc->activate_survey($lime_session_key, $new_survey_id);
 						
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );		
-		
 		//insert the new survey on our side
 		$this->qls->SQL->insert_simple('surveys',
 			array(
@@ -67,7 +92,10 @@ class Surveys {
 	
 	/* export a survey to csv */
 	function export_survey($survey_id)
-	{		
+	{
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];			
+	
 		//survey info
 		list ($survey_id, $survey_name, $survey_auto_assign, $survey_participant_count, $survey_response_count) = $this->get_survey_info($survey_id);
 		
@@ -79,18 +107,10 @@ class Surveys {
 		$from_record_num=0;         //record # to start from
 		$to_record_num=$survey_response_count-1; //record # to end at
 		$fields=null;               //field to export not sure if this is question id maybe, havent tried yet. (or null for all)
-		
-	
-		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
 				
 		//get responses
-		$data = $myJSONRPCClient->export_responses($sessionKey, $survey_id, 'csv', $langauage, $completion, $heading_type, $response_type, $from_record_num, $to_record_num, $fields);
-				
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );
-		
+		$data = $lime_rpc->export_responses($lime_session_key, $survey_id, 'csv', $langauage, $completion, $heading_type, $response_type, $from_record_num, $to_record_num, $fields);
+						
 		//return data
 		return $data;
 	}
@@ -139,17 +159,14 @@ class Surveys {
 			'email' => $user_info['email']);	
 		
 		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
-		
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];	
+				
 		//add the participant, get the token that was created for him (Note the method actually takes an array of partcipants)
-		$results = $myJSONRPCClient->add_participants($sessionKey, $survey_id, array($participant_data) );		
+		$results = $lime_rpc->add_participants($lime_session_key, $survey_id, array($participant_data) );		
 		$token_id = $results[0]['tid'];
 		$token = $results[0]['token'];
-				
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );
-					
+									
 		//add to our user_surveys table		
 		$this->qls->SQL->insert_simple('user_surveys',
 			array(
@@ -178,15 +195,12 @@ class Surveys {
 		$token_id = $user_survey_info['token_id'];
 		
 		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];	
 
 		//remove the participant, (Note the method actually takes an array of token ids)
-		$results = $myJSONRPCClient->delete_participants($sessionKey, $survey_id, array($token_id) );		
-						
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );
-					
+		$results = $lime_rpc->delete_participants($lime_session_key, $survey_id, array($token_id) );		
+											
 		//remove from our user_surveys table		
 		$this->qls->SQL->delete_simple('user_surveys',
 			array(
@@ -207,11 +221,10 @@ class Surveys {
 	/* get survey info for all surveys */
 	function get_all_surveys_info()
 	{
-		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);	
-	
-	
+		//get lime connection
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];	
+		
 		$ids = array();
 		$names = array();
 		$auto_assigns = array();
@@ -232,13 +245,10 @@ class Surveys {
 			$participants[] = $survey_participant_count_row['COUNT(*)'];
 						
 			//ask lime how many people have responded
-			$response_count = $myJSONRPCClient->get_summary($sessionKey, $survey_row['id'], 'full_responses');	
+			$response_count = $lime_rpc->get_summary($lime_session_key, $survey_row['id'], 'full_responses');	
 			$responses[] = $response_count;
 		}
-				
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );
-				
+								
 		//return all the info
 		return array($ids, $names, $auto_assigns, $participants, $responses);
 	}
@@ -248,22 +258,20 @@ class Surveys {
 	function get_survey_info($survey_id)
 	{				
 		//TODO: lots of replicated code between this and get_all_surveys_info.
+				
+		//get lime connection
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];	
 	
 		$user_surveys_table = $this->qls->config['sql_prefix'] . 'user_surveys';
 		$survey_participant_count_results = $this->qls->SQL->query("SELECT COUNT(*) FROM `{$user_surveys_table}` WHERE `survey_id`={$survey_id}");
 		$survey_participant_count_row = $this->qls->SQL->fetch_array($survey_participant_count_results);
 		$participants = $survey_participant_count_row['COUNT(*)'];
-					
-		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);	
 		
 		//ask lime how many people have responded
-		$response_count = $myJSONRPCClient->get_summary($sessionKey, $survey_id, 'full_responses');	
+		$response_count = $lime_rpc->get_summary($lime_session_key, $survey_id, 'full_responses');	
 		$responses = $response_count;
 		
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );
 	
 		$survey_row = $this->qls->SQL->select_one_simple('*', 'surveys', array('id' => $survey_id));			
 		if ($survey_row != null) 
@@ -306,17 +314,14 @@ class Surveys {
 		//users token for the survey
 		$token_id = $user_survey_row['token_id'];
 			
-		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
+		//get lime connection
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];	
 		
 		//get if the participant has completed the survey, and when
-		$results = $myJSONRPCClient->get_participant_properties($sessionKey, $survey_id, $token_id, array('completed'));												
+		$results = $lime_rpc->get_participant_properties($lime_session_key, $survey_id, $token_id, array('completed'));												
 		$completed = $results['completed'];
-				
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );
-		
+						
 		//if completed is not 'N' its complete
 		return $completed;
 	}
@@ -324,9 +329,9 @@ class Surveys {
 	/* get survey info for surveys a user can take*/
 	function get_survey_info_for_user($user_id)
 	{		
-		//connect to lime
-		$myJSONRPCClient = new jsonRPCClient($this->qls->config['lime_location']);
-		$sessionKey = $myJSONRPCClient->get_session_key($this->qls->config['lime_username'], $this->qls->config['lime_password']);
+		//get lime connection
+		$lime_rpc = get_lime_connection();
+		$lime_session_key = $this->qls->user_info['lime_session'];	
 	
 		$ids = array();
 		$names = array();
@@ -344,13 +349,10 @@ class Surveys {
 			$tokens[] =  $survey_row['token'];
 			
 			//get if the participant has completed the survey, and when
-			$results = $myJSONRPCClient->get_participant_properties($sessionKey, $survey_row['id'], $survey_row['token_id'], array('completed'));												
+			$results = $lime_rpc->get_participant_properties($lime_session_key, $survey_row['id'], $survey_row['token_id'], array('completed'));												
 			$completes[] = $results['completed'];
 		}		
-		
-		//dissconnect
-		$myJSONRPCClient->release_session_key( $sessionKey );
-		
+				
 		//return all the info
 		return array($ids, $names, $tokens, $completes);
 	}	
