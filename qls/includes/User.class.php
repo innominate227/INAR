@@ -662,7 +662,7 @@ var $qls;
 	$password = (isset($_POST['password']) && $this->validate_password($_POST['password'])) ? $this->qls->Security->make_safe($_POST['password']) : false;
 	$confirm_password = (isset($_POST['password_c']) && $_POST['password_c'] == $password) ? true : false;
 	$email = (isset($_POST['email']) && strlen($_POST['email']) > 6 && strlen($_POST['email']) < 256 && eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', $_POST['email'])) ? $this->qls->Security->make_safe($_POST['email']) : false;
-	$confirm_email = (isset($_POST['email_c']) && $_POST['email_c'] == $email) ? true : false;
+		
 		if ($this->qls->config['security_image'] == 'yes') {
 		// The random id of the image
 		$random_id = (isset($_POST['random_id']) && preg_match('/^[a-fA-F0-9]{40}$/', $_POST['random_id'])) ? $this->qls->Security->make_safe($_POST['random_id']) : false;
@@ -679,8 +679,7 @@ var $qls;
 
 	$_SESSION[$this->qls->config['cookie_prefix'] . 'registration_username'] = $this->qls->Security->make_safe($_POST['username']);
 	$_SESSION[$this->qls->config['cookie_prefix'] . 'registration_email'] = $this->qls->Security->make_safe($_POST['email']);
-	$_SESSION[$this->qls->config['cookie_prefix'] . 'registration_email_confirm'] = $this->qls->Security->make_safe($_POST['email_c']);
-
+	
 		if ($username === false) {
 		$this->register_error = REGISTER_USERNAME_ERROR;
 		return false;
@@ -696,7 +695,7 @@ var $qls;
 		return false;
 		}
 
-		if ($email === false || $confirm_email === false) {
+		if ($email === false) {
 		$this->register_error = REGISTER_EMAIL_ERROR;
 		return false;
 		}

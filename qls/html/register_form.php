@@ -50,15 +50,6 @@ exit;
 					<input type="text" name="email" maxlength="100" value="<?php if (isset($_SESSION[$qls->config['cookie_prefix'] . 'registration_email'])) { echo $_SESSION[$qls->config['cookie_prefix'] . 'registration_email']; } ?>" />
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<?php echo EMAIL_CONFIRM_LABEL; ?>
-
-				</td>
-				<td>
-					<input type="text" name="email_c" maxlength="100" value="<?php if (isset($_SESSION[$qls->config['cookie_prefix'] . 'registration_email_confirm'])) { echo $_SESSION[$qls->config['cookie_prefix'] . 'registration_email_confirm']; } ?>" />
-				</td>
-			</tr>
 <?php
 /* START SECURITY IMAGE */
 if ($qls->config['security_image'] == 'yes') {

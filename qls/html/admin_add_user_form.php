@@ -50,15 +50,6 @@ exit;
 			</tr>
 			<tr>
 				<td>
-					<?php echo EMAIL_CONFIRM_LABEL; ?>
-
-				</td>
-				<td>
-					<input type="text" id="email_c" name="email_c" maxlength="255" />
-				</td>
-			</tr>
-			<tr>
-				<td>
 					<?php echo PERMISSION_MASK_LABEL; ?>
 
 				</td>
@@ -96,7 +87,7 @@ exit;
 			</tr>
 			<tr>
 				<td colspan="2" align="center">
-					<input type="button" onclick="javascript:run_form('add_user', new Array('username','password','password_c','email','email_c','mask_id','group_id'));" value="<?php echo GO_LABEL; ?>" />
+					<input type="button" onclick="javascript:run_form('add_user', new Array('username','password','password_c','email','mask_id','group_id'));" value="<?php echo GO_LABEL; ?>" />
 				</td>
 			</tr>
 		</table>

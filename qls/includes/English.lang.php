@@ -424,7 +424,6 @@ define('PASSWORD_LABEL', 'Password');
 define('PASSWORD_CONFIRM_LABEL', 'Confirm');
 define('EMAIL_LABEL', 'Email');
 define('NEW_EMAIL_LABEL', 'New Email');
-define('EMAIL_CONFIRM_LABEL', 'Confirm');
 define('SECURITY_CODE_LABEL', 'Security Code');
 define('PERMISSION_MASK_LABEL', 'Permission Mask');
 define('NEW_PERMISSION_MASK_LABEL', 'New Permission Mask');

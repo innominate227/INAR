@@ -143,8 +143,7 @@ var $permissions = array(
 		$username = (isset($_GET['username']) && $this->qls->User->validate_username($_GET['username'])) ? $this->qls->Security->make_safe($_GET['username']) : false;
 		$password = (isset($_GET['password']) && $this->qls->User->validate_password($_GET['password'])) ? $this->qls->Security->make_safe($_GET['password']) : false;
 		$confirm_password = (isset($_GET['password_c']) && $_GET['password_c'] == $password) ? true : false;
-		$email = (isset($_GET['email']) && strlen($_GET['email']) > 6 && strlen($_GET['email']) < 256 && eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', $_GET['email'])) ? $this->qls->Security->make_safe($_GET['email']) : false;
-		$confirm_email = (isset($_GET['email_c']) && $_GET['email_c'] == $email) ? true : false;
+		$email = (isset($_GET['email']) && strlen($_GET['email']) > 6 && strlen($_GET['email']) < 256 && eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', $_GET['email'])) ? $this->qls->Security->make_safe($_GET['email']) : false;		
 		$mask_id = (isset($_GET['mask_id']) && is_numeric($_GET['mask_id']) && $_GET['mask_id'] > -1) ? $this->qls->Security->make_safe($_GET['mask_id']) : false;
 		$group_id = (isset($_GET['group_id']) && is_numeric($_GET['group_id']) && $_GET['group_id'] > -1) ? $this->qls->Security->make_safe($_GET['group_id']) : false;
 			if ($username === false) {
@@ -162,7 +161,7 @@ var $permissions = array(
 			return false;
 			}
 
-			if ($email === false || $confirm_email === false) {
+			if ($email === false) {
 			$this->add_user_error = REGISTER_EMAIL_ERROR;
 			return false;
 			}
