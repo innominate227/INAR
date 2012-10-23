@@ -2,7 +2,6 @@
 define('QUADODO_IN_SYSTEM', true);
 require_once('includes/header.php');
 require_once('includes/banner.php');
-$qls->Security->check_auth_registration();
 ?>
 
 
@@ -33,34 +32,58 @@ $qls->Security->check_auth_registration();
 * Comments are always before the code they are commenting.
 *** *** *** *** *** ***/
 
-// Is the user logged in already?
-if ($qls->user_info['username'] == '') {
-	if (isset($_POST['process'])) {
-		// Try to register the user
-		if ($qls->User->register_user()) {
-			switch ($qls->config['activation_type']) {
-				default:
-				break;
-				case 1:
-				echo REGISTER_SUCCESS_USER_ACTIVATION;
-				break;
-				case 2:
-				echo REGISTER_SUCCESS_ADMIN_ACTIVATION;
-				break;
+	$created_account = false;
+
+	if (isset($_POST['process'])) 
+	{
+		//check if they pass the security image test
+		$pass_security_check = false;		
+		if ($qls->config['security_image'] == 'yes') 
+		{
+			// The random id of the image
+			$random_id = (isset($_POST['random_id']) && preg_match('/^[a-fA-F0-9]{40}$/', $_POST['random_id'])) ? $qls->Security->make_safe($_POST['random_id']) : false;
+
+			// The security code entered by the user
+			$security_code = (isset($_POST['security_code']) && preg_match('/[a-zA-Z1-9]{5,8}/', $_POST['security_code'])) ? $_POST['security_code'] : false;
+			
+			//check if that was the correct code
+			if ($qls->Security->check_security_image($random_id, $security_code)) 
+			{
+				$pass_security_check = true;
 			}
 		}
-		else {
-		// Output register error
-		echo $qls->User->register_error . REGISTER_TRY_AGAIN;
+		else 
+		{
+			$pass_security_check = true;
+		}
+		
+		//make sure they did security image good
+		if ($pass_security_check == false)
+		{
+			echo 'You entered the security image wrong, try again.';
+		}
+		else
+		{
+			// Try to register the participant
+			$participant_created = $qls->Surveys->create_new_participant($_POST['email']);
+			
+			if ($participant_created == false) 
+			{			
+				echo 'Unable to register, have you already registered?';			
+			}
+			else 
+			{				
+				echo 'You are regiested check your email for survey invitations';
+				$created_account = true;				
+			}
 		}
 	}
-	else {
-	// Get the random id for use in the form
-	$random_id = $qls->Security->generate_random_id();
-	require_once('html/register_form.php');
+	
+	if ($created_account == false)
+	{
+		// Get the random id for use in the form
+		$random_id = $qls->Security->generate_random_id();
+		require_once('html/register_form.php');
 	}
-}
-else {
-echo REGISTER_ALREADY_LOGGED;
-}
+
 ?>

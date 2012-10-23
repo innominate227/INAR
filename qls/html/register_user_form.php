@@ -13,14 +13,41 @@ exit;
 	<form action="register.php<?php if (isset($_GET['code'])) { ?>?code=<?php echo htmlentities($_GET['code']); } ?>" method="post">
 		<input type="hidden" name="process" value="true" />
 		<input type="hidden" name="random_id" value="<?php echo $random_id; ?>" />
-		<table>			
+		<table>
+			<tr>
+				<td>
+					<?php echo USERNAME_LABEL; ?>
+
+				</td>
+				<td>
+					<input type="text" name="username" maxlength="<?php echo $qls->config['max_username']; ?>" value="<?php if (isset($_SESSION[$qls->config['cookie_prefix'] . 'registration_username'])) { echo $_SESSION[$qls->config['cookie_prefix'] . 'registration_username']; } ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<?php echo PASSWORD_LABEL; ?>
+
+				</td>
+				<td>
+					<input type="password" name="password" maxlength="<?php echo $qls->config['max_password']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<?php echo PASSWORD_CONFIRM_LABEL; ?>
+
+				</td>
+				<td>
+					<input type="password" name="password_c" maxlength="<?php echo $qls->config['max_password']; ?>" />
+				</td>
+			</tr>
 			<tr>
 				<td>
 					<?php echo EMAIL_LABEL; ?>
 
 				</td>
 				<td>
-					<input type="text" name="email" maxlength="100" value="<?php if (isset($_POST['email'])) { echo $_POST['email']; } ?>" />
+					<input type="text" name="email" maxlength="100" value="<?php if (isset($_SESSION[$qls->config['cookie_prefix'] . 'registration_email'])) { echo $_SESSION[$qls->config['cookie_prefix'] . 'registration_email']; } ?>" />
 				</td>
 			</tr>
 <?php

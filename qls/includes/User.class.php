@@ -774,14 +774,7 @@ var $qls;
 					)
 				)
 			);
-			
-			//get the users id
-			$user_row = $this->qls->SQL->select_one_simple('id', 'users', array('username' => $username));
-			$user_id = $user_row['id'];
-					
-			//add user to auto assign surveys
-			$this->qls->Surveys->auto_assign_new_user($user_id);
-
+								
 			return true;
 		}
 		else 

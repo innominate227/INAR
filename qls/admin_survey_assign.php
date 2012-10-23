@@ -49,27 +49,11 @@ require_once('includes/banner2.php');
 	}
 	
 	
-
-	//lime id of all participants searched for
-	$participant_ids = array();	
-	//name of all participants searched for
-	$participant_names = array();
-	//has the participant completed the survey
-	$participant_completeds = array();
-	//is the participant assign to the survey
-	$participant_assigneds = array();
-
 	//process search made
 	if (isset($_POST['process_search_users'])) 
 	{		
-		$users_results = $qls->SQL->query("SELECT `{$qls->config['sql_prefix']}users`.`id`, `{$qls->config['sql_prefix']}users`.`username` FROM `{$qls->config['sql_prefix']}users`, `{$qls->config['sql_prefix']}groups` WHERE `{$qls->config['sql_prefix']}users`.`username` LIKE '%{$_POST['user_name_search']}%' AND `{$qls->config['sql_prefix']}users`.`group_id` = `{$qls->config['sql_prefix']}groups`.`id` AND `{$qls->config['sql_prefix']}groups`.`name` = 'Respondents'");	
-		while ($users_rows = $qls->SQL->fetch_array($users_results)) 
-		{
-			$participant_ids[] = $users_rows['id'];
-			$participant_names[] = $users_rows['username'];
-			$participant_assigneds[] = $qls->Surveys->is_user_assigned($users_rows['id'], $survey_id);
-			$participant_completeds[] = $qls->Surveys->user_completed_date($users_rows['id'], $survey_id);
-		}
+		$search_term = $_POST['user_name_search'];	
+		list($participant_ids, $participant_emails, $participant_assigneds, $participant_completeds) = $qls->Surveys->search_participants_in_survey($search_term, $survey_id);	
 	}
 	
 	

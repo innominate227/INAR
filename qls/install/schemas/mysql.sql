@@ -148,12 +148,22 @@ CREATE TABLE `{database_prefix}surveys`(
 );
 
 
-DROP TABLE IF EXISTS `{database_prefix}user_surveys`;
+DROP TABLE IF EXISTS `{database_prefix}participant_surveys`;
 
-CREATE TABLE `{database_prefix}user_surveys`(
+CREATE TABLE `{database_prefix}participant_surveys`(
 	`survey_id` INT(11) NOT NULL,
-	`user_id` INT(11) NOT NULL,
+	`participant_id` INT(11) NOT NULL,
 	`token_id` INT(11) NOT NULL,
 	`token` VARCHAR(35) NOT NULL,
-	PRIMARY KEY(`survey_id`, `user_id`)
+	PRIMARY KEY(`survey_id`, `participant_id`)
+);
+
+
+DROP TABLE IF EXISTS `{database_prefix}participants`;
+
+CREATE TABLE `{database_prefix}participants`(
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`email` VARCHAR(255) DEFAULT '' NOT NULL,
+	PRIMARY KEY (`id`),
+    UNIQUE KEY `email` (`email`)
 );
