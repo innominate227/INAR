@@ -209,11 +209,14 @@ class Surveys {
 			$survey_participant_count = $survey_participant_count_row['COUNT(*)'];
 			$participants[] = $survey_participant_count;
 						
-			//ask lime how many people have responded (seems to have issue if at least one participant is not assigned)
+			//ask lime how many people have responded (this is throwing an exception if 0 people have completed)
 			$response_count = 0;
-			if ($survey_participant_count > 0)
+			try 
 			{
-				$response_count = $lime_rpc->get_summary($lime_session_key, $survey_row['id'], 'full_responses');	
+				$response_count = $lime_rpc->get_summary($lime_session_key, intval($survey_row['id']), 'full_responses');	
+			}
+			catch (Exception $e) 
+			{
 			}
 			$responses[] = $response_count;
 		}
@@ -238,11 +241,14 @@ class Surveys {
 		$survey_participant_count = $survey_participant_count_row['COUNT(*)'];
 		$participants = $survey_participant_count;
 		
-		//ask lime how many people have responded (seems to have issue if at least one participant is not assigned)
+		//ask lime how many people have responded (this is throwing an exception if 0 people have completed)
 		$response_count = 0;
-		if ($survey_participant_count > 0)
+		try 
 		{
-			$response_count = $lime_rpc->get_summary($lime_session_key, $survey_id, 'full_responses');	
+			$response_count = $lime_rpc->get_summary($lime_session_key, intval($survey_id), 'full_responses');	
+		}
+		catch (Exception $e) 
+		{
 		}
 		$responses = $response_count;
 		
@@ -406,6 +412,9 @@ class Surveys {
 		//get if the participant has completed the survey, and when
 		$results = $lime_rpc->get_participant_properties($lime_session_key, $survey_id, $token_id, array('completed'));												
 		$completed = $results['completed'];
+		
+		//seems like it sometimes send back '' for not completed
+		if ($completed == 'N'){ $completed ='N'; }
 						
 		//if completed is not 'N' its complete
 		return $completed;
@@ -413,7 +422,7 @@ class Surveys {
 	
 	
 	/* search participant (currently just on email) */
-	function search_participants($email)
+	private function search_participants_inner($email)
 	{
 		$participant_ids = array();
 		$participant_emails = array();
@@ -427,22 +436,47 @@ class Surveys {
 			$participant_emails[] = $participant_row['email'];			
 		}
 		return array($participant_ids, $participant_emails);
+	}
+
+	
+	/* search participant, also return what surveys they have been assigned to */
+	function search_participants($email)
+	{
+		//search participants
+		list ($participant_ids, $participant_emails) = $this->search_participants_inner($email);
+		$participant_surveyss = array();
+				
+		//for each participant get if they have completed the survey, or if they are even assigned
+		foreach ($participant_ids as $participant_id)
+		{
+			$participant_surveys = array();
+			$participant_surveys_table = $this->qls->config['sql_prefix'] . 'participant_surveys';
+			$surveys_table = $this->qls->config['sql_prefix'] . 'surveys';
+			$participants_surveys_result = $this->qls->SQL->query("SELECT `{$surveys_table}`.`name` FROM `{$surveys_table}`, `{$participant_surveys_table}` WHERE `{$participant_surveys_table}`.`participant_id` = {$participant_id} AND `{$participant_surveys_table}`.`survey_id` = `{$surveys_table}`.`id`");	
+			while ($participants_surveys_row = $this->qls->SQL->fetch_array($participants_surveys_result)) 
+			{
+				$participant_surveys[] = $participants_surveys_row['name'];
+			}
+			$participant_surveyss[] = $participant_surveys;			
+		}
+	
+		return array($participant_ids, $participant_emails, $participant_surveyss);
 	}	
 	
 	
-	/* search participant (currently just on email), also return if they are assigned or have completed the survey passed */
+	/* search participant, also return if they are assigned or have completed the survey passed */
 	function search_participants_in_survey($email, $survey_id)
 	{
 		//search participants
-		list ($participant_ids, $participant_emails) = $this->search_participants($email);
+		list ($participant_ids, $participant_emails) = $this->search_participants_inner($email);
 		$participant_assigneds = array();
 		$participant_completeds = array();
 		
 		//for each participant get if they have completed the survey, or if they are even assigned
 		foreach ($participant_ids as $participant_id)
 		{
-			$participant_assigneds[] = $this->is_user_assigned($participant_ids, $survey_id);
-			$participant_completeds[] = $this->user_completed_date($participant_ids, $survey_id);		
+			$participant_assigneds[] = $this->is_participant_assigned($participant_id, $survey_id);
+			$participant_completeds[] = $this->participant_completed_date($participant_id, $survey_id);		
 		}
 		
 		return array($participant_ids, $participant_emails, $participant_assigneds, $participant_completeds);

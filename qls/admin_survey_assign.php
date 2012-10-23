@@ -107,13 +107,13 @@ if (count($participant_ids))
 	for ($participant_num = 0; $participant_num < count($participant_ids); $participant_num++) 
 	{
 		$participant_id = $participant_ids[$participant_num];
-		$participant_name = $participant_names[$participant_num];
+		$participant_email = $participant_emails[$participant_num];
 		$participant_completed = $participant_completeds[$participant_num];
 		$participant_assigned = $participant_assigneds[$participant_num];				
 	?>
 
 	<tr>
-	<td style="border:1px solid black;"><?=$participant_name;?></td>	
+	<td style="border:1px solid black;"><?=$participant_email;?></td>	
 	<td style="border:1px solid black;">	
 	<input type="hidden" name="participant_id_<?=$participant_num;?>" value="<?=$participant_id;?>" />	
 	<input type="checkbox" name="participant_assigned_<?=$participant_num;?>" <?php if ($participant_assigned){ echo 'checked'; }?> value="true" />		

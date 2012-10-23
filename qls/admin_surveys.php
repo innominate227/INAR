@@ -140,6 +140,7 @@ for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++)
 <br>
 <fieldset>
 <legend> Add New Survey </legend>
+<a href='http://indiaautismregistry.com/TEST/limesurvey/admin'> Survey Test Bed </a><br><br>
 <form enctype="multipart/form-data" action="admin_surveys.php" method="post">
 <input type="hidden" name="process_new_survey" value="yes" />
 <input type="hidden" name="MAX_FILE_SIZE" value="10000000" />

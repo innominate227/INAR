@@ -622,7 +622,7 @@ class remotecontrol_handle
      * @param string $sStatName Name of the sumamry option
      * @return string The requested value
      */
-   public function get_summary($sSessionKey,$iSurveyID, $sStatName)
+    public function get_summary($sSessionKey, $iSurveyID, $sStatName)
     {
        $aPermittedStats = array();
        if ($this->_checkSessionKey($sSessionKey))
