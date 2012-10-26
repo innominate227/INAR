@@ -4,6 +4,9 @@
     </div>
     <div class='menubar-main'>
         <div class='menubar-left'>
+			<a href="<?php echo $this->createUrl("/admin/dashboard"); ?>">
+				<img src='<?php echo $sImageURL;?>inar.png' alt='<?php $clang->eT("INAR Dashboard");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+			</a>
             <a href="<?php echo $this->createUrl("admin/survey/view/surveyid/$surveyid"); ?>"><img src='<?php echo $imageurl; ?>home.png' alt='<?php $clang->eT("Return to survey administration"); ?>' /></a>
             <img src='<?php echo $imageurl; ?>separator.gif' class='separator' alt='' />
             <a href="<?php echo $this->createUrl("admin/tokens/index/surveyid/$surveyid"); ?>"><img src='<?php echo $imageurl; ?>summary.png' alt='<?php $clang->eT("Show token summary"); ?>'/></a>

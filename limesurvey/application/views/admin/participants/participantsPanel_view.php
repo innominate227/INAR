@@ -10,6 +10,11 @@
             <strong><?php $clang->eT("Participant panel"); ?> </strong>
     </div>
     <?php
+	$inar = array('src' => $sImageURL.'inar.png',
+        'alt' => $clang->gT("INAR Dashboard"), 
+        'title' => $clang->gT("INAR Dashboard"),  
+        'style' => 'margin-left:2px');
+	
     $home = array('src' => $sImageURL.'home.png',
         'alt' => $clang->gT("Main Admin Screen"), 
         'title' => $clang->gT("Main Admin Screen"),  
@@ -79,6 +84,7 @@
     <div class='menubar-main'>
         <div class='menubar-left'>
             <?php
+			echo CHtml::link(CHtml::image($inar['src'], $inar['alt']), Yii::app()->getController()->createUrl("/admin/dashboard"));
             echo CHtml::link(CHtml::image($home['src'], $home['alt']), Yii::app()->getController()->createUrl("/admin"));
             echo CHtml::link(CHtml::image($information['src'], $information['alt']), $this->createURL('admin/participants/index'));
             echo CHtml::link(CHtml::image($display['src'], $display['alt']), $this->createURL('admin/participants/displayParticipants'));

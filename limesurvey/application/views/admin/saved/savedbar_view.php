@@ -5,7 +5,9 @@
     </div>
     <div class='menubar-main'>
         <div class='menubar-left'>
-
+			<a href="<?php echo $this->createUrl("/admin/dashboard"); ?>">
+				<img src='<?php echo $sImageURL;?>inar.png' alt='<?php $clang->eT("INAR Dashboard");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+			</a>
             <a href="<?php echo $this->createUrl("admin/survey/view/surveyid/{$iSurveyId}"); ?>" title="<?php $clang->eT('Return to survey administration'); ?>">
                 <img src="<?php echo $sImageURL; ?>/home.png" alt="<?php echo $clang->eT('Return to survey administration'); ?>">
             </a>

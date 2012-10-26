@@ -27,15 +27,21 @@ class Index extends Survey_Common_Action
             ));
             unset(Yii::app()->session['just_logged_in'], Yii::app()->session['loginsummary']);
 
-            $this->_renderWrappedTemplate('super', $aViewUrls);
+            //$this->_renderWrappedTemplate('super', $aViewUrls);
+			$this->getController()->_js_admin_includes(Yii::app()->getConfig('adminscripts') . 'dashboard.js');
+			$this->_renderWrappedTemplate('dashboard', 'dashboard', null);
         }
         elseif (count(getSurveyList(true)) == 0)
 		{
-            $this->_renderWrappedTemplate('super', 'firststeps');
+            //$this->_renderWrappedTemplate('super', 'firststeps');
+			$this->getController()->_js_admin_includes(Yii::app()->getConfig('adminscripts') . 'dashboard.js');
+			$this->_renderWrappedTemplate('dashboard', 'dashboard', null);
 		}
         else
         {
-            Yii::app()->request->redirect(Yii::app()->getController()->createUrl('admin/survey/index'));
+            //Yii::app()->request->redirect(Yii::app()->getController()->createUrl('admin/survey/index'));
+			$this->getController()->_js_admin_includes(Yii::app()->getConfig('adminscripts') . 'dashboard.js');
+			$this->_renderWrappedTemplate('dashboard', 'dashboard', null);
         }
 
     }

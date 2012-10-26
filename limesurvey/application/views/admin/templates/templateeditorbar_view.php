@@ -51,6 +51,9 @@
     </div>
     <div class='menubar-main'>
         <div class='menubar-left'>
+			<a href="<?php echo $this->createUrl("/admin/dashboard"); ?>">
+				<img src='<?php echo $sImageURL;?>inar.png' alt='<?php $clang->eT("INAR Dashboard");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+			</a>
             <a href='<?php echo $this->createUrl("/admin"); ?>'>
                 <img src='<?php echo $sImageURL; ?>home.png' alt='<?php $clang->eT("Return to survey administration"); ?>' /></a>
             <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt=''  />
