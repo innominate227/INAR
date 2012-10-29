@@ -38,6 +38,48 @@ class statistics extends Survey_Common_Action {
 		$surveyid = sanitize_int($surveyid);
 		//TODO: Convert question types to views
         $clang = $this->getController()->lang;
+		
+		
+		
+		//get some of the POST data we care about
+		if ($_POST['run_saved_report'] == 'yes')
+		{
+			
+			$report_name = $_POST['report_name'];
+			$datestampG = $_POST['datestampG'];
+			$datestampL = $_POST['datestampL'];
+									
+			//set post to what was posted in order to generate the report		
+			$command = Yii::app()->db->createCommand()
+				->select("post_data")
+				->from("inar_reports")
+				->where("name='{$report_name}'");  
+
+			
+			//set post data to the data gotten from the table
+			$results = $command->queryAll();
+			$post_data = $results[0]['post_data'];			
+			$_POST = (array)json_decode($post_data);					
+			
+			//set back the datestamps to what was selected in the dashboard
+			$_POST['datestampG'] = $datestampG;
+			$_POST['datestampL'] = $datestampL;
+			$_POST['doSaveReport'] = ''; //make sure statistics doesnt try and resave the report
+			
+			//fix request to have be the uniion of  GET, POST, and COOKIE again
+			$_REQUEST = $_GET + $_POST + $_COOKIE;
+		
+			//set survey id from the data in the post
+			$surveyid = $_POST['sid'];
+			
+			
+			
+			echo $surveyid;
+		}
+				
+		
+		
+		
 
 		$imageurl = Yii::app()->getConfig("imageurl");
 		$aData = array('clang' => $clang, 'imageurl' => $imageurl);
@@ -482,7 +524,43 @@ class statistics extends Survey_Common_Action {
         $aData['sStatisticsLanguage']=$statlang;
 		$aData['output'] = $statisticsoutput;
         $aData['summary'] = $summary;
+		
+		
 
+		//did they decided they wanted to save the report?		
+		if ($_POST['doSaveReport'] == 'yes')
+		{	
+			$saveReportName = $_POST['saveReportName'];
+			if (strlen($saveReportName) > 0)
+			{				
+				//get post data as a json string, so we can put it into the db easily
+				$post_as_json = json_encode($_POST);
+
+				//see if there is already a report with that name
+				$command = Yii::app()->db->createCommand()
+					->select("post_data")
+					->from("inar_reports")
+					->where("name='{$saveReportName}'");            
+				$results = $command->queryAll();
+				if (count($results) > 0)
+				{					
+					$sql="UPDATE inar_reports SET post_data=:post_data WHERE name=:name";					
+				}
+				else
+				{	
+					$sql="INSERT INTO inar_reports (name, post_data) VALUES(:name,:post_data)";					
+				}				
+				
+				$command=Yii::app()->db->createCommand($sql);				
+				$command->bindParam(":name",$saveReportName,PDO::PARAM_STR);				
+				$command->bindParam(":post_data",$post_as_json,PDO::PARAM_STR);
+				$command->execute();				
+			}
+			
+		}
+		
+		
+		
         $this->_renderWrappedTemplate('export', 'statistics_view', $aData);
 
 	}

@@ -1291,6 +1291,35 @@
     <input type='hidden' name='display' value='stats' />
     </p>
     </div><!-- END OF AUTOSCROLLING DIV CONTAINING QUESTION FILTERS -->
+<div style='clear: both'></div>
+<div class='header ui-widget-header header_statistics'>	
+	<div style='float:right'><img src='<?php echo $sImageURL; ?>/maximize.png' id='showsave' alt='<?php $clang->eT("Maximize"); ?>'/><img src='<?php echo $sImageURL; ?>/minimize.png' id='hidesave' alt='<?php $clang->eT("Minimize"); ?>'/></div>
+	<?php $clang->eT("Save Report"); ?>
+</div>
+<div id='savereport' class='statisticsfilters' <?php if ($filterchoice_state!='' || !empty($summary)) { echo " style='display:none' "; } ?>>
+	<div id='statistics_general_filter'>
+		<fieldset style="clear:both;">
+		<legend>Save Report</legend>
+		<ul>
+			<li>
+				<label for="doSaveReport">Save Report: </label>
+				<input type="checkbox" id='doSaveReport' name='doSaveReport' value='yes' />
+			</li>				
+			<li>
+				<label for="saveReportName">Report Name:</label>				
+				<input type='text' id='saveReportName' name='saveReportName' size='50' value='' />
+			</li>			
+		</ul>
+		</fieldset>	            
+	</div>	
+    <p id='vertical_slide2'>
+    <input type='submit' value='<?php $clang->eT("View stats"); ?>' />
+    <input type='button' value='<?php $clang->eT("Clear"); ?>' onclick="window.open('<?php echo Yii::app()->getController()->createUrl("admin/statistics/index/surveyid/$surveyid"); ?>', '_top')" />    
+    </p>
+</div>
+	
+	
+	
 </form>
 <div style='clear: both'></div>
 <?php

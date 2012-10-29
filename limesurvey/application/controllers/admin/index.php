@@ -17,8 +17,10 @@ class Index extends Survey_Common_Action
 
     public function run()
     {
-        $clang = Yii::app()->lang;
+        $clang = Yii::app()->lang;		
+		Yii::app()->request->redirect(Yii::app()->getController()->createUrl('admin/dashboard'));
 
+		/*
         if (Yii::app()->session['just_logged_in'])
         {
             $aViewUrls = array('message' => array(
@@ -27,23 +29,17 @@ class Index extends Survey_Common_Action
             ));
             unset(Yii::app()->session['just_logged_in'], Yii::app()->session['loginsummary']);
 
-            //$this->_renderWrappedTemplate('super', $aViewUrls);
-			$this->getController()->_js_admin_includes(Yii::app()->getConfig('adminscripts') . 'dashboard.js');
-			$this->_renderWrappedTemplate('dashboard', 'dashboard', null);
+            $this->_renderWrappedTemplate('super', $aViewUrls);			
         }
         elseif (count(getSurveyList(true)) == 0)
 		{
-            //$this->_renderWrappedTemplate('super', 'firststeps');
-			$this->getController()->_js_admin_includes(Yii::app()->getConfig('adminscripts') . 'dashboard.js');
-			$this->_renderWrappedTemplate('dashboard', 'dashboard', null);
+            $this->_renderWrappedTemplate('super', 'firststeps');			
 		}
         else
         {
-            //Yii::app()->request->redirect(Yii::app()->getController()->createUrl('admin/survey/index'));
-			$this->getController()->_js_admin_includes(Yii::app()->getConfig('adminscripts') . 'dashboard.js');
-			$this->_renderWrappedTemplate('dashboard', 'dashboard', null);
+            Yii::app()->request->redirect(Yii::app()->getController()->createUrl('admin/dashboard'));			
         }
-
+		*/
     }
 
 }

@@ -3,18 +3,8 @@
     var showTextInline="<?php echo $showtextinline ?>";
 </script>
 
-<form method='post' name='formbuilder' action='<?php echo Yii::app()->getController()->createUrl("admin/statistics/index/surveyid/753971"); ?>'>
-	<input type="hidden" name="completionstate" value="all" id="completionstate" />
-	<input type="hidden" name="statlang"  value="en" id="statlang" />
-	<input type="hidden" id="outputtypehtml" name="outputtype" value="html" checked="checked" />
-	<input type="hidden" id="usegraph" name="usegraph" checked="checked" />
-	<input type="hidden" id="showtextinline" name="showtextinline" checked="checked" />
-	<input type="hidden" id="filter753971X2X4" name="summary[]" value="753971X2X4" checked="checked" />	
-	<input type='hidden' name='summary[]' value='datestampE' />
-	<input type='hidden' name='summary[]' value='datestampG' />
-	<input type='hidden' name='summary[]' value='datestampL' />
-	
-
+<form method='post' name='formbuilder' action='<?php echo Yii::app()->getController()->createUrl("admin/statistics/"); ?>'>	
+	<input name='run_saved_report' value='yes' type='hidden' />
     <div class='header ui-widget-header header_statistics'>
         <div style='float:right;'><img src='<?php echo $sImageURL; ?>/maximize.png' id='showreports' alt='<?php $clang->eT("Maximize"); ?>'/><img src='<?php echo $sImageURL; ?>/minimize.png' id='hidereports' alt='<?php $clang->eT("Minimize"); ?>'/></div>
         Dashboard - Reports
@@ -26,8 +16,13 @@
 			<ul>
 				<li>
 					<label for="reportType">Report Type: </label>
-					<select name="reportType" id="reportType">
-						<option value="gender" selected="selected">Gender</option>						
+					<select name="report_name" id="report_name">
+					<?php
+					foreach($report_names as $report_name)
+					{					
+						echo "<option value='" . $report_name ."' selected='selected'>" . $report_name . "</option>";
+					}
+					?>
 					</select>
 				</li>				
 				<li>
@@ -55,8 +50,20 @@
 </div>
 <div id='surveys' class='statisticsfilters'>	
 	<p>	
-		<a href='<?php echo Yii::app()->getController()->createUrl("admin/survey/newsurvey"); ?>'>New Survey</a><br>		
-		TODO: list all the surveys, button to set all properties of a survey correctly for INAR.
+		<a href='<?php echo Yii::app()->getController()->createUrl("admin/survey/newsurvey"); ?>'>Create New Survey</a><br>		
+		<table class='users'>		
+		<thead><tr><th class='header' style='width:20%'>Name</th><th class='header' style='width:20%'>Active</th><th class='header' style='width:60%'>Issues</th></tr></thead>
+		<tbody>
+		<?php
+		$even_odd = 'odd';
+		foreach($surveys as $survey)
+		{					
+			echo "<tr class='" . $even_odd . "'><td>" . $survey['title'] . "</td><td>" . $survey['active'] . "</td><td>" . $survey['issues'] . "</td></tr>";
+			if ($even_odd == 'odd') { $even_odd = 'even'; } else { $even_odd = 'odd'; }
+		}
+		?>				
+		</tbody>
+		</table>
 	</p>
 </div>
 <div style='clear: both'></div>  

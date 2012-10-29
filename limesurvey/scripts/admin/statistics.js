@@ -79,6 +79,14 @@ $(document).ready(function(){
     $('#showgfilter').click( function(){
         $('#statisticsgeneralfilters').show(1000);
     });
+	/* The actual statistics results */
+    $('#hidesave').click( function(){
+        $('#savereport').hide(1000);
+    });
+    $('#showsave').click( function(){
+        $('#savereport').show(1000);
+    });
+	
     /* The actual statistics results */
     $('#hidesfilter').click( function(){
         $('#statisticsoutput').hide(1000);
