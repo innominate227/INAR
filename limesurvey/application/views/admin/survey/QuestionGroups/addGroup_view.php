@@ -9,7 +9,13 @@
             <?php }
             if (hasSurveyPermission($surveyid,'surveycontent','import'))
             { ?>
+			<?php if ($inar_menu_only) { ?>
+			<div style="display: none;">
+			<?php } ?>
             <li><a href="#import"><?php $clang->eT("Import question group"); ?></a></li>
+			<?php if ($inar_menu_only) { ?>
+			</div>
+			<?php } ?>
 
             <?php } ?>
     </ul>
@@ -35,12 +41,18 @@
                         <?php echo getEditor("group-desc","description_".$grouplang, "[".$clang->gT("Description:", "js")."](".$grouplang.")",$surveyid,'','',$action); ?>
                     </li>
                     <?php if ($grouplang==$baselang){?>
+						<?php if ($inar_menu_only) { ?>
+						<div style="display: none;">
+						<?php } ?>
                         <li><label for='randomization_group'><?php $clang->eT("Randomization group:"); ?></label><input type='text' size='20' maxlength='20' name='randomization_group' id='randomization_group' /></li>
+						<?php if ($inar_menu_only) { ?>
+						</div>
+						<?php } ?>
                         <li>
                             <label for='grelevance'><?php $clang->eT("Relevance equation:"); ?></label>
                             <textarea cols='50' rows='1' id='grelevance' name='grelevance'></textarea>
                         </li>
-                        <?php } ?>
+                    <?php } ?>
                 </ul>
                 <p><input type='submit' value='<?php $clang->eT("Save question group"); ?>' />
             </div>
@@ -48,6 +60,7 @@
 
     </form>
 
+	<?php if ($inar_menu_only == false) { ?>
     <?php if (hasSurveyPermission($surveyid,'surveycontent','import'))
         { ?>
         <div id="import">
@@ -65,5 +78,6 @@
 
         </div>
         <?php } ?>
+		<?php } ?>
 
     </div>

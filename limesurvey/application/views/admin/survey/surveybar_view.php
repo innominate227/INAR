@@ -4,6 +4,9 @@
         <span class='basic'><?php echo $surveyinfo['surveyls_title']."(".$clang->gT("ID").":".$surveyid.")"; ?></span>
     </div>
     <div class='menubar-main'>
+	
+			
+		<?php if($inar_menu_only == false) { ?>
         <div class='menubar-left'>
             <?php if(!$activated) { ?>
                 <img src='<?php echo $sImageURL;?>inactive.png' alt='<?php $clang->eT("This survey is currently not active"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
@@ -31,6 +34,9 @@
                 <?php } ?>
             <img src='<?php echo $sImageURL;?>separator.gif' class='separator' alt=''  />
         </div>
+		<?php } ?>
+		
+				
         <ul class='sf-menu'>
             <?php if($onelanguage) { ?>
                 <li><a accesskey='d' target='_blank' href="<?php echo $this->createUrl("survey/index/sid/$surveyid/newtest/Y/lang/$baselang"); ?>" >
@@ -49,6 +55,9 @@
                             </ul></li>
                     </ul></li>
                 <?php } ?>
+			
+			<?php if($inar_menu_only == false) { ?>
+				
             <li><a href='#'>
                     <img src='<?php echo $sImageURL;?>edit.png' alt='<?php $clang->eT("Survey properties");?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a><ul>
                     <?php if($surveylocale) { ?>
@@ -223,6 +232,7 @@
                     } ?>
                 </ul></li>
 
+			<?php } ?>
             <?php if($surveycontent)
                 {
                     if ($activated)
@@ -237,14 +247,18 @@
                             <img src='<?php echo $sImageURL; ?>organize.png' alt='<?php $clang->eT("Reorder question groups / questions"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a></li>
                     <?php }
             } ?>
+			<?php if($inar_menu_only == false) { ?>
 
             <?php if($tokenmanagement) { ?>
                 <li><a href="<?php echo $this->createUrl("admin/tokens/index/surveyid/$surveyid"); ?>">
                         <img src='<?php echo $sImageURL;?>tokens.png' alt='<?php $clang->eT("Token management");?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a>
                 </li>
                 <?php } ?>
-        </ul>
-
+        
+			<?php } ?>
+		</ul>
+		
+		
         <div class='menubar-right'>
             <?php if ($permission)
                 { ?>

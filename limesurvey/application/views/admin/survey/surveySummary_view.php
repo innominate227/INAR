@@ -7,6 +7,7 @@
 			<?php echo $surveyinfo['surveyls_title']." (".$clang->gT("ID")." ".$surveyinfo['sid'].")";?>
 		</td>
 	</tr>
+	<?php if ($inar_menu_only == false) { ?>
 	<tr>
 		<td>
 			<strong><?php echo $clang->gT("Survey URL") ." (".getLanguageNameFromCode($surveyinfo['language'],false)."):";?></strong>
@@ -128,6 +129,7 @@
     		<?php echo $sumcount3."/".$sumcount2;?>
     	</td>
     </tr>
+	<?php } ?>
     <tr>
     	<td>
     		<strong><?php $clang->eT("Survey currently active");?>:</strong>
@@ -136,34 +138,37 @@
     		<?php echo $activatedlang;?>
     	</td>
     </tr>
-    <?php if($activated=="Y") { ?>
-    <tr>
-    	<td>
-    		<strong><?php $clang->eT("Survey table name");?>:</strong>
-    	</td>
-    	<td>
-    		<?php echo $surveydb;?>
-    	</td>
-    </tr>
-    <?php } ?>
-    <tr>
-    	<td>
-    		<strong><?php $clang->eT("Hints");?>:</strong>
-    	</td>
-    	<td>
-    		<?php echo $warnings.$hints;?>
-    	</td>
-    </tr>
-    <?php if ($tableusage != false){
-            if ($tableusage['dbtype']=='mysql' || $tableusage['dbtype']=='mysqli'){
-                $column_usage = round($tableusage['column'][0]/$tableusage['column'][1] * 100,2);
-                $size_usage =  round($tableusage['size'][0]/$tableusage['size'][1] * 100,2); ?>
-                <tr><td><strong><?php $clang->eT("Table column usage");?>: </strong></td><td><div class='progressbar' style='width:20%; height:15px;' name='<?php echo $column_usage;?>'></div> </td></tr>
-                <tr><td><strong><?php $clang->eT("Table size usage");?>: </strong></td><td><div class='progressbar' style='width:20%; height:15px;' name='<?php echo $size_usage;?>'></div></td></tr>
-            <?php }
-            elseif (($arrCols['dbtype'] == 'mssql')||($arrCols['dbtype'] == 'postgre')){
-                $column_usage = round($tableusage['column'][0]/$tableusage['column'][1] * 100,2); ?>
-                <tr><td><strong><?php $clang->eT("Table column usage");?>: </strong></td><td><strong><?php echo $column_usage;?>%</strong><div class='progressbar' style='width:20%; height:15px;' name='<?php echo $column_usage;?>'></div> </td></tr>
-            <?php }
-        } ?>
+	<?php if ($inar_menu_only == false) { ?>
+	
+		<?php if($activated=="Y") { ?>
+		<tr>
+			<td>
+				<strong><?php $clang->eT("Survey table name");?>:</strong>
+			</td>
+			<td>
+				<?php echo $surveydb;?>
+			</td>
+		</tr>
+		<?php } ?>
+		<tr>
+			<td>
+				<strong><?php $clang->eT("Hints");?>:</strong>
+			</td>
+			<td>
+				<?php echo $warnings.$hints;?>
+			</td>
+		</tr>
+		<?php if ($tableusage != false){
+				if ($tableusage['dbtype']=='mysql' || $tableusage['dbtype']=='mysqli'){
+					$column_usage = round($tableusage['column'][0]/$tableusage['column'][1] * 100,2);
+					$size_usage =  round($tableusage['size'][0]/$tableusage['size'][1] * 100,2); ?>
+					<tr><td><strong><?php $clang->eT("Table column usage");?>: </strong></td><td><div class='progressbar' style='width:20%; height:15px;' name='<?php echo $column_usage;?>'></div> </td></tr>
+					<tr><td><strong><?php $clang->eT("Table size usage");?>: </strong></td><td><div class='progressbar' style='width:20%; height:15px;' name='<?php echo $size_usage;?>'></div></td></tr>
+				<?php }
+				elseif (($arrCols['dbtype'] == 'mssql')||($arrCols['dbtype'] == 'postgre')){
+					$column_usage = round($tableusage['column'][0]/$tableusage['column'][1] * 100,2); ?>
+					<tr><td><strong><?php $clang->eT("Table column usage");?>: </strong></td><td><strong><?php echo $column_usage;?>%</strong><div class='progressbar' style='width:20%; height:15px;' name='<?php echo $column_usage;?>'></div> </td></tr>
+				<?php }
+			} ?>
+		<?php } ?>
 </table>

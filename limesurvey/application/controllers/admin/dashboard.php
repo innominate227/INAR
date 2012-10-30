@@ -36,6 +36,9 @@ class Dashboard extends Survey_Common_Action
 		foreach ($aUserSurveys as $oSurvey)
 		{
 			$survey_info = array();
+			
+			//surveys id
+			$survey_info['id'] = $oSurvey->primaryKey;
 							
 			//get the title of the survey			
 			$oSurveyLanguageSettings = Surveys_languagesettings::model()->findByAttributes(array('surveyls_survey_id' => $oSurvey->primaryKey, 'surveyls_language' => $oSurvey->language));
@@ -61,8 +64,8 @@ class Dashboard extends Survey_Common_Action
 			
 		}
 		
-		
-		
+		//set to only show INAR_MENU items
+		Yii::app()->session['INAR_MENU_ONLY'] = 1;		
 		        				
 		$this->getController()->_js_admin_includes(Yii::app()->getConfig('adminscripts') . 'dashboard.js');
 		$this->_renderWrappedTemplate('dashboard', 'dashboard', $aData);

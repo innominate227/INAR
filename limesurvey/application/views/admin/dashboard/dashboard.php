@@ -50,15 +50,24 @@
 </div>
 <div id='surveys' class='statisticsfilters'>	
 	<p>	
-		<a href='<?php echo Yii::app()->getController()->createUrl("admin/survey/newsurvey"); ?>'>Create New Survey</a><br>		
+		<font size="4"><a href='<?php echo Yii::app()->getController()->createUrl("admin/survey/newsurvey"); ?>'>Create New Survey</a></font><br>		
+	
 		<table class='users'>		
-		<thead><tr><th class='header' style='width:20%'>Name</th><th class='header' style='width:20%'>Active</th><th class='header' style='width:60%'>Issues</th></tr></thead>
+		<thead><tr><th class='header' style='width:30%'>Name</th><th class='header' style='width:10%'>Active</th><th class='header' style='width:10%'>Edit</th><th class='header' style='width:10%'>Export</th><th class='header' style='width:40%'>Issues</th></tr></thead>
 		<tbody>
 		<?php
 		$even_odd = 'odd';
 		foreach($surveys as $survey)
 		{					
-			echo "<tr class='" . $even_odd . "'><td>" . $survey['title'] . "</td><td>" . $survey['active'] . "</td><td>" . $survey['issues'] . "</td></tr>";
+			echo "<tr class='" . $even_odd . "'><td>" . $survey['title'] . "</td><td>" . $survey['active'] . "</td>";
+			echo "<td><a href='" . Yii::app()->getController()->createUrl('admin/survey/view/surveyid/' . $survey['id']) . "'>Edit</a></td>";
+			echo "<td>";
+			if ($survey['active'] == 'Y')
+			{
+				echo "<a href='" . Yii::app()->getController()->createUrl('admin/export/exportresults/surveyid/' . $survey['id']) . "'>Export</a>";
+			}
+			echo "</td>";
+			echo "<td>" . $survey['issues'] . "</td></tr>";
 			if ($even_odd == 'odd') { $even_odd = 'even'; } else { $even_odd = 'odd'; }
 		}
 		?>				

@@ -71,10 +71,7 @@ class statistics extends Survey_Common_Action {
 		
 			//set survey id from the data in the post
 			$surveyid = $_POST['sid'];
-			
-			
-			
-			echo $surveyid;
+						
 		}
 				
 		
@@ -560,6 +557,7 @@ class statistics extends Survey_Common_Action {
 		}
 		
 		
+		$aData['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);	
 		
         $this->_renderWrappedTemplate('export', 'statistics_view', $aData);
 
@@ -685,7 +683,7 @@ class statistics extends Survey_Common_Action {
 	    } else {
 	        $aData['success'] = 0;
 	    }
-
+		
         //$this->_renderWrappedTemplate('export', 'statistics_graph_view', $aData);
         $this->getController()->render('export/statistics_graph_view', $aData);
 	}

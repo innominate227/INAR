@@ -194,6 +194,7 @@ class AdminController extends LSYii_Controller
         'limereplacementfields' => 'limereplacementfields',
         'index'            => 'index',
 		'dashboard'        => 'dashboard',
+		'fulllime'         => 'fulllime',
         'kcfinder'         => 'kcfinder',
         'labels'           => 'labels',
         'participants'     => 'participantsaction',
@@ -409,6 +410,7 @@ class AdminController extends LSYii_Controller
             Yii::app()->session['flashmessage'] = $clang->gT("Warning: You are still using the default password ('password'). Please change your password and re-login again.");
         }
 
+		$data['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);		
         $data['showupdate'] = (Yii::app()->session['USER_RIGHT_SUPERADMIN'] == 1 && Yii::app()->getConfig("updatelastcheck")>0 && Yii::app()->getConfig("updateavailable")==1 && Yii::app()->getConfig("updatable") );
         $data['updateversion'] = Yii::app()->getConfig("updateversion");
         $data['updatebuild'] = Yii::app()->getConfig("updatebuild");

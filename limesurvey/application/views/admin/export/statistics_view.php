@@ -11,6 +11,12 @@
     var listColumnUrl="<?php echo Yii::app()->getController()->createUrl("admin/statistics/listcolumn/surveyid/".$surveyid."/column/"); ?>";
     var showTextInline="<?php echo $showtextinline ?>";
 </script>
+
+
+
+<?php 
+if ($inar_menu_only == false) { ?>
+
 <form method='post' name='formbuilder' action='<?php echo Yii::app()->getController()->createUrl("admin/statistics/index/surveyid/$surveyid"); ?>#start'>
     <div class='header ui-widget-header header_statistics'>
         <div style='float:right;'><img src='<?php echo $sImageURL; ?>/maximize.png' id='showgfilter' alt='<?php $clang->eT("Maximize"); ?>'/><img src='<?php echo $sImageURL; ?>/minimize.png' id='hidegfilter' alt='<?php $clang->eT("Minimize"); ?>'/></div>
@@ -1322,6 +1328,9 @@
 	
 </form>
 <div style='clear: both'></div>
+
+<? } //end hide in inar only mode ?>
+
 <?php
 flush(); //Let's give the user something to look at while they wait for the pretty pictures
 ?>

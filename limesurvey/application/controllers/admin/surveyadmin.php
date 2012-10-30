@@ -134,7 +134,10 @@ class SurveyAdmin extends Survey_Common_Action
         $aData = array_merge($aData, $this->_tabPublicationAccess($esrow));
         $aData = array_merge($aData, $this->_tabNotificationDataManagement($esrow));
         $aData = array_merge($aData, $this->_tabTokens($esrow));
+		$aData['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);
+		
         $arrayed_data['data'] = $aData;
+		$arrayed_data['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);
 
         $this->_renderWrappedTemplate('survey', 'newSurvey_view', $arrayed_data);
     }

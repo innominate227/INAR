@@ -123,6 +123,7 @@ class questiongroup extends Survey_Common_Action
             $aData['action'] = $aData['display']['menu_bars']['gid_action'] = 'addgroup';
             $aData['grplangs'] = $grplangs;
             $aData['baselang'] = $baselang;
+			$aData['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);
 
             $this->_renderWrappedTemplate('survey/QuestionGroups', 'addGroup_view', $aData);
         }
@@ -329,7 +330,8 @@ class questiongroup extends Survey_Common_Action
             $aData['surveyid'] = $surveyid;
             $aData['gid'] = $gid;
             $aData['tabtitles'] = $aTabTitles;
-            $aData['aBaseLanguage'] = $aBaseLanguage;
+            $aData['aBaseLanguage'] = $aBaseLanguage;			
+			$aData['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);
 
             $this->_renderWrappedTemplate('survey/QuestionGroups', 'editGroup_view', $aData);
         }

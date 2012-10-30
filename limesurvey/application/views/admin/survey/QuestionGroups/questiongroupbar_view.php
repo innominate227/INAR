@@ -54,12 +54,13 @@
                 <img src='<?php echo $imageurl; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
                 <?php }
             }
+			if ($inar_menu_only == false) {
             if(hasSurveyPermission($surveyid,'surveycontent','export'))
             { ?>
 
             <a href='<?php echo $this->createUrl("admin/export/group/surveyid/$surveyid/gid/$gid");?>'>
                 <img src='<?php echo $imageurl; ?>dumpgroup.png' title='' alt='<?php $clang->eT("Export this question group"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a>
-            <?php } ?>
+            <?php } } ?>
     </div>
     <div class='menubar-right'>
         <label for="questionid"><?php $clang->eT("Questions:"); ?></label> <select class="listboxquestions" name='questionid' id='questionid'

@@ -58,47 +58,53 @@ if (isset($tmp_survlangs)) { ?>
 
 
 
+			if ($inar_menu_only == false) {
             if(hasSurveyPermission($surveyid,'surveycontent','export'))
             { ?>
             <a href='<?php echo $this->createUrl("admin/export/question/surveyid/$surveyid/gid/$gid/qid/$qid");?>'>
                 <img src='<?php echo $sImageURL; ?>dumpquestion.png' alt='<?php $clang->eT("Export this question"); ?>' /></a>
-            <?php } ?>
+            <?php } } ?>
 
         <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
 
 
 
 
-        <?php if(hasSurveyPermission($surveyid,'surveycontent','create'))
-            {
-                if ($activated != "Y")
-                { ?>
-                <a href='<?php echo $this->createUrl("admin/question/copyquestion/surveyid/$surveyid/gid/$gid/qid/$qid");?>'>
-                    <img src='<?php echo $sImageURL; ?>copy.png'  alt='<?php $clang->eT("Copy Current Question"); ?>' /></a>
-                <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
-                <?php }
-                else
-                { ?>
-                <a href='#' onclick="alert('<?php $clang->eT("You can't copy a question if the survey is active.","js"); ?>')">
-                    <img src='<?php echo $sImageURL; ?>copy_disabled.png' alt='<?php $clang->eT("Copy Current Question"); ?>' /></a>
-                <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
-                <?php }
-            }
-            else
-            { ?>
-            <img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
-            <?php }
+        <?php 
+		
+			if ($inar_menu_only == false) {
+				if(hasSurveyPermission($surveyid,'surveycontent','create'))
+				{
+					if ($activated != "Y")
+					{ ?>
+					<a href='<?php echo $this->createUrl("admin/question/copyquestion/surveyid/$surveyid/gid/$gid/qid/$qid");?>'>
+						<img src='<?php echo $sImageURL; ?>copy.png'  alt='<?php $clang->eT("Copy Current Question"); ?>' /></a>
+					<img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+					<?php }
+					else
+					{ ?>
+					<a href='#' onclick="alert('<?php $clang->eT("You can't copy a question if the survey is active.","js"); ?>')">
+						<img src='<?php echo $sImageURL; ?>copy_disabled.png' alt='<?php $clang->eT("Copy Current Question"); ?>' /></a>
+					<img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+					<?php }
+				}
+				else
+				{ ?>
+				<img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
+				<?php } 
 
-            if(hasSurveyPermission($surveyid,'surveycontent','update'))
-            { ?>
-            <a href="<?php echo $this->createUrl("admin/conditions/index/subaction/editconditionsform/surveyid/$surveyid/gid/$gid/qid/$qid"); ?>">
-                <img src='<?php echo $sImageURL; ?>conditions.png' alt='<?php $clang->eT("Set conditions for this question"); ?>'  /></a>
-            <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
-            <?php }
-            else
-            { ?>
-            <img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
-            <?php }
+				if(hasSurveyPermission($surveyid,'surveycontent','update'))
+				{ ?>
+				<a href="<?php echo $this->createUrl("admin/conditions/index/subaction/editconditionsform/surveyid/$surveyid/gid/$gid/qid/$qid"); ?>">
+					<img src='<?php echo $sImageURL; ?>conditions.png' alt='<?php $clang->eT("Set conditions for this question"); ?>'  /></a>
+				<img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+				<?php }
+				else
+				{ ?>
+				<img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
+				<?php }
+			
+			}
 
 
 
