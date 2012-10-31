@@ -797,6 +797,7 @@ class SurveyAdmin extends Survey_Common_Action
                 $aData['esrow'] = $esrow;
                 $aData['action'] = "editsurveylocalesettings";
                 $aData['clang'] = $clang;
+				$aData['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);
 
                 $tab_content[$i] = $this->getController()->render('/admin/survey/editLocalSettings_view', $aData, true);
 

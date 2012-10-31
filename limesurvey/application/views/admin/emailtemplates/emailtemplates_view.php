@@ -34,42 +34,56 @@
                         <li><a href='#tab-<?php echo $grouplang; ?>-invitation'><?php $clang->eT("Invitation"); ?></a></li>
                         <li><a href='#tab-<?php echo $grouplang; ?>-reminder'><?php $clang->eT("Reminder"); ?></a></li>
                         <li><a href='#tab-<?php echo $grouplang; ?>-confirmation'><?php echo$clang->gT("Confirmation"); ?></a></li>
-                        <li><a href='#tab-<?php echo $grouplang; ?>-registration'><?php $clang->eT("Registration"); ?></a></li>
-                        <li><a href='#tab-<?php echo $grouplang; ?>-admin-confirmation'><?php $clang->eT("Basic admin notification"); ?></a></li>
-                        <li><a href='#tab-<?php echo $grouplang; ?>-admin-responses'><?php $clang->eT("Detailed admin notification"); ?></a></li>
+						<?php if ($inar_menu_only) { ?>
+						<div style="display: none;">
+						<?php } ?>
+							<li><a href='#tab-<?php echo $grouplang; ?>-registration'><?php $clang->eT("Registration"); ?></a></li>
+							<li><a href='#tab-<?php echo $grouplang; ?>-admin-confirmation'><?php $clang->eT("Basic admin notification"); ?></a></li>
+							<li><a href='#tab-<?php echo $grouplang; ?>-admin-responses'><?php $clang->eT("Detailed admin notification"); ?></a></li>
+						<?php if ($inar_menu_only) { ?>
+						</div>
+						<?php } ?>
                     </ul>
 
-                    <div id='tab-<?php echo $grouplang; ?>-admin-confirmation'>
-                        <ul>
-                            <li><label for='email_admin_notification_subj_<?php echo $grouplang; ?>'><?php $clang->eT("Admin confirmation email subject:"); ?></label>
-                                <input type='text' size='80' name='email_admin_notification_subj_<?php echo $grouplang; ?>' id='email_admin_notification_subj_<?php echo $grouplang; ?>' value="<?php echo $esrow->email_admin_notification_subj; ?>" />
-                                <input type='hidden' name='email_admin_notification_subj_default_<?php echo $grouplang; ?>' id='email_admin_notification_subj_default_<?php echo $grouplang; ?>' value='<?php echo $aDefaultTexts['admin_notification_subject']; ?>' />
-                                <input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_notification_subj_<?php echo $grouplang; ?>","email_admin_notification_subj_default_<?php echo $grouplang; ?>")' />
-                            </li>
-                            <li><label for='email_admin_notification_<?php echo $grouplang; ?>'><?php $clang->eT("Admin confirmation email body:"); ?></label>
-                                <textarea cols='80' rows='20' name='email_admin_notification_<?php echo $grouplang; ?>' id='email_admin_notification_<?php echo $grouplang; ?>'><?php echo htmlspecialchars($esrow->email_admin_notification); ?></textarea>
-                                <?php echo getEditor("email-admin-notification","email_admin_notification_$grouplang", "[".$clang->gT("Admin notification email:", "js")."](".$grouplang.")",$surveyid,'','','editemailtemplates'); ?>
-                                <input type='hidden' name='email_admin_notification_default_<?php echo $grouplang; ?>' id='email_admin_notification_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars(conditionalNewlineToBreak($aDefaultTexts['admin_notification'],$ishtml),ENT_QUOTES); ?>' />
-                                <input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_notification_<?php echo $grouplang; ?>","email_admin_notification_default_<?php echo $grouplang; ?>")' />
-                            </li>
-                        </ul>
-                    </div>
+					<?php if ($inar_menu_only) { ?>
+					<div style="display: none;">
+					<?php } ?>
+					
+						<div id='tab-<?php echo $grouplang; ?>-admin-confirmation'>
+							<ul>
+								<li><label for='email_admin_notification_subj_<?php echo $grouplang; ?>'><?php $clang->eT("Admin confirmation email subject:"); ?></label>
+									<input type='text' size='80' name='email_admin_notification_subj_<?php echo $grouplang; ?>' id='email_admin_notification_subj_<?php echo $grouplang; ?>' value="<?php echo $esrow->email_admin_notification_subj; ?>" />
+									<input type='hidden' name='email_admin_notification_subj_default_<?php echo $grouplang; ?>' id='email_admin_notification_subj_default_<?php echo $grouplang; ?>' value='<?php echo $aDefaultTexts['admin_notification_subject']; ?>' />
+									<input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_notification_subj_<?php echo $grouplang; ?>","email_admin_notification_subj_default_<?php echo $grouplang; ?>")' />
+								</li>
+								<li><label for='email_admin_notification_<?php echo $grouplang; ?>'><?php $clang->eT("Admin confirmation email body:"); ?></label>
+									<textarea cols='80' rows='20' name='email_admin_notification_<?php echo $grouplang; ?>' id='email_admin_notification_<?php echo $grouplang; ?>'><?php echo htmlspecialchars($esrow->email_admin_notification); ?></textarea>
+									<?php echo getEditor("email-admin-notification","email_admin_notification_$grouplang", "[".$clang->gT("Admin notification email:", "js")."](".$grouplang.")",$surveyid,'','','editemailtemplates'); ?>
+									<input type='hidden' name='email_admin_notification_default_<?php echo $grouplang; ?>' id='email_admin_notification_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars(conditionalNewlineToBreak($aDefaultTexts['admin_notification'],$ishtml),ENT_QUOTES); ?>' />
+									<input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_notification_<?php echo $grouplang; ?>","email_admin_notification_default_<?php echo $grouplang; ?>")' />
+								</li>
+							</ul>
+						</div>
 
-                    <div id='tab-<?php echo $grouplang; ?>-admin-responses'>
-                        <ul>
-                            <li><label for='email_admin_responses_subj_<?php echo $grouplang; ?>'><?php $clang->eT("Detailed admin notification subject:"); ?></label>
-                                <input type='text' size='80' name='email_admin_responses_subj_<?php echo $grouplang; ?>' id='email_admin_responses_subj_<?php echo $grouplang; ?>' value="<?php echo $esrow->email_admin_responses_subj; ?>" />
-                                <input type='hidden' name='email_admin_responses_subj_default_<?php echo $grouplang; ?>' id='email_admin_responses_subj_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars($aDefaultTexts['admin_detailed_notification_subject']);?>' />
-                                <input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_responses_subj_<?php echo $grouplang; ?>","email_admin_responses_subj_default_<?php echo $grouplang; ?>")' />
-                            </li>
-                            <li><label for='email_admin_responses_<?php echo $grouplang; ?>'><?php $clang->eT("Detailed admin notification email:"); ?></label>
-                                <textarea cols='80' rows='20' name='email_admin_responses_<?php echo $grouplang; ?>' id='email_admin_responses_<?php echo $grouplang; ?>'><?php echo htmlspecialchars($esrow->email_admin_responses); ?></textarea>
-                                <?php echo getEditor("email-admin-resp","email_admin_responses_$grouplang", "[".$clang->gT("Invitation email:", "js")."](".$grouplang.")",$surveyid,'','','editemailtemplates'); ?>
-                                <input type='hidden' name='email_admin_responses_default_<?php echo $grouplang; ?>' id='email_admin_responses_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars($aDefaultTexts['admin_detailed_notification'],ENT_QUOTES); ?>' />
-                                <input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_responses_<?php echo $grouplang; ?>","email_admin_responses_default_<?php echo $grouplang; ?>")' />
-                            </li>
-                        </ul>
-                    </div>
+						<div id='tab-<?php echo $grouplang; ?>-admin-responses'>
+							<ul>
+								<li><label for='email_admin_responses_subj_<?php echo $grouplang; ?>'><?php $clang->eT("Detailed admin notification subject:"); ?></label>
+									<input type='text' size='80' name='email_admin_responses_subj_<?php echo $grouplang; ?>' id='email_admin_responses_subj_<?php echo $grouplang; ?>' value="<?php echo $esrow->email_admin_responses_subj; ?>" />
+									<input type='hidden' name='email_admin_responses_subj_default_<?php echo $grouplang; ?>' id='email_admin_responses_subj_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars($aDefaultTexts['admin_detailed_notification_subject']);?>' />
+									<input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_responses_subj_<?php echo $grouplang; ?>","email_admin_responses_subj_default_<?php echo $grouplang; ?>")' />
+								</li>
+								<li><label for='email_admin_responses_<?php echo $grouplang; ?>'><?php $clang->eT("Detailed admin notification email:"); ?></label>
+									<textarea cols='80' rows='20' name='email_admin_responses_<?php echo $grouplang; ?>' id='email_admin_responses_<?php echo $grouplang; ?>'><?php echo htmlspecialchars($esrow->email_admin_responses); ?></textarea>
+									<?php echo getEditor("email-admin-resp","email_admin_responses_$grouplang", "[".$clang->gT("Invitation email:", "js")."](".$grouplang.")",$surveyid,'','','editemailtemplates'); ?>
+									<input type='hidden' name='email_admin_responses_default_<?php echo $grouplang; ?>' id='email_admin_responses_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars($aDefaultTexts['admin_detailed_notification'],ENT_QUOTES); ?>' />
+									<input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_admin_responses_<?php echo $grouplang; ?>","email_admin_responses_default_<?php echo $grouplang; ?>")' />
+								</li>
+							</ul>
+						</div>
+					
+					<?php if ($inar_menu_only) { ?>
+					</div>
+					<?php } ?>
 
                     <div id='tab-<?php echo $grouplang; ?>-invitation'>
                         <ul>
@@ -122,22 +136,30 @@
                             </li>
                         </ul>
                     </div>
-
-                    <div id='tab-<?php echo $grouplang; ?>-registration'>
-                        <ul>
-                            <li><label for='email_register_subj_<?php echo $grouplang; ?>'><?php $clang->eT("Public registration email subject:"); ?></label>
-                                <input type='text' size='80' name='email_register_subj_<?php echo $esrow->surveyls_language; ?>' id='email_register_subj_<?php echo $grouplang; ?>' value="<?php echo $esrow->surveyls_email_register_subj; ?>" />
-                                <input type='hidden' name='email_register_subj_default_<?php echo $esrow->surveyls_language; ?>' id='email_register_subj_default_<?php echo $grouplang; ?>' value='<?php echo $aDefaultTexts['registration_subject'] ?>' />
-                                <input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_register_subj_<?php echo $grouplang; ?>","email_register_subj_default_<?php echo $grouplang; ?>")' />
-                            </li>
-                            <li><label for='email_register_<?php echo $grouplang; ?>'><?php $clang->eT("Public registration email:"); ?></label>
-                                <textarea cols='80' rows='20' name='email_register_<?php echo $grouplang; ?>' id='email_register_<?php echo $grouplang; ?>'><?php echo htmlspecialchars($esrow->surveyls_email_register); ?></textarea>
-                                <?php echo getEditor("email-reg","email_register_$grouplang", "[".$clang->gT("Public registration email:", "js")."](".$grouplang.")",$surveyid,'','','editemailtemplates'); ?>
-                                <input type='hidden' name='email_register_default_<?php echo $esrow->surveyls_language; ?>' id='email_register_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars(conditionalNewlineToBreak($aDefaultTexts['registration'],$ishtml),ENT_QUOTES); ?>' />
-                                <input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_register_<?php echo $grouplang; ?>","email_register_default_<?php echo $grouplang; ?>")' />
-                            </li>
-                        </ul>
-                    </div>
+					
+					
+					<?php if ($inar_menu_only) { ?>
+					<div style="display: none;">
+					<?php } ?>
+						<div id='tab-<?php echo $grouplang; ?>-registration'>
+							<ul>
+								<li><label for='email_register_subj_<?php echo $grouplang; ?>'><?php $clang->eT("Public registration email subject:"); ?></label>
+									<input type='text' size='80' name='email_register_subj_<?php echo $esrow->surveyls_language; ?>' id='email_register_subj_<?php echo $grouplang; ?>' value="<?php echo $esrow->surveyls_email_register_subj; ?>" />
+									<input type='hidden' name='email_register_subj_default_<?php echo $esrow->surveyls_language; ?>' id='email_register_subj_default_<?php echo $grouplang; ?>' value='<?php echo $aDefaultTexts['registration_subject'] ?>' />
+									<input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_register_subj_<?php echo $grouplang; ?>","email_register_subj_default_<?php echo $grouplang; ?>")' />
+								</li>
+								<li><label for='email_register_<?php echo $grouplang; ?>'><?php $clang->eT("Public registration email:"); ?></label>
+									<textarea cols='80' rows='20' name='email_register_<?php echo $grouplang; ?>' id='email_register_<?php echo $grouplang; ?>'><?php echo htmlspecialchars($esrow->surveyls_email_register); ?></textarea>
+									<?php echo getEditor("email-reg","email_register_$grouplang", "[".$clang->gT("Public registration email:", "js")."](".$grouplang.")",$surveyid,'','','editemailtemplates'); ?>
+									<input type='hidden' name='email_register_default_<?php echo $esrow->surveyls_language; ?>' id='email_register_default_<?php echo $grouplang; ?>' value='<?php echo htmlspecialchars(conditionalNewlineToBreak($aDefaultTexts['registration'],$ishtml),ENT_QUOTES); ?>' />
+									<input type='button' value='<?php $clang->eT("Use default"); ?>' onclick='javascript: fillin("email_register_<?php echo $grouplang; ?>","email_register_default_<?php echo $grouplang; ?>")' />
+								</li>
+							</ul>
+						</div>
+					<?php if ($inar_menu_only) { ?>
+					</div>
+					<?php } ?>
+					
                 </div>
             </div>
             <?php endforeach; ?>

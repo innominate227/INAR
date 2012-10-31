@@ -6,7 +6,7 @@
     <div class='menubar-main'>
 	
 			
-		<?php if($inar_menu_only == false) { ?>
+		
         <div class='menubar-left'>
             <?php if(!$activated) { ?>
                 <img src='<?php echo $sImageURL;?>inactive.png' alt='<?php $clang->eT("This survey is currently not active"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
@@ -34,8 +34,7 @@
                 <?php } ?>
             <img src='<?php echo $sImageURL;?>separator.gif' class='separator' alt=''  />
         </div>
-		<?php } ?>
-		
+				
 				
         <ul class='sf-menu'>
             <?php if($onelanguage) { ?>
@@ -99,6 +98,8 @@
                         </li>
                         <?php } ?>
                 </ul></li>
+				
+				
             <li><a href="#">
                     <img src='<?php echo $sImageURL;?>tools.png' alt='<?php $clang->eT("Tools");?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a><ul>
                     <?php if ($surveydelete) { ?>
@@ -141,6 +142,8 @@
                         </li>
                         <?php } ?>
                 </ul></li>
+				
+				
             <li><a href='#'>
                     <img src='<?php echo $sImageURL;?>display_export.png' alt='<?php $clang->eT("Display / Export");?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a><ul>
                     <?php if($surveyexport) { ?>
@@ -231,8 +234,56 @@
                             <?php }
                     } ?>
                 </ul></li>
-
+			
+			<?php } else { //inar mode: ?>
+			 
+				<?php if($surveylocale) { ?>
+                 <li>
+					<a href='<?php echo $this->createUrl("admin/survey/editlocalsettings/surveyid/$surveyid");?>'>
+						<img src='<?php echo $sImageURL;?>edit.png' alt='<?php $clang->eT("Edit text elements");?>'/> 
+					</a>
+				</li>
+				<?php } ?>                    
+                <?php if($surveylocale) { ?>
+                <li>
+					<a href='<?php echo $this->createUrl("admin/emailtemplates/index/surveyid/$surveyid");?>' >
+						<img src='<?php echo $sImageURL;?>emailtemplates.png' alt='<?php $clang->eT("Email templates");?>'/>
+					</a>
+				</li>
+                <?php } ?>
+				<?php if ($surveydelete) { ?>
+				<li>
+					<a href="<?php echo $this->createUrl("admin/survey/delete/surveyid/{$surveyid}"); ?>">
+						<img src='<?php echo $sImageURL;?>delete.png' alt='<?php $clang->eT("Delete survey");?>'/>
+					</a>
+				</li>
+				<?php } ?>				
+				<?php if($onelanguage) { ?>
+                    <li>
+						<a target='_blank' href='<?php echo $this->createUrl("admin/printablesurvey/index/surveyid/$surveyid");?>' >
+							<img src='<?php echo $sImageURL;?>print_30.png' alt='<?php $clang->eT("Printable version");?>'/>
+						</a>
+					</li>
+                <?php } else { ?>
+                    <li>
+						<a target='_blank' href='<?php echo $this->createUrl("admin/printablesurvey/index/surveyid/$surveyid");?>' >
+						<img src='<?php echo $sImageURL;?>print_30.png' alt='<?php $clang->eT("Printable version");?>'/>
+						</a>
+						<ul>
+							<?php foreach ($languagelist as $tmp_lang) { ?>
+							<li>
+								<a accesskey='d' target='_blank' href='<?php echo $this->createUrl("admin/printablesurvey/index/surveyid/$surveyid/lang/$tmp_lang");?>'>
+								<img src='<?php echo $sImageURL;?>print_30.png' alt='' /> <?php echo getLanguageNameFromCode($tmp_lang,false);?>
+								</a>
+							</li>
+							<?php } ?>
+						</ul>
+					</li>
+                <?php } ?>
 			<?php } ?>
+			
+			
+			
             <?php if($surveycontent)
                 {
                     if ($activated)

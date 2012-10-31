@@ -8,6 +8,12 @@
         </div>
         <?php echo getEditor("survey-desc","description_".$esrow['surveyls_language'], "[".$clang->gT("Description:", "js")."](".$esrow['surveyls_language'].")",$surveyid,'','',$action); ?>
     </li>
+	
+	
+	<?php if ($inar_menu_only) { ?>
+	<div style="display: none;">
+	<?php } ?>
+	
     <li><label for='welcome_<?php echo $esrow['surveyls_language']; ?>'><?php $clang->eT("Welcome message:"); ?></label>
         <div class='htmleditor'>
         <textarea cols='80' rows='15' id='welcome_<?php echo $esrow['surveyls_language']; ?>' name='welcome_<?php echo $esrow['surveyls_language']; ?>'><?php echo $esrow['surveyls_welcometext']; ?></textarea>
@@ -50,4 +56,9 @@
                 <?php } ?>
         </select>
     </li>
+	
+	<?php if ($inar_menu_only) { ?>
+	</div>
+	<?php } ?>
+	
 </ul>

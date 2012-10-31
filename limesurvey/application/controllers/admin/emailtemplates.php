@@ -74,6 +74,7 @@ class emailtemplates extends Survey_Common_Action {
         $aData['surveyid'] = $iSurveyId;
         $aData['ishtml'] = $ishtml;
         $aData['grplangs'] = $grplangs;
+		$aData['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);
         $this->_renderWrappedTemplate('emailtemplates', array('output' => $sEditScript, 'emailtemplates_view'), $aData);
     }
 
