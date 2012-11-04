@@ -50,13 +50,13 @@
         <li><label for='showwelcome'><?php $clang->eT("Show welcome screen?") ; ?></label>
             <select id='showwelcome' name='showwelcome'>
                 <option value='Y'
-                    <?php if (!$esrow['showwelcome'] || $esrow['showwelcome'] == "Y") { ?>
+                    <?php if ($esrow['showwelcome'] == "Y") { ?>
                         selected='selected'
                         <?php } ?>
                     ><?php $clang->eT("Yes") ; ?>
                 </option>
                 <option value='N'
-                    <?php if ($esrow['showwelcome'] == "N") { ?>
+                    <?php if (!$esrow['showwelcome'] || $esrow['showwelcome'] == "N") { ?>
                         selected='selected'
                         <?php } ?>
                     ><?php $clang->eT("No") ; ?>

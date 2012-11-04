@@ -2318,18 +2318,26 @@ class tokens extends Survey_Common_Action
     * Show dialogs and create a new tokens table
     */
     function _newtokentable($iSurveyId)
-    {
+    {	
         $clang = $this->getController()->lang;
         Yii::import('application.helpers.admin.token_helper', true);
-        if (Yii::app()->request->getPost('createtable') == "Y" && hasSurveyPermission($iSurveyId, 'surveyactivation', 'update'))
+        if ($_REQUEST['createtable'] == "Y" && hasSurveyPermission($iSurveyId, 'surveyactivation', 'update'))
         {
             createTokenTable($iSurveyId);
-            $this->_renderWrappedTemplate('token', array('message' =>array(
-            'title' => $clang->gT("Token control"),
-            'message' => $clang->gT("A token table has been created for this survey.") . " (\"" . Yii::app()->db->tablePrefix . "tokens_$iSurveyId\")<br /><br />\n"
-            . "<input type='submit' value='"
-            . $clang->gT("Continue") . "' onclick=\"window.open('" . $this->getController()->createUrl("admin/tokens/index/surveyid/$iSurveyId") . "', '_top')\" />\n"
-            )));
+			
+			if (Yii::app()->session['INAR_MENU_ONLY'] == 1)
+			{
+				Yii::app()->request->redirect(Yii::app()->getController()->createUrl("admin/survey/view/surveyid/".$_REQUEST['sid']));	
+			}
+			else
+			{			
+				$this->_renderWrappedTemplate('token', array('message' =>array(
+				'title' => $clang->gT("Token control"),
+				'message' => $clang->gT("A token table has been created for this survey.") . " (\"" . Yii::app()->db->tablePrefix . "tokens_$iSurveyId\")<br /><br />\n"
+				. "<input type='submit' value='"
+				. $clang->gT("Continue") . "' onclick=\"window.open('" . $this->getController()->createUrl("admin/tokens/index/surveyid/$iSurveyId") . "', '_top')\" />\n"
+				)));
+			}
         }
         /* Restore a previously deleted tokens table */
         elseif (returnGlobal('restoretable') == "Y" && Yii::app()->request->getPost('oldtable') && hasSurveyPermission($iSurveyId, 'surveyactivation', 'update'))

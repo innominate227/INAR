@@ -26,12 +26,12 @@
                 <?php } else { ?>
                 <select id='datestamp' name='datestamp' onchange='alertPrivacy();'>
                     <option value='Y'
-                        <?php if ($esrow['datestamp'] == "Y") { ?>
+                        <?php if ($esrow['datestamp'] != "N") { ?>
                             selected='selected'
                             <?php } ?>
                         ><?php $clang->eT("Yes"); ?></option>
                     <option value='N'
-                        <?php if ($esrow['datestamp'] != "Y") { ?>
+                        <?php if ($esrow['datestamp'] == "N") { ?>
                             selected='selected'
                             <?php } ?>
                         ><?php $clang->eT("No"); ?></option>

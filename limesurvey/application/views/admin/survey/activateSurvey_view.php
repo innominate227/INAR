@@ -39,12 +39,22 @@
         </div>
         <?php $clang->eT("You should only activate a survey when you are absolutely certain that your survey setup is finished and will not need changing."); ?><br /><br />
         <?php $clang->eT("Once a survey is activated you can no longer:"); ?><ul><li><?php $clang->eT("Add or delete groups"); ?></li><li><?php $clang->eT("Add or delete questions"); ?></li><li><?php $clang->eT("Add or delete subquestions or change their codes"); ?></li></ul>
+		
+		<?php if ($inar_menu_only) { ?>
+			<div style="display: none;">
+		<?php } ?>		
         <div class='warningheader'>
             <?php $clang->eT("The following settings cannot be changed when the survey is active.");?>
-        </div>
-        <?php $clang->eT("Please check these settings now, then click the button below.");?>
+        </div>		
+        <?php $clang->eT("Please check these settings now, then click the button below.");?>		
+		<?php if ($inar_menu_only) { ?>
+			</div>
+		<?php } ?>
         <form class='form44' action='<?php echo Yii::app()->getController()->createUrl("admin/survey/activate/surveyid/".$surveyid); ?>' method='post'>
-            <ul>
+            <?php if ($inar_menu_only) { ?>
+				<div style="display: none;">
+			<?php } ?>
+			<ul>
                 <li><label for='anonymized'><?php $clang->eT("Anonymized responses?"); ?>
 
                         <script type="text/javascript"><!--
@@ -130,10 +140,16 @@
                     </select>
                 </li>
             </ul>
+			<?php if ($inar_menu_only) { ?>
+				</div>
+			<?php } ?>
 
             <?php $clang->eT("Please note that once responses have collected with this survey and you want to add or remove groups/questions or change one of the settings above, you will need to deactivate this survey, which will move all data that has already been entered into a separate archived table."); ?><br /><br />
             <input type='hidden' name='ok' value='Y' />
             <input type='submit' value="<?php $clang->eT("Save / Activate survey"); ?>" />
-        </form>
+        </form>		
+		
+		
+		
     </div><br />&nbsp;
     <?php } ?>

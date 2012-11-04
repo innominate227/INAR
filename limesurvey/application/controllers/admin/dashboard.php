@@ -108,7 +108,7 @@ class Dashboard extends Survey_Common_Action
 		{
 			$survey_issues .= 'Answer persistance is off.<br>';
 		}		
-		if (!Yii::app()->db->schema->getTable('{{tokens_' . $oSurvey->primaryKey . '}}'))
+		if ($oSurvey->attributes['active'] == 'Y' && !Yii::app()->db->schema->getTable('{{tokens_' . $oSurvey->primaryKey . '}}'))
 		{
 			$survey_issues .= 'No token table created.<br>';
 		}

@@ -57,7 +57,7 @@
             <label for='tokenanswerspersistence'><?php $clang->eT("Enable token-based response persistence?"); ?></label>
             <select id='tokenanswerspersistence' name='tokenanswerspersistence' onchange="javascript: if (document.getElementById('anonymized').value == 'Y') { alert('<?php $clang->eT("This option can't be set if the `Anonymized responses` option is active.","js"); ?>'); this.value='N';}">
                 <option value='Y'
-                    <?php if ($esrow['tokenanswerspersistence'] == "Y") { ?>
+                    <?php if (!$esrow['tokenanswerspersistence'] || $esrow['tokenanswerspersistence'] == "Y") { ?>
                         selected='selected'
                         <?php } ?>
                     ><?php $clang->eT("Yes"); ?></option>
