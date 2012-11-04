@@ -7,39 +7,54 @@
 	
 			
 		
-        <div class='menubar-left'>
+        <div class='menubar-left'>	
+			<ul class='sf-menu'>
+			<li>
             <?php if(!$activated) { ?>
                 <img src='<?php echo $sImageURL;?>inactive.png' alt='<?php $clang->eT("This survey is currently not active"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
                 <?php if($canactivate) { ?>
-                    <a href="<?php echo $this->createurl("admin/survey/activate/surveyid/$surveyid"); ?>">
-                        <img src='<?php echo $sImageURL; ?>activate.png' alt='<?php $clang->eT("Activate this Survey"); ?>'/></a>
+						<li>
+						<a href="<?php echo $this->createurl("admin/survey/activate/surveyid/$surveyid"); ?>">
+							<img src='<?php echo $sImageURL; ?>activate.png' alt='<?php $clang->eT("Activate this Survey"); ?>'/>
+						</a>
+						</li>
                     <?php } else { ?>
-                    <img src='<?php echo $sImageURL; ?>activate_disabled.png'
-                        alt='<?php $clang->eT("Survey cannot be activated. Either you have no permission or there are no questions."); ?>' />
+						<li>
+						<img src='<?php echo $sImageURL; ?>activate_disabled.png' alt='<?php $clang->eT("Survey cannot be activated. Either you have no permission or there are no questions."); ?>' />						
+						</li>
                     <?php } ?>
                 <?php } else { ?>
                 <?php if($expired) { ?>
-                    <img src='<?php echo $sImageURL; ?>expired.png' alt='<?php $clang->eT("This survey is active but expired."); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
+						<img src='<?php echo $sImageURL; ?>expired.png' alt='<?php $clang->eT("This survey is active but expired."); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
                     <?php } elseif($notstarted) { ?>
-                    <img src='<?php echo $sImageURL; ?>notyetstarted.png' alt='<?php $clang->eT("This survey is active but has a start date."); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
+						<img src='<?php echo $sImageURL; ?>notyetstarted.png' alt='<?php $clang->eT("This survey is active but has a start date."); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
                     <?php } else { ?>
-                    <img src='<?php echo $sImageURL; ?>active.png' title='' alt='<?php $clang->eT("This survey is currently active."); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
+						<img src='<?php echo $sImageURL; ?>active.png' title='' alt='<?php $clang->eT("This survey is currently active."); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
                     <?php }
                     if($canactivate) { ?>
-                    <a href="<?php echo $this->createUrl("admin/survey/deactivate/surveyid/$surveyid"); ?>">
-                        <img src='<?php echo $sImageURL;?>deactivate.png' alt='<?php $clang->eT("Stop this survey"); ?>' /></a>
+						<li>
+						<a href="<?php echo $this->createUrl("admin/survey/deactivate/surveyid/$surveyid"); ?>">
+							<img src='<?php echo $sImageURL;?>deactivate.png' alt='<?php $clang->eT("Stop this survey"); ?>' />
+						</a>
+						</li>
                     <?php } else { ?>
-                    <img src='<?php echo $sImageURL; ?>blank.gif' alt='' width='14' />
+						<li><img src='<?php echo $sImageURL; ?>blank.gif' alt='' width='14' /></li>
                     <?php } ?>
-                <?php } ?>
-            <img src='<?php echo $sImageURL;?>separator.gif' class='separator' alt=''  />
+                <?php } ?>		
+				</li>									
+				<li>
+				<div style='float: right; line-height: 1.2em; padding: 3px;'>Activate /<br>Deactivate</div>			
+				</li>
+				</ul>
         </div>
 				
 				
         <ul class='sf-menu'>
+			<li><img src='<?php echo $sImageURL;?>separator.gif' class='separator' alt=''  /></li>
             <?php if($onelanguage) { ?>
                 <li><a accesskey='d' target='_blank' href="<?php echo $this->createUrl("survey/index/sid/$surveyid/newtest/Y/lang/$baselang"); ?>" >
-                        <img src='<?php echo $sImageURL;?>do.png' alt='<?php echo $icontext;?>' />
+                        <img style='float: left' src='<?php echo $sImageURL;?>do.png' alt='<?php echo $icontext;?>' />
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Test<br>Survey</div>
                     </a></li>
                 <?php } else { ?>
                 <li><a href='#' accesskey='d'>
@@ -53,7 +68,8 @@
                                     <?php } ?>
                             </ul></li>
                     </ul></li>
-                <?php } ?>
+                <?php } ?>			
+				
 			
 			<?php if($inar_menu_only == false) { ?>
 				
@@ -240,28 +256,32 @@
 				<?php if($surveylocale) { ?>
                  <li>
 					<a href='<?php echo $this->createUrl("admin/survey/editlocalsettings/surveyid/$surveyid");?>'>
-						<img src='<?php echo $sImageURL;?>edit.png' alt='<?php $clang->eT("Edit text elements");?>'/> 
+						<img style='float: left' src='<?php echo $sImageURL;?>edit.png' alt='<?php $clang->eT("Edit survey name and description");?>'/> 
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Edit<br>Name</div>
 					</a>
 				</li>
 				<?php } ?>                    
                 <?php if($surveylocale) { ?>
                 <li>
 					<a href='<?php echo $this->createUrl("admin/emailtemplates/index/surveyid/$surveyid");?>' >
-						<img src='<?php echo $sImageURL;?>emailtemplates.png' alt='<?php $clang->eT("Email templates");?>'/>
+						<img style='float: left' src='<?php echo $sImageURL;?>emailtemplates.png' alt='<?php $clang->eT("Edit survey email templates");?>'/>
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Edit<br>Emails</div>
 					</a>
 				</li>
                 <?php } ?>
 				<?php if ($surveydelete) { ?>
 				<li>
 					<a href="<?php echo $this->createUrl("admin/survey/delete/surveyid/{$surveyid}"); ?>">
-						<img src='<?php echo $sImageURL;?>delete.png' alt='<?php $clang->eT("Delete survey");?>'/>
+						<img style='float: left' src='<?php echo $sImageURL;?>delete.png' alt='<?php $clang->eT("Delete survey");?>'/>
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Delete<br>Survey</div>
 					</a>
 				</li>
 				<?php } ?>				
 				<?php if($onelanguage) { ?>
                     <li>
 						<a target='_blank' href='<?php echo $this->createUrl("admin/printablesurvey/index/surveyid/$surveyid");?>' >
-							<img src='<?php echo $sImageURL;?>print_30.png' alt='<?php $clang->eT("Printable version");?>'/>
+							<img style='float: left' src='<?php echo $sImageURL;?>print_30.png' alt='<?php $clang->eT("Printable version");?>'/>
+							<div style='float: right; line-height: 1.2em; padding: 3px;'>Printable<br>Version</div>
 						</a>
 					</li>
                 <?php } else { ?>
@@ -288,14 +308,19 @@
                 {
                     if ($activated)
                     { ?><li><a href='#'>
-                            <img src='<?php echo $sImageURL; ?>organize_disabled.png' title='' alt='<?php $clang->eT("Question group/question organizer disabled"); ?> - <?php $clang->eT("This survey is currently active."); ?>'
-                                width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a></li>
+                            <img style='float: left' src='<?php echo $sImageURL; ?>organize_disabled.png' title='' alt='<?php $clang->eT("Question group/question organizer disabled"); ?> - <?php $clang->eT("This survey is currently active."); ?>'
+                                width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
+							<div style='float: right; line-height: 1.2em; padding: 3px;'>Reorder<br>Questions</div>
+								
+								</a></li>
                     <?php }
                     else
                     { ?><li>
 
                         <a href="<?php echo $this->createUrl("admin/survey/organize/surveyid/$surveyid"); ?>">
-                            <img src='<?php echo $sImageURL; ?>organize.png' alt='<?php $clang->eT("Reorder question groups / questions"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a></li>
+                            <img style='float: left' src='<?php echo $sImageURL; ?>organize.png' alt='<?php $clang->eT("Reorder question groups / questions"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
+							<div style='float: right; line-height: 1.2em; padding: 3px;'>Reorder<br>Questions</div>
+							</a></li>
                     <?php }
             } ?>
 			<?php if($inar_menu_only == false) { ?>
@@ -307,43 +332,20 @@
                 <?php } ?>
         
 			<?php } ?>
-		</ul>
 		
 		
-        <div class='menubar-right'>
+		
+			
             <?php if ($permission)
                 { ?>
-                <label for='groupselect'><?php $clang->eT("Question groups:"); ?></label>
+				<li>
+				<div style='float: right; line-height: 1.2em; padding: 3px;'>Page:<br>
                 <select name='groupselect' id='groupselect' onchange="window.open(this.options[this.selectedIndex].value,'_top')">
-
                     <?php echo $groups; ?>
                 </select>
-
-                <span class='arrow-wrapper' style='font-size:0;'>
-                    <?php if ($GidPrev != "")
-                        { ?>
-                        <a href='<?php echo $this->createUrl("admin/survey/view/surveyid/$surveyid/gid/$GidPrev"); ?>'>
-                        <img src='<?php echo $sImageURL; ?>previous_20.png' title='' alt='<?php $clang->eT("Previous question group"); ?>'/> </a>
-                        <?php }
-                        else
-                        { ?>
-                        <img src='<?php echo $sImageURL; ?>previous_disabled_20.png' title='' alt='<?php $clang->eT("No previous question group"); ?>' />
-                        <?php }
-
-
-                        if ($GidNext != "")
-                        { ?>
-
-
-                        <a href='<?php echo $this->createUrl("admin/survey/view/surveyid/$surveyid/gid/$GidNext"); ?>'>
-                        <img src='<?php echo $sImageURL; ?>next_20.png' title='' alt='<?php $clang->eT("Next question group"); ?>'/> </a>
-                        <?php }
-                        else
-                        { ?>
-
-                        <img src='<?php echo $sImageURL; ?>next_disabled_20.png' title='' alt='<?php $clang->eT("No next question group"); ?>'/>
-                        <?php } ?>
-                </span>
+				</div>
+				</li>
+				
                 <?php } ?>
 
 
@@ -353,17 +355,25 @@
                 {
                     if ($activated)
                     { ?>
+					<li>
                     <img src='<?php echo $sImageURL; ?>add_disabled.png' title='' alt='<?php $clang->eT("Disabled"); ?> - <?php $clang->eT("This survey is currently active."); ?>'
                         width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
+					</li>
                     <?php }
                     else
                     { ?>
 
-                    <a href="<?php echo $this->createUrl("admin/questiongroup/add/surveyid/$surveyid"); ?>">
-                        <img src='<?php echo $sImageURL; ?>add.png' alt='<?php $clang->eT("Add new group to survey"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/></a>
+					<li>
+						<a href="<?php echo $this->createUrl("admin/questiongroup/add/surveyid/$surveyid"); ?>">						
+                        <img style='float: left;' src='<?php echo $sImageURL; ?>add.png' alt='<?php $clang->eT("Add new page to survey"); ?>' width="<?php echo $iIconSize;?>" height="<?php echo $iIconSize;?>"/>
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>New<br>Page</div>
+						</a>
+					</li>
                     <?php }
             } ?>
+			<!--
             <img id='separator3' src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+			
             <input type='image' src='<?php echo $sImageURL; ?>minimize.png' title='<?php $clang->eT("Hide details of this Survey"); ?>'
                 alt='<?php $clang->eT("Hide details of this Survey"); ?>' onclick='$("#surveydetails").hide();' />
 
@@ -376,8 +386,9 @@
 
                 <?php if (!$gid){?>
                     style='visibility:hidden;'
-                    <?php } ?>
-                >
-        </div>
+                    <?php } ?>                
+				>
+			-->
+        </ul>
     </div>
 </div>

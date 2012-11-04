@@ -1,5 +1,5 @@
 <?php echo PrepareEditorScript(false, $this);?>
-<div class='header ui-widget-header'><?php $clang->eT("Add question group"); ?></div>
+<div class='header ui-widget-header'><?php $clang->eT("Add Page"); ?></div>
 <div id='tabs'><ul>
         <?php foreach ($grplangs as $grouplang)
             { ?>
@@ -44,17 +44,17 @@
 						<?php if ($inar_menu_only) { ?>
 						<div style="display: none;">
 						<?php } ?>
-                        <li><label for='randomization_group'><?php $clang->eT("Randomization group:"); ?></label><input type='text' size='20' maxlength='20' name='randomization_group' id='randomization_group' /></li>
-						<?php if ($inar_menu_only) { ?>
-						</div>
-						<?php } ?>
+                        <li><label for='randomization_group'><?php $clang->eT("Randomization group:"); ?></label><input type='text' size='20' maxlength='20' name='randomization_group' id='randomization_group' /></li>						
                         <li>
                             <label for='grelevance'><?php $clang->eT("Relevance equation:"); ?></label>
                             <textarea cols='50' rows='1' id='grelevance' name='grelevance'></textarea>
                         </li>
+						<?php if ($inar_menu_only) { ?>
+						</div>
+						<?php } ?>
                     <?php } ?>
                 </ul>
-                <p><input type='submit' value='<?php $clang->eT("Save question group"); ?>' />
+                <p><input type='submit' value='<?php $clang->eT("Add Page"); ?>' />
             </div>
             <?php } ?>
 

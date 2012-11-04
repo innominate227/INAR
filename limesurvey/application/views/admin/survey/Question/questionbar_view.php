@@ -13,47 +13,67 @@ if (isset($tmp_survlangs)) { ?>
 </div>
 <div class='menubar-main'>
     <div class='menubar-left'>
-        <img id='separator16' src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+	<ul class='sf-menu'>
         <?php if(hasSurveyPermission($surveyid,'surveycontent','read'))
             {
                 if (count(Survey::model()->findByPk($surveyid)->additionalLanguages) == 0)
                 { ?>
-                <a accesskey='q' href="<?php echo $this->createUrl("survey/index/action/previewquestion/sid/" . $surveyid . "/gid/" . $gid . "/qid/" . $qid); ?>" target="_blank">
-                    <img src='<?php echo $sImageURL; ?>preview.png' alt='<?php $clang->eT("Preview this question"); ?>' /></a>
-                <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+				<li>
+					<a accesskey='q' href="<?php echo $this->createUrl("survey/index/action/previewquestion/sid/" . $surveyid . "/gid/" . $gid . "/qid/" . $qid); ?>" target="_blank">
+						<img style='float: left;' src='<?php echo $sImageURL; ?>preview.png' alt='<?php $clang->eT("Preview this question"); ?>' />
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Test<br>Question</div>
+					</a>
+				</li>                
                 <?php } else { ?>
-                <a accesskey='q' id='previewquestion'>
-                    <img src='<?php echo $sImageURL; ?>preview.png' title='' alt='<?php $clang->eT("Preview This Question"); ?>' /></a>
-                <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt=''  />
-
+				<li>
+					<a accesskey='q' id='previewquestion'>
+						<img style='float: left;' src='<?php echo $sImageURL; ?>preview.png' title='' alt='<?php $clang->eT("Preview This Question"); ?>' />
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Test<br>Question</div>
+					</a>
+                </li>   
                 <?php }
         } ?>
 
 
         <?php  if(hasSurveyPermission($surveyid,'surveycontent','update'))
             { ?>
-
-            <a href='<?php echo $this->createUrl("admin/question/editquestion/surveyid/".$surveyid."/gid/".$gid."/qid/".$qid); ?>'>
-                <img src='<?php echo $sImageURL; ?>edit.png' alt='<?php $clang->eT("Edit Current Question"); ?>' /></a>
+				<li>
+				<a href='<?php echo $this->createUrl("admin/question/editquestion/surveyid/".$surveyid."/gid/".$gid."/qid/".$qid); ?>'>
+					<img style='float: left;' src='<?php echo $sImageURL; ?>edit.png' alt='<?php $clang->eT("Edit Current Question"); ?>' />
+					<div style='float: right; line-height: 1.2em; padding: 3px;'>Edit<br>Question</div>
+				</a>
+				</li>
             <?php } ?>
 
-        <?php if(hasSurveyPermission($surveyid,'surveycontent','read'))
+        <?php 
+		if ($inar_menu_only == false) {
+		if(hasSurveyPermission($surveyid,'surveycontent','read'))
             { ?>
-            <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt=''  />
-            <a target='_blank' href="<?php echo $this->createUrl("admin/expressions/survey_logic_file/sid/{$surveyid}/gid/{$gid}/qid/{$qid}/"); ?>">
-                <img src='<?php echo $sImageURL; ?>quality_assurance.png' alt='<?php $clang->eT("Check survey logic for current question"); ?>' /></a>
-            <?php } ?>
+				<li>
+					<a target='_blank' href="<?php echo $this->createUrl("admin/expressions/survey_logic_file/sid/{$surveyid}/gid/{$gid}/qid/{$qid}/"); ?>">
+						<img style='float: left;' src='<?php echo $sImageURL; ?>quality_assurance.png' alt='<?php $clang->eT("Check survey logic for current question"); ?>' />						
+					</a>
+				</li>
+            <?php } }?>
         <?php if ($activated != "Y")
             {?>
-            <a href='#'
-                onclick="if (confirm('<?php $clang->eT("Deleting this question will also delete any answer options and subquestions it includes. Are you sure you want to continue?","js"); ?>')) { <?php echo convertGETtoPOST($this->createUrl("admin/question/delete/surveyid/$surveyid/gid/$gid/qid/$qid")); ?>}">
-                <img style='<?php echo (hasSurveyPermission($surveyid,'surveycontent','delete')?'':'visibility: hidden;');?>' src='<?php echo $sImageURL; ?>delete.png' alt='<?php $clang->eT("Delete current question"); ?>'/></a>
+				<li>
+					<a href='#'
+					onclick="if (confirm('<?php $clang->eT("Deleting this question will also delete any answer options and subquestions it includes. Are you sure you want to continue?","js"); ?>')) { <?php echo convertGETtoPOST($this->createUrl("admin/question/delete/surveyid/$surveyid/gid/$gid/qid/$qid")); ?>}">
+						<img style='float: left;' style='<?php echo (hasSurveyPermission($surveyid,'surveycontent','delete')?'':'visibility: hidden;');?>' src='<?php echo $sImageURL; ?>delete.png' alt='<?php $clang->eT("Delete current question"); ?>'/>
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Delete<br>Question</div>
+					</a>
+				</li>
             <?php }
             else
             { ?>
-            <a href='<?php echo $this->createUrl('admin/survey/view/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'
-                onclick="alert('<?php $clang->eT("You can't delete this question because the survey is currently active.","js"); ?>')">
-                <img src='<?php echo $sImageURL; ?>delete_disabled.png' alt='<?php $clang->eT("Disabled - Delete current question"); ?>' /></a>
+				<li>
+					<a href='<?php echo $this->createUrl('admin/survey/view/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'
+					onclick="alert('<?php $clang->eT("You can't delete this question because the survey is currently active.","js"); ?>')">
+						<img style='float: left;' src='<?php echo $sImageURL; ?>delete_disabled.png' alt='<?php $clang->eT("Disabled - Delete current question"); ?>' />
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Delete<br>Question</div>
+					</a>
+				</li>
             <?php }
 
 
@@ -61,14 +81,14 @@ if (isset($tmp_survlangs)) { ?>
 			if ($inar_menu_only == false) {
             if(hasSurveyPermission($surveyid,'surveycontent','export'))
             { ?>
-            <a href='<?php echo $this->createUrl("admin/export/question/surveyid/$surveyid/gid/$gid/qid/$qid");?>'>
-                <img src='<?php echo $sImageURL; ?>dumpquestion.png' alt='<?php $clang->eT("Export this question"); ?>' /></a>
+				<li>
+					<a href='<?php echo $this->createUrl("admin/export/question/surveyid/$surveyid/gid/$gid/qid/$qid");?>'>
+						<img style='float: left;' src='<?php echo $sImageURL; ?>dumpquestion.png' alt='<?php $clang->eT("Export this question"); ?>' />						
+					</a>
+				</li>
             <?php } } ?>
 
-        <img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
-
-
-
+        
 
         <?php 
 		
@@ -77,31 +97,35 @@ if (isset($tmp_survlangs)) { ?>
 				{
 					if ($activated != "Y")
 					{ ?>
-					<a href='<?php echo $this->createUrl("admin/question/copyquestion/surveyid/$surveyid/gid/$gid/qid/$qid");?>'>
-						<img src='<?php echo $sImageURL; ?>copy.png'  alt='<?php $clang->eT("Copy Current Question"); ?>' /></a>
-					<img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+						<li>
+							<a href='<?php echo $this->createUrl("admin/question/copyquestion/surveyid/$surveyid/gid/$gid/qid/$qid");?>'>
+								<img style='float: left;' src='<?php echo $sImageURL; ?>copy.png'  alt='<?php $clang->eT("Copy Current Question"); ?>' />								
+							</a>
+						</li>						
 					<?php }
 					else
 					{ ?>
-					<a href='#' onclick="alert('<?php $clang->eT("You can't copy a question if the survey is active.","js"); ?>')">
-						<img src='<?php echo $sImageURL; ?>copy_disabled.png' alt='<?php $clang->eT("Copy Current Question"); ?>' /></a>
-					<img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+						<li>
+							<a href='#' onclick="alert('<?php $clang->eT("You can't copy a question if the survey is active.","js"); ?>')">
+								<img style='float: left;' src='<?php echo $sImageURL; ?>copy_disabled.png' alt='<?php $clang->eT("Copy Current Question"); ?>' />								
+							</a>
+						</li>						
 					<?php }
 				}
 				else
-				{ ?>
-				<img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
+				{ ?>				
 				<?php } 
 
 				if(hasSurveyPermission($surveyid,'surveycontent','update'))
 				{ ?>
-				<a href="<?php echo $this->createUrl("admin/conditions/index/subaction/editconditionsform/surveyid/$surveyid/gid/$gid/qid/$qid"); ?>">
-					<img src='<?php echo $sImageURL; ?>conditions.png' alt='<?php $clang->eT("Set conditions for this question"); ?>'  /></a>
-				<img src='<?php echo $sImageURL; ?>separator.gif' class='separator' alt='' />
+					<li>
+						<a href="<?php echo $this->createUrl("admin/conditions/index/subaction/editconditionsform/surveyid/$surveyid/gid/$gid/qid/$qid"); ?>">
+							<img style='float: left;' src='<?php echo $sImageURL; ?>conditions.png' alt='<?php $clang->eT("Set conditions for this question"); ?>'  />							
+						</a>
+					</li>				
 				<?php }
 				else
-				{ ?>
-				<img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
+				{ ?>				
 				<?php }
 			
 			}
@@ -114,13 +138,16 @@ if (isset($tmp_survlangs)) { ?>
             {
                 if ($qtypes[$qrrow['type']]['subquestions'] >0)
                 { ?>
-                <a href='<?php echo $this->createUrl('admin/question/subquestions/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'>
-                    <img src='<?php echo $sImageURL; ?><?php if ($qtypes[$qrrow['type']]['subquestions']==1){?>subquestions.png<?php } else {?>subquestions2d.png<?php } ?>' alt='<?php $clang->eT("Edit subquestions for this question"); ?>' /></a>
+					<li>
+						<a href='<?php echo $this->createUrl('admin/question/subquestions/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'>
+							<img style='float: left;' src='<?php echo $sImageURL; ?><?php if ($qtypes[$qrrow['type']]['subquestions']==1){?>subquestions.png<?php } else {?>subquestions2d.png<?php } ?>' alt='<?php $clang->eT("Edit subquestions for this question"); ?>' />
+							<div style='float: right; line-height: 1.2em; padding: 3px;'>Edit<br>Subquestions</div>
+						</a>
+					</li>
                 <?php }
             }
             else
-            { ?>
-            <img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
+            { ?>            
             <?php }
 
 
@@ -128,12 +155,15 @@ if (isset($tmp_survlangs)) { ?>
 
             if(hasSurveyPermission($surveyid,'surveycontent','read') && $qtypes[$qrrow['type']]['answerscales'] > 0)
             { ?>
-            <a href='<?php echo $this->createUrl('admin/question/answeroptions/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'>
-                <img src='<?php echo $sImageURL; ?>answers.png' alt='<?php $clang->eT("Edit answer options for this question"); ?>' /></a>
+				<li>
+					<a href='<?php echo $this->createUrl('admin/question/answeroptions/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'>
+						<img style='float: left;' src='<?php echo $sImageURL; ?>answers.png' alt='<?php $clang->eT("Edit answer options for this question"); ?>' />
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Edit<br>Options</div>
+					</a>
+				</li>
             <?php }
             else
-            { ?>
-            <img src='<?php echo $sImageURL; ?>blank.gif' alt='' height="<?php echo $iIconSize;?>" width='40' />
+            { ?>            
             <?php }
 
 
@@ -141,19 +171,17 @@ if (isset($tmp_survlangs)) { ?>
 
             if(hasSurveyPermission($surveyid,'surveycontent','read') && $qtypes[$qrrow['type']]['hasdefaultvalues'] >0)
             { ?>
-            <a href='<?php echo $this->createUrl('admin/question/editdefaultvalues/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'>
-                <img src='<?php echo $sImageURL; ?>defaultanswers.png' alt='<?php $clang->eT("Edit default answers for this question"); ?>' /></a>
+				<li>
+					<a href='<?php echo $this->createUrl('admin/question/editdefaultvalues/surveyid/'.$surveyid.'/gid/'.$gid.'/qid/'.$qid); ?>'>
+						<img style='float: left;' src='<?php echo $sImageURL; ?>defaultanswers.png' alt='<?php $clang->eT("Edit default answers for this question"); ?>' />
+						<div style='float: right; line-height: 1.2em; padding: 3px;'>Default<br>Answers</div>
+					</a>
+				</li>
             <?php } ?>
-    </div>
-    <div class='menubar-right'>
-        <input type='image' src='<?php echo $sImageURL; ?>minimize.png'
-            title='<?php $clang->eT("Hide details of this question"); ?>'  alt='<?php $clang->eT("Hide details of this question"); ?>' onclick='document.getElementById("questiondetails").style.display="none";' />
-        <input type='image' src='<?php echo $sImageURL; ?>maximize.png' title='<?php $clang->eT("Show details of this question"); ?>'  alt='<?php $clang->eT("Show Details of this Question"); ?>' onclick='document.getElementById("questiondetails").style.display="";' />
-        <input type='image' src='<?php echo $sImageURL; ?>close.png' title='<?php $clang->eT("Close this question"); ?>' alt='<?php $clang->eT("Close this question"); ?>'
-            onclick="window.open('<?php echo $this->createUrl("admin/survey/view/surveyid/$surveyid/gid/$gid"); ?>','_top');" />
-    </div>
+	</ul>
+    </div>    
 </div>
-</div>
+
 <p style='margin:0;font-size:1px;line-height:1px;height:1px;'>&nbsp;</p>
 
 

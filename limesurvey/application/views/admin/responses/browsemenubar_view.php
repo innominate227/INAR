@@ -4,8 +4,18 @@
     </div>
     <div class='menubar-main'>
         <div class='menubar-left'>
-			<a href="<?php echo $this->createUrl("/admin/dashboard"); ?>">
-				<img src='<?php echo $sImageURL;?>inar.png' alt='<?php $clang->eT("INAR Dashboard");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+			<a style='font-size:200%; color:black;' href="<?php echo $this->createUrl("/admin/dashboard?view=surveys"); ?>">
+				<img src='<?php echo $sImageURL;?>inar_surveys.png' alt='<?php $clang->eT("INAR Dashboard Surveys");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+				<?php if ($inar_menu_only) { ?><b>Surveys</b><?php } ?>
+			</a>			
+			<img src='<?php echo $sImageURL;?>separator.gif' id='separator1' class='separator' alt='' />
+			<a style='font-size:200%; color:black;' href="<?php echo $this->createUrl("/admin/dashboard?view=reports"); ?>">
+				<img src='<?php echo $sImageURL;?>inar_reports.png' alt='<?php $clang->eT("INAR Dashboard Reports");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+				<?php if ($inar_menu_only) { ?><b>Reports</b><?php } ?>
+			</a>			
+			<img src='<?php echo $sImageURL;?>separator.gif' id='separator1' class='separator' alt='' />
+			<a href="<?php echo $this->createUrl("/admin/fulllime"); ?>">
+			<img src='<?php echo $sImageURL;?>home.png' alt='<?php $clang->eT("Go to full lime survey software");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
 			</a>
 			<?php if($inar_menu_only == false) { ?>
 			

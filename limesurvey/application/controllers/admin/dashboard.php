@@ -59,10 +59,11 @@ class Dashboard extends Survey_Common_Action
 			$survey_info['issues'] = $this->check_survey($oSurvey);
 			
 			//put survey info into data to pass to view
-			$aData['surveys'][] = $survey_info;						
-			
-			
+			$aData['surveys'][] = $survey_info;	
 		}
+		
+		//if they passed a view in the get pass that on
+		$aData['view'] = $_GET['view'];
 		
 		//set to only show INAR_MENU items
 		Yii::app()->session['INAR_MENU_ONLY'] = 1;		
