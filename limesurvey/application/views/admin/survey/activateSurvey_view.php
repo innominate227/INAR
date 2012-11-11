@@ -37,8 +37,10 @@
             <?php $clang->eT("Warning"); ?><br />
             <?php $clang->eT("READ THIS CAREFULLY BEFORE PROCEEDING"); ?>
         </div>
+		<?php if ($inar_menu_only == false) { ?>
         <?php $clang->eT("You should only activate a survey when you are absolutely certain that your survey setup is finished and will not need changing."); ?><br /><br />
-        <?php $clang->eT("Once a survey is activated you can no longer:"); ?><ul><li><?php $clang->eT("Add or delete groups"); ?></li><li><?php $clang->eT("Add or delete questions"); ?></li><li><?php $clang->eT("Add or delete subquestions or change their codes"); ?></li></ul>
+		<?php } ?>
+        <?php $clang->eT("Once a survey is activated you can no longer:"); ?><ul><li><?php $clang->eT("Add or delete pages"); ?></li><li><?php $clang->eT("Add or delete questions"); ?></li><li><?php $clang->eT("Add or delete subquestions or change their codes"); ?></li></ul>
 		
 		<?php if ($inar_menu_only) { ?>
 			<div style="display: none;">
@@ -144,7 +146,11 @@
 				</div>
 			<?php } ?>
 
-            <?php $clang->eT("Please note that once responses have collected with this survey and you want to add or remove groups/questions or change one of the settings above, you will need to deactivate this survey, which will move all data that has already been entered into a separate archived table."); ?><br /><br />
+			<?php if ($inar_menu_only == false) { ?>
+				<?php $clang->eT("Please note that once responses have collected with this survey and you want to add or remove groups/questions or change one of the settings above, you will need to deactivate this survey, which will move all data that has already been entered into a separate archived table."); ?><br /><br />
+			<?php } else { ?>
+				<?php $clang->eT("Please note that once responses have been collected with this survey and you want to add or remove pages/questions, you will need to deactivate this survey.  While deactivated responses will not be available, and participants will be unable to take the survey.  When you reactivate the survey responses will be available again."); ?><br /><br />
+			<?php }  ?>
             <input type='hidden' name='ok' value='Y' />
             <input type='submit' value="<?php $clang->eT("Save / Activate survey"); ?>" />
         </form>		

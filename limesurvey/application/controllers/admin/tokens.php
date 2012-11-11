@@ -2340,10 +2340,11 @@ class tokens extends Survey_Common_Action
 			}
         }
         /* Restore a previously deleted tokens table */
-        elseif (returnGlobal('restoretable') == "Y" && Yii::app()->request->getPost('oldtable') && hasSurveyPermission($iSurveyId, 'surveyactivation', 'update'))
+        elseif (returnGlobal('restoretable') == "Y" && returnGlobal('oldtable') && hasSurveyPermission($iSurveyId, 'surveyactivation', 'update'))
         {
             //Rebuild attributedescription value for the surveys table
-            $table = Yii::app()->db->schema->getTable(Yii::app()->request->getPost('oldtable'));
+            $table = Yii::app()->db->schema->getTable(returnGlobal('oldtable'));
+						
             $fields=array_filter(array_keys($table->columns), 'filterForAttributes');
             foreach ($fields as $fieldname)
             {
@@ -2362,19 +2363,26 @@ class tokens extends Survey_Common_Action
             Survey::model()->updateByPk($iSurveyId, array('attributedescriptions' => serialize($fieldcontents)));
 
 
-            Yii::app()->db->createCommand()->renameTable(Yii::app()->request->getPost('oldtable'), Yii::app()->db->tablePrefix."tokens_".intval($iSurveyId));
+            Yii::app()->db->createCommand()->renameTable(returnGlobal('oldtable'), Yii::app()->db->tablePrefix."tokens_".intval($iSurveyId));
 
             //Add any survey_links from the renamed table
             Survey_links::model()->rebuildLinksFromTokenTable($iSurveyId);
-
-            $this->_renderWrappedTemplate('token', array('message' => array(
-            'title' => $clang->gT("Import old tokens"),
-            'message' => $clang->gT("A token table has been created for this survey and the old tokens were imported.") . " (\"" . Yii::app()->db->tablePrefix . "tokens_$iSurveyId" . "\")<br /><br />\n"
-            . "<input type='submit' value='"
-            . $clang->gT("Continue") . "' onclick=\"window.open('" . $this->getController()->createUrl("admin/tokens/index/surveyid/$iSurveyId") . "', '_top')\" />\n"
-            )));
-
+			
             LimeExpressionManager::SetDirtyFlag();  // so that knows that token tables have changed
+			
+			if (Yii::app()->session['INAR_MENU_ONLY'] == 1)
+			{
+				Yii::app()->request->redirect(Yii::app()->getController()->createUrl("admin/survey/view/surveyid/".$_REQUEST['sid']));	
+			}
+			else
+			{
+				$this->_renderWrappedTemplate('token', array('message' => array(
+				'title' => $clang->gT("Import old tokens"),
+				'message' => $clang->gT("A token table has been created for this survey and the old tokens were imported.") . " (\"" . Yii::app()->db->tablePrefix . "tokens_$iSurveyId" . "\")<br /><br />\n"
+				. "<input type='submit' value='"
+				. $clang->gT("Continue") . "' onclick=\"window.open('" . $this->getController()->createUrl("admin/tokens/index/surveyid/$iSurveyId") . "', '_top')\" />\n"
+				)));
+			}
         }
         else
         {

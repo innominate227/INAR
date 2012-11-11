@@ -433,6 +433,7 @@ class SurveyAdmin extends Survey_Common_Action
             $aData['failedgroupcheck'] = $failedgroupcheck;
             $aData['aSurveysettings'] = getSurveyInfo($iSurveyID);
 			$aData['inar_menu_only'] = (Yii::app()->session['INAR_MENU_ONLY'] == 1);
+					
 
             $this->_renderWrappedTemplate('survey', 'activateSurvey_view', $aData);
         }
@@ -450,6 +451,8 @@ class SurveyAdmin extends Survey_Common_Action
             }
 
             $aResult=activateSurvey($iSurveyID);
+						
+			
             if (isset($aResult['error']))
             {
                 $aViewUrls['output']= "<br />\n<div class='messagebox ui-corner-all'>\n" .
@@ -470,8 +473,85 @@ class SurveyAdmin extends Survey_Common_Action
             else
             {
 				if (Yii::app()->session['INAR_MENU_ONLY'] == 1)
-				{
-					Yii::app()->request->redirect(Yii::app()->getController()->createUrl("admin/tokens/index/surveyid/".$iSurveyID). "?action=tokens&sid=". $iSurveyID . "&createtable=Y");	
+				{					
+					//if in INAR mode copy over the old responses automaticly					
+					//copied over from dataentry.php		
+					$schema = Yii::app()->db->getSchema();
+					$clang = Yii::app()->lang;
+					Yii::app()->loadHelper('database');
+														
+					//get the newest old response table
+					$old_response_tables = dbGetTablesLike("old\_survey\_" . $iSurveyID . "%");	
+					$newest_old_response_table = '';
+					$newest_old_response_table_num = 0;
+					foreach ($old_response_tables as $old_response_table)
+					{						
+						$old_response_table = each($old_response_table);						
+						$old_response_table_name = $old_response_table[1];
+						$old_response_table_num = substr($old_response_table_name, strrpos($old_response_table_name, "_")+1);
+						//have to compare as strings since they are too big for ints
+						if (strcmp($old_response_table_num, $newest_old_response_table_num) > 0)
+						{
+							$newest_old_response_table_num = $old_response_table_num;
+							$newest_old_response_table = $old_response_table_name;
+						}
+					}
+					
+					//get the newest old token table
+					$old_token_tables = dbGetTablesLike("old\_tokens\_" . $iSurveyID . "%");						
+					$newest_old_token_table = '';
+					$newest_old_token_table_num = 0;
+					foreach ($old_token_tables as $old_token_table)
+					{						
+						$old_token_table = each($old_token_table);						
+						$old_token_table_name = $old_token_table[1];
+						$old_token_table_num = substr($old_token_table_name, strrpos($old_token_table_name, "_")+1);
+						//have to compare as strings since they are too big for ints
+						if (strcmp($old_token_table_num, $newest_old_token_table_num) > 0)
+						{
+							$newest_old_token_table_num = $old_token_table_num;
+							$newest_old_token_table = $old_token_table_name;
+						}
+					}
+										
+					//if ther is old reponses move them over
+					if ($newest_old_response_table != '')
+					{					
+						$activetable = "{{survey_$iSurveyID}}";
+						
+						$aFieldsOldTable = array_values($schema->getTable($newest_old_response_table)->columnNames);
+						$aFieldsNewTable = array_values($schema->getTable($activetable)->columnNames);
+						
+						// Only import fields where the fieldnames are matching
+						$aValidFields = array_intersect($aFieldsOldTable, $aFieldsNewTable);
+												
+						$queryOldValues = "SELECT ".implode(", ",array_map("dbQuoteID", $aValidFields))." FROM {$newest_old_response_table} ";																		
+						$resultOldValues = dbExecuteAssoc($queryOldValues) or show_error("Error:<br />$queryOldValues<br />");
+						$iRecordCount = $resultOldValues->count();
+						$aSRIDConversions=array();
+						foreach ($resultOldValues->readAll() as $row)
+						{
+							$iOldID=$row['id'];
+							unset($row['id']);
+
+							$sInsertSQL="INSERT into {$activetable} (".implode(",", array_map("dbQuoteID", array_keys($row))).") VALUES (".implode(",", array_map("dbQuoteAll",array_values($row))).")";
+							$result = dbExecuteAssoc($sInsertSQL) or show_error("Error:<br />$sInsertSQL<br />");
+							$aSRIDConversions[$iOldID]=Yii::app()->db->getLastInsertID();
+						}
+
+						Yii::app()->session['flashmessage'] = sprintf($clang->gT("%s old response(s) were successfully imported."), $iRecordCount);
+					}
+
+					if ($newest_old_token_table != '')
+					{
+						//restore old tokens						
+						Yii::app()->request->redirect(Yii::app()->getController()->createUrl("admin/tokens/index/surveyid/".$iSurveyID). "?action=tokens&sid=". $iSurveyID . "&restoretable=Y&oldtable=" . $newest_old_token_table);							
+					}
+					else
+					{
+						//no old responses / tokens so create new
+						Yii::app()->request->redirect(Yii::app()->getController()->createUrl("admin/tokens/index/surveyid/".$iSurveyID). "?action=tokens&sid=". $iSurveyID . "&createtable=Y");	
+					}
 				}
 				else
 				{			

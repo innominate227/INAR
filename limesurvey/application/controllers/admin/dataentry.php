@@ -388,10 +388,11 @@ class dataentry extends Survey_Common_Action
                     //$resultOld = dbExecuteAssoc($queryCheckColumnsOld) or show_error("Error:<br />$query<br />");
                     $resultOld = $schema->getTable($row[1])->columnNames;
 
-                    if($countActive == count($resultOld)) //num_fields()
-                    {
+                    //if($countActive == count($resultOld)) //num_fields()
+                    //{
+											
                         $aOptionElements[$row[1]] = $row[1];
-                    }
+                    //}
                 }
                 $aHTMLOptions=array('empty'=>$clang->gT('Please select...'));
                 $aData['optionElements'] = CHtml::listOptions('', $aOptionElements, $aHTMLOptions);
@@ -478,6 +479,36 @@ class dataentry extends Survey_Common_Action
                     }
                     Yii::app()->session['flashmessage'] = sprintf($clang->gT("%s old response(s) and according timings were successfully imported."),$iRecordCount,$iRecordCountT);
                 }
+								
+                $sOldTimingsTable=substr($oldtable,0,strrpos($oldtable,'_')).'_timings'.substr($oldtable,strrpos($oldtable,'_'));
+                $sNewTimingsTable = "{{{$surveyid}_timings}}";
+				
+                if (returnGlobal('importtimings')=='Y' && tableExists($sOldTimingsTable) && tableExists($sNewTimingsTable))
+                {
+                    // Import timings
+                    $aFieldsOldTimingTable=array_values($schema->getTable($sOldTimingsTable)->columnNames);
+                    $aFieldsNewTimingTable=array_values($schema->getTable($sNewTimingsTable)->columnNames);
+
+                    $aValidTimingFields=array_intersect($aFieldsOldTimingTable,$aFieldsNewTimingTable);
+
+                    $queryOldValues = "SELECT ".implode(", ",$aValidTimingFields)." FROM {$sOldTimingsTable} ";
+                    $resultOldValues = dbExecuteAssoc($queryOldValues) or show_error("Error:<br />$queryOldValues<br />");
+                    $iRecordCountT=$resultOldValues->count();
+                    $aSRIDConversions=array();
+                    foreach ($resultOldValues->readAll() as $row)
+                    {
+                        if (isset($aSRIDConversions[$row['id']]))
+                        {
+                            $row['id']=$aSRIDConversions[$row['id']];
+                        }
+                        else continue;
+                        //$sInsertSQL=Yii::app()->db->GetInsertSQL($sNewTimingsTable,$row);
+                        $sInsertSQL="INSERT into {$sNewTimingsTable} (".implode(",", array_map("dbQuoteID", array_keys($row))).") VALUES (".implode(",", array_map("dbQuoteAll", array_values($row))).")";
+                        $result = dbExecuteAssoc($sInsertSQL) or show_error("Error:<br />$sInsertSQL<br />");
+                    }
+                    Yii::app()->session['flashmessage'] = sprintf($clang->gT("%s old response(s) and according timings were successfully imported."),$iRecordCount,$iRecordCountT);
+                }
+				
                 $this->getController()->redirect(Yii::app()->getController()->createUrl("/admin/responses/index/surveyid/{$surveyid}"));
             }
         }
