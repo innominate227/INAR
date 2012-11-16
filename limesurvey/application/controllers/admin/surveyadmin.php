@@ -521,11 +521,57 @@ class SurveyAdmin extends Survey_Common_Action
 						
 						$aFieldsOldTable = array_values($schema->getTable($newest_old_response_table)->columnNames);
 						$aFieldsNewTable = array_values($schema->getTable($activetable)->columnNames);
+												
+						//adjust the column names so that its just the question number (not the question group) before we try and copy over.
+						$aFieldsOldTableRealNamesMap = array();	
+						for($i = 0; $i < count($aFieldsOldTable); ++$i) 
+						{
+							$aFieldsOldTableCol = $aFieldsOldTable[$i];
+							$lastX = strrpos($aFieldsOldTableCol, 'X'); 
+							if ($lastX === false)
+							{							
+								$aFieldsOldTableRealNamesMap[$aFieldsOldTableCol] = $aFieldsOldTableCol;
+							}
+							else
+							{
+								$aFieldsOldTableColFixed = substr($aFieldsOldTableCol, $lastX);
+								$aFieldsOldTableRealNamesMap[$aFieldsOldTableColFixed] = $aFieldsOldTableCol;
+								$aFieldsOldTable[$i] = $aFieldsOldTableColFixed;							
+							}
+						}
+											
+						//adjust the column names so that its just the question number (not the question group) before we try and copy over.
+						$aFieldsOldToNewTableNamesMap = array();	
+						for($i = 0; $i < count($aFieldsNewTable); ++$i) 
+						{
+							$aFieldsNewTableCol = $aFieldsNewTable[$i];
+							$lastX = strrpos($aFieldsNewTableCol, 'X'); 
+							if ($lastX === false)
+							{
+								$aFieldsOldToNewTableNamesMap[$aFieldsNewTableCol] = $aFieldsNewTableCol;
+							}
+							else
+							{
+								$aFieldsNewTableColFixed = substr($aFieldsNewTableCol, $lastX);
+								$aFieldsOldToNewTableNamesMap[$aFieldsOldTableRealNamesMap[$aFieldsNewTableColFixed]] = $aFieldsNewTableCol;
+								$aFieldsNewTable[$i] = $aFieldsNewTableColFixed;
+							}
+						}
+																
+						
 						
 						// Only import fields where the fieldnames are matching
 						$aValidFields = array_intersect($aFieldsOldTable, $aFieldsNewTable);
+						for($i = 0; $i < count($aValidFields); ++$i) 
+						{
+							$aValidFields[$i] = $aFieldsOldTableRealNamesMap[$aValidFields[$i]];
+						}
+						
+						
 												
-						$queryOldValues = "SELECT ".implode(", ",array_map("dbQuoteID", $aValidFields))." FROM {$newest_old_response_table} ";																		
+						$queryOldValues = "SELECT ".implode(", ",array_map("dbQuoteID", $aValidFields))." FROM {$newest_old_response_table} ";	
+												
+																		
 						$resultOldValues = dbExecuteAssoc($queryOldValues) or show_error("Error:<br />$queryOldValues<br />");
 						$iRecordCount = $resultOldValues->count();
 						$aSRIDConversions=array();
@@ -533,8 +579,14 @@ class SurveyAdmin extends Survey_Common_Action
 						{
 							$iOldID=$row['id'];
 							unset($row['id']);
-
-							$sInsertSQL="INSERT into {$activetable} (".implode(",", array_map("dbQuoteID", array_keys($row))).") VALUES (".implode(",", array_map("dbQuoteAll",array_values($row))).")";
+															
+							$fixedRow = array();
+							foreach ($row as $key => $value) 
+							{
+								$fixedRow[$aFieldsOldToNewTableNamesMap[$key]] = $value;								
+							}
+																					
+							$sInsertSQL="INSERT into {$activetable} (".implode(",", array_map("dbQuoteID", array_keys($fixedRow))).") VALUES (".implode(",", array_map("dbQuoteAll",array_values($fixedRow))).")";
 							$result = dbExecuteAssoc($sInsertSQL) or show_error("Error:<br />$sInsertSQL<br />");
 							$aSRIDConversions[$iOldID]=Yii::app()->db->getLastInsertID();
 						}
