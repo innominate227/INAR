@@ -1,0 +1,13 @@
+div#footer{
+          margin-top:25px;
+          clear:both;
+          background:#F6EAFA;
+          text-align:center;
+          padding:10px 10px;}
+
+#footer a{
+           display:inline;
+           color:black;
+           font-size:18px;
+           padding:5px 8px;
+        }

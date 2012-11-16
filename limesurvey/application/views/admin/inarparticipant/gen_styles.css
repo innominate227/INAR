@@ -1,0 +1,190 @@
+/*
+
+cleanStickyFooter
+
+Copyright (c) 2009 Trevor Sheridan
+
+*/
+
+/****************
+
+NOT Required (just there to make this look a little prettier)
+
+****************/
+
+body {
+	font-family: Sans-Serif;
+	font-size: 110%;
+}
+a:hover 
+{
+		background:#993266;
+		color:#fff;
+}
+.myClass
+{
+font-family: Sans-Serif;
+font-size: 110%;
+background:#F6EAFA;
+}
+.myClass:hover
+{
+background:#D8BFD8;
+}
+.col2
+{
+float:left;
+width:65%;
+min-height:350px;
+border-left:0.5em solid #ccc;
+}
+.col1
+{
+float:left;
+width:32%;
+}
+.col1 p,ul,li
+{
+text-align:left;
+line-height:1.4em;
+padding:0.5em;
+margin: 0.4em;
+}
+div#clear
+{
+clear:both;
+}
+div#header
+{
+background:#D8BFD8;
+overflow: hidden;
+}
+
+div#heading
+{
+clear:both;
+font-family: 'Convergence',Sans-Serif;
+margin:0;
+padding-bottom:0.01em;
+text-align:center;
+}
+
+div#footer_wrapper 
+{
+	background:#D8BFD8;
+	padding-top:0.2em;
+	padding-bottom:0.2em;
+        border-top:0.1em solid #bca5a6;
+
+}
+div#inner_text 
+{
+	padding:1em 1.5em;
+        text-align:left;
+}
+
+div#inner_text h2
+{
+font-family: 'Convergence',Sans-Serif;
+}
+
+div#inner_text p
+{
+line-height:1.45em;
+font-size: 112%;
+}
+div#inner_text li
+{
+line-height:1.45em;
+font-size: 112%;
+}
+div#footer_inner_wrapper 
+{
+	text-align: center;	
+}
+
+
+div#header span
+{
+padding:0.1em;
+}
+div#footer_inner_wrapper a 
+{
+       padding-top:0.3em;
+	padding-left:0.8em;
+	padding-right:0.8em;
+	font-size:106%;
+        color:purple;
+}
+div#footer_inner_wrapper a:hover
+{
+background:#993266;
+color:#fff;
+}
+div#content_inner_wrapper 
+{
+
+	/*background:#F6EAFA;*/
+	min-height: 300px;
+	padding:5px;
+	text-align:center;
+        color:black;
+}
+.error 
+{       
+	padding:0.5em;
+        color:DarkRed;
+}
+.error h3
+{
+font-family: Sans-Serif;
+}
+.success 
+{       
+	padding:0.7em;
+        color:DarkGreen;
+}
+.success h3
+{
+font-family:Sans-Serif;
+}
+div#footer_inner_wrapper 
+{   
+}
+	div#header ul {	
+	   background:#F6EAFA;
+		width:100%;
+		list-style:none;
+		margin:0;
+		padding:0;
+                 border-bottom:1px solid grey;
+                border-top:1px solid grey;
+		text-align: center;
+		
+	}
+	div#header ul li {
+		display:inline;
+		list-style:none;
+		margin:0;
+		padding:0;
+                line-height:1.4em;
+	}
+
+	div#header ul li a 
+	{
+		margin:0;
+                padding: 0.05em 1em;
+		text-align:center;
+		font-size:112%;
+	        /*background:#D8BFD8;*/
+                border-left:0.1em solid grey;
+		color:#000;
+		text-decoration:none;
+		line-height:1.4em;
+	}
+	div#header ul li a:hover
+	{
+	background:#993266;
+	color:#fff;
+	}
+    

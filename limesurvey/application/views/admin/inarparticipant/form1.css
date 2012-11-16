@@ -1,0 +1,18 @@
+.col1 label{
+display:block;
+margin-bottom:0.2em;
+color:black;
+}
+.col1 form
+{
+text-align:left;
+padding:0.5em;
+}
+.col1 label span
+{
+display:block;
+float:left;
+padding-right:0.5em;
+width:11em;
+text-align:right;
+}

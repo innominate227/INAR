@@ -4,14 +4,6 @@ require_once('includes/header.php');
 $qls->Security->check_auth_page('admin_survey_assign.php'); ?>
 
 
-
-<?php
-// Look in the USERGUIDE.html for more info
-if ($qls->user_info['username'] != '') 
-{
-require_once('includes/banner2.php');
-?>
-
 <?php
 	$survey_id = $_GET['sid'];
 		
@@ -58,51 +50,99 @@ require_once('includes/banner2.php');
 	
 	
 ?>
-<html>
-<body>
-<div style ="background-color:linen;margin-left:20px;margin-right:20px;padding:25px;">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
+<head>
+<link href='http://fonts.googleapis.com/css?family=Convergence' rel='stylesheet' type='text/css'>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="I.N.A.R.">
+<meta name="keywords" content="I.N.A.R , A.F.A">
+<title>INAR</title>
+<link rel="stylesheet" type="text/css" href="cleanstickyfooter.css" media="screen" charset="utf-8" /> 
+<link rel="stylesheet" type="text/css" href="gen_styles.css" media="screen" charset="utf-8" /> 
+<link rel="stylesheet" type="text/css" HREF="html/table.css" />
+<link rel="stylesheet" type="text/css" HREF="form1.css" />
+  </head> 
+	<body>
+		<div id="wrapper">
+		<div id="header">
+                  <a href="http://www.autism-india.org"> <span> Action For Autism </span> </a>
+				    <div style="float:right;">
+			                <span>Hi Admin!<a href="logout.php"> Logout</a> </span> 
+		                     </div>
+			<div id="heading">
+				<h1> Indian National Autism Registry </h1> 
+				
+			</div>
+							<ul>							
+							<li><a href="register.php"><span>Register</span></a></li>
+							<li><a href="participants.php">View Participants</a></li>
+                                                        <li><a href="alter_reg.php">Configure Registration</a></li>
+                                                        <li><a href="admin_surveys.php">View Surveys</a></li>
+<li><a href='http://www.indiaautismregistry.com/TEST2B/limesurvey/index.php/admin/authentication/login?user=inar2012&password=Inar!2012&subm=1'>Manage Survey Questions/Data</a></li>
+							</ul>
+                          
+						 
+					
+		</div>	 
+			<div id="content_wrapper">
+				<div id="content_inner_wrapper">
+
+
+
+
+<div class="col1">
+
+<h3>Survey Name: <?php echo $survey_name; ?></h3>
+<ul>
+<li>Do you want to export current responses of this survey?  <a href="admin_survey_export.php?sid=<?=$survey_id;?>">Export</a> </li>
+<li> Do you want to assign participants to this survey? </li>
+<p>
+Then, Search for participants
+<form action="admin_survey_assign.php?sid=<?=$survey_id?>" method="post">
+<input type="hidden" name="process_search_users" value="yes" />
+<label><span> Using email address: </span>
+<input type="text" name="user_name_search" value="<?php echo $_POST['user_name_search'] ?>">
+</label> 
+<div style ="margin: 0px auto 0px auto; text-align: center;">
+ <input type="submit" class="myClass" value="Go!" />
+</div>
+</form>
+</p>
+</ul>
+</div>
+<div class="col2">
+
 <?php
 if ($paticipants_updated)
 {
 ?>
-	<h3> Participant List For Survey Updated</h3>
+<div class="success">
+Participant List For Survey Updated
+</div>
 <?php
 }
-?>
 
-<h1>Assign to <?php echo $survey_name; ?>:</h1><br>
-<form action="admin_survey_assign.php?sid=<?=$survey_id?>" method="post">
-<input type="hidden" name="process_search_users" value="yes" />
-Search: 
-<input type="text" name="user_name_search" value="<?php echo $_POST['user_name_search'] ?>"> 
-<input type="submit" value="Search" />
-</form>
-
-<br>
-<br>
-
-
-<?php 
-if (count($participant_ids))
+if (count($participant_ids)&&(isset($_POST['process_search_users'])))
 {
 ?>
 
-
-	<h1>Participants:</h1><br>
-         <div style="font-size:18px">
 	<form action="admin_survey_assign.php?sid=<?=$survey_id?>" method="post">
 	<input type="hidden" name="process_search_users" value="yes" />
 	<input type="hidden" name="user_name_search" value="<?=$_POST['user_name_search']?>"> 	
 	<input type="hidden" name="process_assign_participants" value="yes" />
 	<input type="hidden" name="assign_participant_count" value="<?=count($participant_ids)?>" />
 	
-	<table style="border:1px solid black;border-collapse:collapse;">
+	<table id="hor-minimalist-a">
+        <caption>Participants</caption>
+        <thead>
 	<tr>
-	<th style="border:1px solid black;"><b>Participant</b></th>
-	<th style="border:1px solid black;"><b>Assigned</b></th>
-	<th style="border:1px solid black;"><b>Completed</b></th>
+	<th>Participant</th>
+	<th>Assigned</th>
+	<th>Completed</th>
 	</tr>
-
+        </thead>
+        <tfoot> <tr><td></td> <td> </td> <td> <input type="submit" value="Update" /> </td></tr> </tfoot>
+        <tbody>
 	<?php
 	for ($participant_num = 0; $participant_num < count($participant_ids); $participant_num++) 
 	{
@@ -111,42 +151,55 @@ if (count($participant_ids))
 		$participant_completed = $participant_completeds[$participant_num];
 		$participant_assigned = $participant_assigneds[$participant_num];				
 	?>
-
+   
 	<tr>
-	<td style="border:1px solid black;"><?=$participant_email;?></td>	
-	<td style="border:1px solid black;">	
-	<input type="hidden" name="participant_id_<?=$participant_num;?>" value="<?=$participant_id;?>" />	
+	<td><?=$participant_email." ";?> </td>	
+	<td>	
+	<input type="hidden" name="participant_id_<?=$participant_num;?>" value="<?=$participant_id;?>" />
 	<input type="checkbox" name="participant_assigned_<?=$participant_num;?>" <?php if ($participant_assigned){ echo 'checked'; }?> value="true" />		
 	</td>
-	<td style="border:1px solid black;"><?=$participant_completed;?></td>
+	<td><?=$participant_completed;?></td>
 	</tr>
 
 	<?php	
 	}
 	?>
-
+       </tbody>
+       
 	</table>
-	<br>
-	<input type="submit" value="Update" />
+        
 	</form>
-	<br>
-	<br>
-	</div>
-<?php
-}
-?>
+	
+         <?php	
+	}
+        else if(isset($_POST['process_search_users']))
+         {
+          echo "<p> Sorry! No participants meet your search criterion </p>";
+         }
+	?>
+
 </div>
+<div id="clear"> <br /> </div>
 
 
-<?php
-}
-else {
-?>
-
-You are currently not logged in.
-
-<?php
-}
-?>
-</body>
+</div>
+			
+			</div>
+		
+		</div>
+		
+		<div id="footer_wrapper">
+		
+			<div id="footer_inner_wrapper">
+				<a href="welcome.php">Home</a>
+				<a href="contactus.php">Contact Us </a> 
+				<a href="http://ianproject.com">I.A.N </a> 	
+				
+			
+			</div>
+		
+		</div>
+	
+	</body>
+	
 </html>

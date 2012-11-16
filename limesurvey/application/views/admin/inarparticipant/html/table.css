@@ -1,0 +1,90 @@
+#hor-minimalist-a
+{
+	background: #fff;
+	width: 65%;
+	border-collapse: collapse;
+	text-align: left;
+        font-size:100%;
+        margin:auto;
+        padding:5%;
+}
+#hor-minimalist-a th
+{       font-weight:normal;
+	padding:2% 2.2%;
+        border-top: 1px solid #E0CFE1;
+	border-bottom: 1px solid #E0CFE1;
+        font-size:105%;
+}
+#hor-minimalist-a td
+{
+	color: black;
+	padding: 9px 8px 0px 8px;
+        padding: 2% 1.5% 0.5% 1.5%;
+}
+#hor-minimalist-a tbody tr:hover td
+{
+	background: #E0CFE1;
+}
+#hor-minimalist-a caption
+{
+font-size:112%;
+font-weight:bold;
+padding:2%;
+}
+#hor-minimalist-a tfoot input
+{
+width:80%;
+font-size:110%;
+font-family: San-Serrif;
+background:#F6EAFA;
+border: 0.1em solid #E0CFE1;
+}
+#hor-minimalist-a tfoot:hover input
+{
+background: #E0CFE1;
+}
+#hor-minimalist
+{
+	background: #fff;
+	width: 50%;
+	border-collapse: collapse;
+	text-align: left;
+        font-size:100%;
+        margin:auto;
+        padding:5%;
+}
+#hor-minimalist th
+{       font-weight:normal;
+	padding:2% 2.2%;
+        border-top: 1px solid #E0CFE1;
+	border-bottom: 1px solid #E0CFE1;
+        font-size:105%;
+}
+#hor-minimalist td
+{
+	color: black;
+	padding: 9px 8px 0px 8px;
+        padding: 2% 1.5% 0.5% 1.5%;
+}
+#hor-minimalist tbody tr:hover td
+{
+	background: #E0CFE1;
+}
+#hor-minimalist caption
+{
+font-size:112%;
+font-weight:bold;
+padding:2%;
+}
+#hor-minimalist tfoot input
+{
+width:80%;
+font-size:110%;
+font-family: San-Serrif;
+background:#F6EAFA;
+border: 0.1em solid #E0CFE1;
+}
+#hor-minimalist tfoot:hover input
+{
+background: #E0CFE1;
+}

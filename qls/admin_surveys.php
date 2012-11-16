@@ -4,16 +4,40 @@ require_once('includes/header.php');
 $qls->Security->check_auth_page('admin_surveys.php'); 
 ?>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
 <head>
-<link rel="stylesheet" type="text/css" HREF="html/form.css" />
-</head>
-<?php
-// Look in the USERGUIDE.html for more info
-if ($qls->user_info['username'] != '') 
-{
-require_once('includes/banner2.php');
-?>
+<link href='http://fonts.googleapis.com/css?family=Convergence' rel='stylesheet' type='text/css'>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="I.N.A.R.">
+<meta name="keywords" content="I.N.A.R , A.F.A">
+<title>INAR</title>
+<link rel="stylesheet" type="text/css" href="cleanstickyfooter.css" media="screen" charset="utf-8" /> 
+<link rel="stylesheet" type="text/css" href="gen_styles.css" media="screen" charset="utf-8" /> 
+<link rel="stylesheet" type="text/css" HREF="html/table.css" />
+  </head> 
+	<body>
+		<div id="wrapper">
+		<div id="header">
+                        <span><a href="http://www.autism-india.org">Action For Autism </a></span>
+                        <div style="float:right;">
+			                <span>Hi Admin!<a href="logout.php"> Logout</a> </span> 
+		                     </div>
+			<div id="heading">
+				<h1> Indian National Autism Registry </h1>
+			</div>
+							<ul>							
+							
+							<li><a href="register.php"><span>Register</span></a></li>
+							<li><a href="participants.php">View Participants</a></li>
+                                                        <li><a href="alter_reg.php">Configure Registration</a></li>
+                                     <li><a href='http://www.indiaautismregistry.com/TEST2B/limesurvey/index.php/admin/authentication/login?user=inar2012&password=Inar!2012&subm=1'>Manage Survey Questions/Data</a></li>
+							</ul>
+                          
+						 
+					
+		</div>	 
+			<div id="content_wrapper">
+				<div id="content_inner_wrapper">
 
 
 <?php
@@ -41,30 +65,7 @@ require_once('includes/banner2.php');
 	}
 	
 	
-	$new_survey_added = false;
-	//process changes made
-	if (isset($_POST['process_new_survey'])) 
-	{				
-		$filename = $_FILES['survey_file']['tmp_name'];
-		if ($filename != '')
-		{			
-			//get uploaded survey data in base64
-			$handle = fopen($filename, "r");
-			$file_binary = fread($handle, filesize($filename));		
-			$file_base64 = base64_encode($file_binary);
-			fclose($handle);
-						
-			//get the survey name
-			$survey_name = $_POST['survey_name'];
-					
-			//add the new survy to lime
-			$qls->Surveys->create_survey($survey_name, $file_base64);
 
-			//new survey was added
-			$new_survey_added = true;
-		}
-	}
-	
 ?>
 
 
@@ -75,31 +76,39 @@ require_once('includes/banner2.php');
 	list ($survey_ids, $survey_names, $survey_auto_assigns, $survey_participant_counts, $survey_response_counts) = $qls->Surveys->get_all_surveys_info();		
 ?>
 
-
-
 <?php
 if ($auto_assign_updated)
 {
 ?>
-	<h3> Surveys Auto Assign Settings Updated</h3>
+<div class="success">	
+Update Successful: Default Surveys Changed!
+</div>
 <?php
 }
 ?>
-<fieldset>
-<legend> Current Surveys </legend>
+
+
+
 <form action="admin_surveys.php" method="post">
 <input type="hidden" name="process_update_auto_assign" value="yes" />
 <input type="hidden" name="surveys_count" value="<?=count($survey_names)?>" />
-<table style="border:1px solid black;border-collapse:collapse;">
+<br />
+<table id="hor-minimalist">
+<caption> Current Surveys </caption>
+<thead>
 <tr>
-<th style="border:1px solid black;"><b>Name</b></th>
-<th style="border:1px solid black;"><b>Auto Assign New Participants</b></th>
-<th style="border:1px solid black;"><b>Participants</b></th>
-<th style="border:1px solid black;"><b>Assign Participants</b></th>
-<th style="border:1px solid black;"><b>Responses</b></th>
-<th style="border:1px solid black;"><b>Export</b></th>
+<th>Name</th>
+<th>Set: Default Survey</th>
+<th>Participants</th>
 </tr>
-
+</thead>
+<tfoot>
+<tr>
+<td> </td>
+<td> <input class= "myClass" type="submit" value="Save Selection" /></td>
+<td> </td>
+</tfoot>
+<tbody>
 <?php
 for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++) 
 {
@@ -110,64 +119,43 @@ for ($survey_num = 0; $survey_num < count($survey_names); $survey_num++)
 	$survey_response_count = $survey_response_counts[$survey_num];		
 ?>
 	<tr>
-	<td style="border:1px solid black;"><?=$survey_name?></td>
-	<td style="border:1px solid black;">
+	<td ><a href="admin_survey_assign.php?sid=<?=$survey_id;?>"><?=$survey_name?></a></td>
+	<td >
 	<input type="hidden"    name="survey_id_<?=$survey_num?>"    value="<?=$survey_id?>" />
 	<input type="checkbox"  name="survey_auto_<?=$survey_num?>"  value="true"  <?php if($survey_auto_assign){ echo 'checked'; } ?> />
 	</td>
-	<td style="border:1px solid black;"><?=$survey_participant_count?></td>
-	<td style="border:1px solid black;">
-	<a href="admin_survey_assign.php?sid=<?=$survey_id;?>">Assign Participants</a>
-	</td>
-	<td style="border:1px solid black;"><?=$survey_response_count?></td>
-	<td style="border:1px solid black;">
-	<a href="admin_survey_export.php?sid=<?=$survey_id;?>">Export</a>
-	</td>
+	<td ><?=$survey_participant_count?></td>
 	</tr>
+</tbody>
 <?php	
 }
 ?>
+
 </table>
-<br>
-<input type="submit" value="Update Auto Assign" />
 </form>
-</fieldset>
 
 
 
 
-
-<br>
-<fieldset>
-<legend> Add New Survey </legend>
-<a href='http://indiaautismregistry.com/TEST/limesurvey/admin'> Survey Test Bed </a><br><br>
-<form enctype="multipart/form-data" action="admin_surveys.php" method="post">
-<input type="hidden" name="process_new_survey" value="yes" />
-<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
-<table style="border:1px solid black;border-collapse:collapse;">
-<tr>
-<td style="border:1px solid black;"><b>Name:</b></td>
-<td style="border:1px solid black;"><input type="text"  name="survey_name"/></td>
-</tr>
-<tr>
-<td style="border:1px solid black;"><b>File:</b></td>
-<td style="border:1px solid black;"><input type="file"  name="survey_file"/></td>
-</tr>
-</table>
-<br>
-<input type="submit" value="Add New Survey" />
-</form>
-</fieldset>
-
-</div>
-<?php
-}
-else {
-?>
-
-You are currently not logged in.
-
-<?php
-}
-?>
+                                </div>
+			
+			</div>
+		
+		</div>
+		
+		<div id="footer_wrapper">
+		
+			<div id="footer_inner_wrapper">
+				<a href="welcome.php"><span>Home</a>
+				<a href="contactus.php">Contact Us </a> 
+				<a href="http://ianproject.com">I.A.N </a> 
+				
+				
+			
+			</div>
+		
+		</div>
+	
+	</body>
+	
 </html>

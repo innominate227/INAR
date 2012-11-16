@@ -4,7 +4,7 @@
 </script>
 
 
-<div class='header ui-widget-header header_statistics'>
+<div class='header ui-widget-header header_statistics' <?php if ($view!='' && $view!='surveys') { echo " style='display:none' "; } ?>>
 	<div style='float:right;'><img src='<?php echo $sImageURL; ?>/maximize.png' id='showsurveys' alt='<?php $clang->eT("Maximize"); ?>'/><img src='<?php echo $sImageURL; ?>/minimize.png' id='hidesurveys' alt='<?php $clang->eT("Minimize"); ?>'/></div>
 	Dashboard - Surveys
 </div>
@@ -40,7 +40,7 @@
 
 <form method='post' name='formbuilder' action='<?php echo Yii::app()->getController()->createUrl("admin/statistics/"); ?>'>	
 	<input name='run_saved_report' value='yes' type='hidden' />
-    <div class='header ui-widget-header header_statistics'>
+    <div class='header ui-widget-header header_statistics'  <?php if ($view!='' && $view!='reports') { echo " style='display:none' "; } ?>>
         <div style='float:right;'><img src='<?php echo $sImageURL; ?>/maximize.png' id='showreports' alt='<?php $clang->eT("Maximize"); ?>'/><img src='<?php echo $sImageURL; ?>/minimize.png' id='hidereports' alt='<?php $clang->eT("Minimize"); ?>'/></div>
         Dashboard - Reports
     </div>    

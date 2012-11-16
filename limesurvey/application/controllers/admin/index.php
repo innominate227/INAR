@@ -18,7 +18,7 @@ class Index extends Survey_Common_Action
     public function run()
     {
         $clang = Yii::app()->lang;		
-		Yii::app()->request->redirect(Yii::app()->getController()->createUrl('admin/dashboard'));
+		Yii::app()->request->redirect(Yii::app()->getController()->createUrl('admin/inarsurveys'));
 
 		/*
         if (Yii::app()->session['just_logged_in'])
