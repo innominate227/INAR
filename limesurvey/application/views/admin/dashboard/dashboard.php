@@ -10,8 +10,6 @@
 </div>
 <div id='surveys' class='statisticsfilters'  <?php if ($view!='' && $view!='surveys') { echo " style='display:none' "; } ?>>	
 	<p>	
-		<font size="4"><a href='<?php echo Yii::app()->getController()->createUrl("admin/survey/newsurvey"); ?>'>Create New Survey</a></font><br>		
-	
 		<table class='users'>		
 		<thead><tr><th class='header' style='width:30%'>Name</th><th class='header' style='width:10%'>Active</th><th class='header' style='width:10%'>Edit</th><th class='header' style='width:10%'>Export</th><th class='header' style='width:40%'>Issues</th></tr></thead>
 		<tbody>
@@ -33,6 +31,10 @@
 		?>				
 		</tbody>
 		</table>
+		<br>		
+	</p>
+	<p>
+		<font size="4" ><a href='<?php echo Yii::app()->getController()->createUrl("admin/survey/newsurvey"); ?>'>Create New Survey</a></font><br>			
 	</p>
 </div>
 <div style='clear: both'></div>    

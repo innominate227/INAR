@@ -76,9 +76,9 @@ class Dashboard extends Survey_Common_Action
 	private function check_survey($oSurvey)
 	{
 		$survey_issues = '';
-		if ($oSurvey->attributes['showwelcome'] != 'N')
+		if ($oSurvey->attributes['showwelcome'] != 'Y')
 		{
-			$survey_issues .= 'Welcome screen is on.<br>';
+			$survey_issues .= 'Welcome screen is off.<br>';
 		}			
 		if ($oSurvey->attributes['alloweditaftercompletion'] != 'N')
 		{

@@ -20,17 +20,17 @@
     <div class='menubar-main'>
         <div class='menubar-left'>
 			<a style='font-size:200%; color:black;' href="<?php echo $this->createUrl("/admin/dashboard?view=surveys"); ?>">
-				<img src='<?php echo $sImageURL;?>inar.png' alt='<?php $clang->eT("INAR Dashboard Surveys");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+				<img src='<?php echo $sImageURL;?>inar_surveys.png' alt='<?php $clang->eT("INAR Dashboard Surveys");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
 				<?php if ($inar_menu_only) { ?><b>Surveys</b><?php } ?>
 			</a>			
 			<img src='<?php echo $sImageURL;?>separator.gif' id='separator1' class='separator' alt='' />
 			<a style='font-size:200%; color:black;' href="<?php echo $this->createUrl("/admin/dashboard?view=reports"); ?>">
-				<img src='<?php echo $sImageURL;?>inar.png' alt='<?php $clang->eT("INAR Dashboard Reports");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+				<img src='<?php echo $sImageURL;?>inar_reports.png' alt='<?php $clang->eT("INAR Dashboard Reports");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
 				<?php if ($inar_menu_only) { ?><b>Reports</b><?php } ?>
 			</a>			
 			<img src='<?php echo $sImageURL;?>separator.gif' id='separator1' class='separator' alt='' />
 			<a style='font-size:200%; color:black;' href="<?php echo $this->createUrl("/admin/inarsurveys"); ?>">
-				<img src='<?php echo $sImageURL;?>inar.png' alt='<?php $clang->eT("INAR Participants");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
+				<img src='<?php echo $sImageURL;?>inar_participants.png' alt='<?php $clang->eT("INAR Participants");?>' width='<?php echo $iconsize;?>' height='<?php echo $iconsize;?>'/>
 				<?php if ($inar_menu_only) { ?><b>Participants</b><?php } ?>
 			</a>
 			<img src='<?php echo $sImageURL;?>separator.gif' id='separator1' class='separator' alt='' />

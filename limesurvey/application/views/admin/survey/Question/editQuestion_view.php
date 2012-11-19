@@ -43,7 +43,15 @@
             <?php $eqrow  = array_map('htmlspecialchars', $eqrow); ?>
                 <ul><li>
                         <label for='title'> <?php $clang->eT("Code:"); ?></label><input type='text' size='20' maxlength='20' id='title' name='title' value="<?php echo $eqrow['title']; ?>" /> <?php if ($copying) $clang->eT("Note: You MUST enter a new question code!"); ?>
-                    </li><li>
+                    </li>
+					<li>
+						<label for='question_type_help'>&nbsp;</label>
+						<span style="display:inline-block; font-size:75%;">					
+						Question code is used as a header when exporting responses.<br>
+						The code must contains only letters and numbers and must start with a letter. (No Spaces)					
+						</span>
+					</li>					
+					<li>
                         <label for='question_<?php echo $eqrow['language']; ?>'><?php $clang->eT("Question:"); ?></label>
                         <div class="htmleditor">
                         <textarea cols='50' rows='4' id='question_<?php echo $eqrow['language']; ?>' name='question_<?php echo $eqrow['language']; ?>'><?php echo $eqrow['question']; ?></textarea>
@@ -130,7 +138,13 @@
                             echo "{$qtypelist[$eqrow['type']]['description']} - ".$clang->gT("Cannot be changed (survey is active)"); ?>
                         <input type='hidden' name='type' id='question_type' value='<?php echo $eqrow['type']; ?>' />
                         <?php } ?>
-
+                </li>
+				<li>
+				    <label for='question_type_help'>&nbsp;</label>
+					<span style="display:inline-block; font-size:75%;">					
+                    For "List" and "Array" question types. Answers options and subquestions are specified after<br>
+					clicking "Save" by selecting the "Edit Options" or "Edit Subquestions" in the question menu bar.					
+					</span>
                 </li>
 
 
