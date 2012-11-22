@@ -1,0 +1,236 @@
+/*
+
+cleanStickyFooter
+
+Copyright (c) 2009 Trevor Sheridan
+
+*/
+
+/****************
+
+NOT Required (just there to make this look a little prettier)
+
+****************/
+
+body {
+	font-family: Sans-Serif;
+	font-size: 110%;
+}
+div#header a
+{
+text-decoration:none;
+color:linen;
+}
+div#header a:visited
+{
+color:Lavendar;
+}
+div#header a:hover 
+{
+color:#fff;
+}
+.myClass
+{
+font-family: Sans-Serif;
+font-size: 110%;
+background:#F6EAFA;
+}
+.myClass:hover
+{
+background:#D8BFD8;
+}
+.bClass
+{
+font-family: Sans-Serif;
+font-size: 125%;
+background:#996699;
+color:linen;
+padding:0.5em 1.5em;
+text-align:center;
+border:1px solid purple;
+-moz-border-radius:10px;-webkit-border-radius:10px;border-radius:10px;
+cursor:pointer;
+text-shadow: -1px -1px 2px #777777;
+}
+.btn
+{
+margin:1em;
+text-align:center;
+}
+.bClass:hover
+{
+background:#D8BFD8;
+color:maroon;
+}
+.col2
+{
+float:left;
+width:65%;
+min-height:350px;
+border-left:0.5em solid #ccc;
+}
+.col1
+{
+float:left;
+width:32%;
+}
+.col1 p,ul,li
+{
+text-align:left;
+line-height:1.4em;
+padding:0.5em;
+margin: 0.4em;
+}
+div#clear
+{
+clear:both;
+}
+div#header
+{
+width:97.6%;
+overflow: hidden;
+margin-left:1.2%;
+margin-right:1.2%;
+padding-top:0.2em;
+}
+
+.head
+{
+background:#996699;
+color:linen;
+}
+div#heading
+{
+clear:both;
+font-family: 'Convergence',Sans-Serif;
+padding-bottom:0.01em;
+text-align:center;
+color:linen;
+}
+
+div#footer_wrapper 
+{
+	
+	padding-top:0.2em;
+	padding-bottom:0.2em;
+        border-top:0.1em solid #bca5a6;
+
+}
+div#inner_text 
+{
+	padding:1em 1.5em;
+        text-align:left;
+}
+
+div#inner_text h2
+{
+font-family: 'Convergence',Sans-Serif;
+}
+
+div#inner_text p
+{
+line-height:1.45em;
+font-size: 112%;
+}
+div#inner_text li
+{
+line-height:1.45em;
+font-size: 112%;
+}
+div#footer_inner_wrapper 
+{
+	text-align: center;	
+}
+
+
+div#header span
+{
+padding:0.1em;
+}
+div#footer_inner_wrapper a 
+{
+       padding-top:0.3em;
+	padding-left:0.8em;
+	padding-right:0.8em;
+	font-size:106%;
+        font-weight:normal;
+        color:black;
+        text-decoration:none;
+}
+div#footer_inner_wrapper a:hover
+{
+background:#996699;
+color:#fff;
+}
+div#content_inner_wrapper 
+{
+
+	/*background:#F6EAFA;*/
+	min-height: 300px;
+	padding:5px;
+	text-align:center;
+        color:black;
+}
+.error 
+{       
+	padding:0.5em;
+        color:DarkRed;
+}
+.error h3
+{
+font-family: Sans-Serif;
+}
+.success 
+{       
+	padding:0.7em;
+        color:DarkGreen;
+}
+.success h3
+{
+font-family:Sans-Serif;
+}
+div#footer_inner_wrapper 
+{   
+}
+	div#header ul{	
+	  
+		width:100%;
+		list-style:none;
+		margin:0;
+		padding:0;
+                border-top:1px solid #F6EAFA;
+                border-top:1px solid grey;
+		text-align: center;
+		
+	}
+	div#header ul li {
+		display:inline;
+		list-style:none;
+		margin:0;
+		padding:0;
+                line-height:1.4em;
+	}
+
+	div#header ul li a 
+	{
+		margin:0;
+                padding: 0.05em 1em;
+		text-align:center;
+		font-size:112%;
+	        background:#F6EAFA;
+                border-left:0.1em solid grey;
+		color:#000;
+		text-decoration:none;
+		line-height:1.4em;
+	}
+        div#header ul li a.active
+	{
+        background:#FFFFE0;
+        color:black;
+        }
+	div#header ul li a:hover
+	{
+	background:#FFFFE0;
+	color:maroon;
+	}
+    

@@ -33,17 +33,24 @@ exit;
  */
 class MySQL {
 
+/**
+ * @var object $qls - Will contain everything else
+ */
+var $qls;
+
 	/**
 	 * Constructs the class and initializes some variables
 	 * @param    string  $server_name - Server name for the connection
 	 * @param    string  $username    - Username for the connection
 	 * @param    string  $password    - Password for the connection
 	 * @param    string  $name        - Database name
-	 * @param    boolean $persistent  - Use persistent connections	 
+	 * @param    boolean $persistent  - Use persistent connections
+	 * @param    object  $qls         - Contains all other classes
 	 * @optional integer $port        - Contains port or false for no port
 	 * @return void but outputs error if found
 	 */
-	function MySQL($server_name, $username, $password, $name, $persistent, $port = false) {	
+	function MySQL($server_name, $username, $password, $name, $persistent, &$qls, $port = false) {
+	$this->qls = &$qls;
 	$this->server_name = $server_name;
 	$this->username = $username;
 	$this->password = $password;
@@ -217,7 +224,7 @@ class MySQL {
 		}
 
 	// Build the query
-	$query = "SELECT {$new_what} FROM `{$from}`";
+	$query = "SELECT {$new_what} FROM `{$this->qls->config['sql_prefix']}{$from}`";
 
 		if ($where !== false) {
 			if (is_array($where)) {
@@ -349,7 +356,7 @@ class MySQL {
 	$new_where = '';
 		// Can't be an array
 		if (!is_array($from) && $from != '') {
-		$new_from = "`{$from}`";
+		$new_from = "`{$this->qls->config['sql_prefix']}{$from}`";
 		}
 		else {
 		die(SQL_DELETE_QUERY_FAILED);
@@ -433,7 +440,7 @@ class MySQL {
 	$new_where = '';
 		// Can't be an array or empty
 		if (!is_array($table) && $table != '') {
-		$new_table = "`{$table}`";
+		$new_table = "`{$this->qls->config['sql_prefix']}{$table}`";
 		}
 		else {
 		die(SQL_UPDATE_QUERY_FAILED);
@@ -548,7 +555,7 @@ class MySQL {
 
 		// Did they define a table?
 		if ($table != '') {
-		$new_table = "`{$table}`";
+		$new_table = "`{$this->qls->config['sql_prefix']}{$table}`";
 		}
 		else {
 		die(SQL_INSERT_QUERY_FAILED);
@@ -642,7 +649,7 @@ class MySQL {
 
 		// Check the table
 		if ($table != '') {
-		$new_table = "{$table}";
+		$new_table = "{$this->qls->config['sql_prefix']}{$table}";
 		}
 		else {
 		die(SQL_ALTER_QUERY_FAILED);

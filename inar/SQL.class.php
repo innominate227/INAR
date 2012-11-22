@@ -25,20 +25,19 @@
 * Comments are always before the code they are commenting.
 *** *** *** *** *** ***/
 
+
 /**
  * Acts as an interface for the sub classes
  */
 class SQL {
 
-
-
 	/**
-	 * Constructs the class
-	 * @param object $qls - Contains all the other classes
+	 * Constructs the class	 
 	 * @return void but will output error if found
 	 */
 	function SQL() {
 	
+
 	require_once('database_info.php');
 	$this->database_type = $database_type;
 		/**
@@ -57,7 +56,7 @@ class SQL {
 		/**
 		 * End of security functions
 		 */
-	
+
 	// Get the actual database class
 	$database_file = ($database_type == 'MySQLi') ? 'MySQLie' : $database_type;
 	require_once($database_file . '.class.php');
@@ -71,7 +70,6 @@ class SQL {
 				$database_password,
 				$database_name,
 				$database_persistent,
-				$this->qls,
 				$database_port
 			);
 			break;
@@ -80,7 +78,6 @@ class SQL {
 				$database_username,
 				$database_password,
 				$database_name,
-				$this->qls,
 				$database_port
 			);
 			break;
@@ -90,7 +87,6 @@ class SQL {
 				$database_password,
 				$database_name,
 				$database_persistent,
-				$this->qls,
 				$database_port
 			);
 			break;
