@@ -1,56 +1,135 @@
-<?php
-define('QUADODO_IN_SYSTEM', true);
-require_once('includes/header.php');
- ?>
 
+<html>
+<head>
+<style>
+div#header
+{
+width:100%;
+background:#F0F8FF;
+overflow: hidden;
+margin:0;
+}
+div#header ul{	
+	  
+		width:100%;
+		list-style:none;
+		margin:0;
+		padding-left:1%;
+                border-top:1px solid #F6EAFA;
+                border-bottom:1px solid grey;
 
-<?php
-	$survey_id = $_GET['sid'];
 		
-	//get info for the survey with the passed id
-	list ($survey_id, $survey_name, $survey_auto_assign, $survey_participant_count, $survey_response_count) = $qls->Surveys->get_survey_info($survey_id);	
-	
-
-	$paticipants_updated = false;	
-	//process user assigned changes
-	if (isset($_POST['process_assign_participants'])) 
-	{	
-		//start operation
-		$qls->SQL->transaction("START TRANSACTION");
-		
-		//look at each participant assigned/unassigned
-		$edits_count = $_POST['assign_participant_count'];
-		for ($edit_num = 0; $edit_num < $edits_count; $edit_num++) 
-		{
-			$participant_id = $_POST['participant_id_' . $edit_num];
-			$participant_assigned = $_POST['participant_assigned_' . $edit_num];
-			
-			if ($participant_assigned == 'true')
-			{
-				$qls->Surveys->assign_to_survey($participant_id, $survey_id);
-			}
-			else
-			{
-				$qls->Surveys->unassign_to_survey($participant_id, $survey_id);
-			}
-		}
-		
-		//commit operation
-		$qls->SQL->transaction("COMMIT");		
-		$paticipants_updated = true;
 	}
-	
-	
-	//process search made
-	if (isset($_POST['process_search_users'])) 
-	{		
-		$search_term = $_POST['user_name_search'];	
-		list($participant_ids, $participant_emails, $participant_assigneds, $participant_completeds) = $qls->Surveys->search_participants_in_survey($search_term, $survey_id);	
+	div#header ul li {
+		display:inline;
+		list-style:none;
+		margin:0;
+		padding:0;
+                line-height:1.4em;
 	}
-	
-	
-?>
-		<div id="wrapper">
+
+	div#header ul li a 
+	{
+		margin:0;
+                padding: 0.05em 1em;
+		text-align:center;
+		font-size:115%;
+	        background:#d7ecff;
+		text-decoration:none;
+		line-height:1.4em;
+                color:black;
+                font-weight:bold;
+	}
+       div#header ul li a:hover
+	{
+	background:#FFFFE0;
+	color:maroon;
+	}
+.col2
+{
+float:left;
+width:65%;
+min-height:350px;
+border-left:0.5em solid #ccc;
+padding:0.5%;
+}
+.col1
+{
+float:left;
+width:32%;
+padding:0.5%;
+}
+.col1 p,ul,li
+{
+text-align:left;
+line-height:1.4em;
+padding:0.5em;
+margin: 0.4em;
+}
+div#clear
+{
+clear:both;
+}
+#hor-minimalist-a
+{
+	background: #fff;
+	width: 65%;
+	border-collapse: collapse;
+	text-align: left;
+        font-size:100%;
+        margin:auto;
+        padding:5%;
+        font-family:sans-serif;
+}
+#hor-minimalist-a th
+{       font-weight:normal;
+	padding:2% 2.2%;
+        border-top: 1px solid navy;
+	border-bottom: 1px solid navy;
+        font-size:105%;
+}
+#hor-minimalist-a td
+{
+	color: black;
+	padding: 9px 8px 0px 8px;
+        padding: 2% 1.5% 0.5% 1.5%;
+}
+#hor-minimalist-a tbody tr:hover td
+{
+	background: #d7ecff;
+}
+#hor-minimalist-a caption
+{
+font-size:112%;
+font-weight:bold;
+padding:2%;
+}
+.success 
+{       
+	margin:auto;
+        color:DarkGreen;
+        text-align:center;
+}
+.col1 label{
+display:block;
+margin-bottom:0.2em;
+color:black;
+}
+.col1 form
+{
+text-align:left;
+padding:0.5em;
+}
+.col1 label span
+{
+display:block;
+float:left;
+padding-right:0.5em;
+width:11em;
+text-align:right;
+}
+</style>
+</head>		<div id="wrapper">
 		<div id="header">
                   
 				  
@@ -58,7 +137,7 @@ require_once('includes/header.php');
 							<ul>														
 							<li><a href="<?php echo Yii::app()->getController()->createUrl("admin/inarparticipants/"); ?>">View Participants</a></li>
                                                         <li><a href="<?php echo Yii::app()->getController()->createUrl("admin/inaralterreg/"); ?>">Configure Registration</a></li>
-                                                        <li><a href="<?php echo Yii::app()->getController()->createUrl("admin/inarsurveys/"); ?>">View Surveys</a></li>
+                                                        <li><a class="active" href="<?php echo Yii::app()->getController()->createUrl("admin/inarsurveys/"); ?>">Assign Participants To Surveys</a></li>
 							</ul>
                           
 						 
@@ -73,7 +152,6 @@ require_once('includes/header.php');
 <div class="col1">
 
 <h3>Survey Name: <?php echo $survey_name; ?></h3>
-<ul>
 <li> Do you want to assign participants to this survey? </li>
 <p>
 Then, Search for participants
@@ -82,12 +160,11 @@ Then, Search for participants
 <label><span> Using email address: </span>
 <input type="text" name="user_name_search" value="<?php echo $_POST['user_name_search'] ?>">
 </label> 
-<div style ="margin: 0px auto 0px auto; text-align: center;">
- <input type="submit" class="myClass" value="Go!" />
+<div style ="margin: 0px auto 0px auto; text-align: center; padding:3px;">
+ <input type="submit" value="Go!" />
 </div>
 </form>
 </p>
-</ul>
 </div>
 <div class="col2">
 
@@ -120,7 +197,7 @@ if (count($participant_ids)&&(isset($_POST['process_search_users'])))
 	<th>Completed</th>
 	</tr>
         </thead>
-        <tfoot> <tr><td></td> <td> </td> <td> <input type="submit" value="Update" /> </td></tr> </tfoot>
+        <tfoot> <tr><td></td>  <td> <input type="submit" value="Update" /> </td> <td> </td></tr> </tfoot>
         <tbody>
 	<?php
 	for ($participant_num = 0; $participant_num < count($participant_ids); $participant_num++) 
@@ -166,4 +243,4 @@ if (count($participant_ids)&&(isset($_POST['process_search_users'])))
 			</div>
 		
 		</div>
-		
+</html>

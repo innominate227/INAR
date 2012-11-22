@@ -1,46 +1,95 @@
 <?php
-define('QUADODO_IN_SYSTEM', true);
-require_once('includes/header.php');
 include("includes/pChart2.1.3/class/pDraw.class.php"); 
 include("includes/pChart2.1.3/class/pImage.class.php"); 
 include("includes/pChart2.1.3/class/pData.class.php"); 
 ?>
 
+<html>
+<head>
+<style>
+div#header
+{
+width:100%;
+background:#F0F8FF;
+overflow: hidden;
+margin:0;
+}
+div#header ul{	
+	  
+		width:100%;
+		list-style:none;
+		margin:0;
+		padding-left:1%;
+                border-top:1px solid #F6EAFA;
+                border-bottom:1px solid grey;
+
+		
+	}
+	div#header ul li {
+		display:inline;
+		list-style:none;
+		margin:0;
+		padding:0;
+                line-height:1.4em;
+	}
+
+	div#header ul li a 
+	{
+		margin:0;
+                padding: 0.05em 1em;
+		text-align:center;
+		font-size:115%;
+	        background:#d7ecff;
+		text-decoration:none;
+		line-height:1.4em;
+                color:black;
+                font-weight:bold;
+	}
+       div#header ul li a:hover
+	{
+	background:#FFFFE0;
+	color:maroon;
+	}
+       div#header ul li a.active
+	   {
+        background:#FFFFE0;
+        color:DarkGreen;
+        }
+
+#content_inner_wrapper label{
+display:block;
+margin-bottom:0.2em;
+color:black;
+}
+#content_inner_wrapper form
+{
+text-align:center;
+padding:0.5em;
+}
+#content_inner_wrapper label span
+{
+padding-right:0.5em;
+}
+.errr
+{
+text-align:center;
+padding:0.5em;
+color:maroon;
+}
+</style>
+</head>	
+
 		<div id="wrapper">
 		<div id="header">                                  
-							<ul>														
+			<ul>														
+							<li><a  class="active" href="<?php echo Yii::app()->getController()->createUrl("admin/inarparticipants/"); ?>">View Participants</a></li>
                                                         <li><a href="<?php echo Yii::app()->getController()->createUrl("admin/inaralterreg/"); ?>">Configure Registration</a></li>
-                                                        <li><a href="<?php echo Yii::app()->getController()->createUrl("admin/inarsurveys/"); ?>">View Surveys</a></li>
+                                                        <li><a href="<?php echo Yii::app()->getController()->createUrl("admin/inarsurveys/"); ?>">Assign Participants To Surveys</a></li>
 							</ul>
-                          
-						 
-					
 		</div>	 
 			<div id="content_wrapper">
 				<div id="content_inner_wrapper">
 
-
-<?php
-			
-			
-	
-	//process search made
-	if (isset($_POST['process_search_users'])) 
-	{		
-		$search_term = $_POST['user_name_search'];
-                $term2 = $_POST['from_date'];	
-                $term3 = $_POST['to_date'];
-		list($participant_ids, $participant_emails, $participant_surveyss) = $qls->Surveys->search_participants($search_term, $term2,$term3);	
-	}
-	
-	if (isset($_POST['process_reports'])) 
-	{	
-              $s_term = $_POST['month'];
-              $mons = array(1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December");
-              $month_name = $mons[$s_term];
-              list($dates_reg,$emails) = $qls->Surveys->search_participants_month($s_term);
-	}
-?>
 
 <div class="col1">
 <p>Search for Participants </p>
